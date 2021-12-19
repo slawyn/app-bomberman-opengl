@@ -1,0 +1,23 @@
+{
+  "buildFiles": [
+    "C:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\src\\jni\\Android.mk",
+    "C:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\src\\jni\\Application.mk"
+  ],
+  "cleanCommands": [
+    "C:\\Users\\Unixt\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\ndk-build.cmd NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003dC:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\src\\jni\\Android.mk NDK_APPLICATION_MK\u003dC:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\src\\jni\\Application.mk APP_ABI\u003dx86 NDK_ALL_ABIS\u003dx86 NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-19 NDK_OUT\u003dC:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003dC:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\build\\intermediates\\ndkBuild\\release\\lib clean"
+  ],
+  "libraries": {
+    "NativeInterface-release-x86": {
+      "artifactName": "NativeInterface",
+      "buildCommand": "C:\\Users\\Unixt\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\ndk-build.cmd NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003dC:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\src\\jni\\Android.mk NDK_APPLICATION_MK\u003dC:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\src\\jni\\Application.mk APP_ABI\u003dx86 NDK_ALL_ABIS\u003dx86 NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-19 NDK_OUT\u003dC:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003dC:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\build\\intermediates\\ndkBuild\\release\\lib C:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/build/intermediates/ndkBuild/release/obj/local/x86/libNativeInterface.so",
+      "abi": "x86",
+      "output": "C:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\build\\intermediates\\ndkBuild\\release\\obj\\local\\x86\\libNativeInterface.so"
+    },
+    "freetype-release-x86": {
+      "artifactName": "freetype",
+      "buildCommand": "C:\\Users\\Unixt\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\ndk-build.cmd NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003dC:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\src\\jni\\Android.mk NDK_APPLICATION_MK\u003dC:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\src\\jni\\Application.mk APP_ABI\u003dx86 NDK_ALL_ABIS\u003dx86 NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-19 NDK_OUT\u003dC:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003dC:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\build\\intermediates\\ndkBuild\\release\\lib C:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/build/intermediates/ndkBuild/release/obj/local/x86/libfreetype.a",
+      "abi": "x86",
+      "output": "C:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\build\\intermediates\\ndkBuild\\release\\obj\\local\\x86\\libfreetype.a"
+    }
+  }
+}

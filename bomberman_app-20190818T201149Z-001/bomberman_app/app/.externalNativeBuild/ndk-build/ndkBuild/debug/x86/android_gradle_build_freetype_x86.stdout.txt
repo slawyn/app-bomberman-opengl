@@ -1,0 +1,18 @@
+[x86] Compile        : freetype <= ftbbox.c
+[x86] Compile        : freetype <= ftbitmap.c
+[x86] Compile        : freetype <= ftglyph.c
+[x86] Compile        : freetype <= ftstroke.c
+[x86] Compile        : freetype <= ftxf86.c
+[x86] Compile        : freetype <= ftbase.c
+[x86] Compile        : freetype <= ftsystem.c
+[x86] Compile        : freetype <= ftinit.c
+[x86] Compile        : freetype <= ftgasp.c
+[x86] Compile        : freetype <= raster.c
+[x86] Compile        : freetype <= sfnt.c
+[x86] Compile        : freetype <= smooth.c
+[x86] Compile        : freetype <= autofit.c
+[x86] Compile        : freetype <= truetype.c
+[x86] Compile        : freetype <= cff.c
+[x86] Compile        : freetype <= psnames.c
+[x86] Compile        : freetype <= pshinter.c
+[x86] SharedLibrary  : libfreetype.so

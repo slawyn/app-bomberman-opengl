@@ -1,0 +1,15 @@
+In file included from C:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/src/jni/NativeInterface.cpp:8:
+In file included from C:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/src/jni/include\freetype/freetype.h:34:
+C:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/src/jni/include\freetype/config/ftconfig.h:348:5: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+    register FT_Int32  t, t2;
+    ^~~~~~~~~
+C:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/src/jni/include\freetype/config/ftconfig.h:348:5: warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+    register FT_Int32  t, t2;
+    ^~~~~~~~~
+C:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/src/jni/NativeInterface.cpp:14:86: warning: unused parameter 'env' [-Wunused-parameter]
+JNIEXPORT jlong JNICALL Java_main_nativeclasses_NativeInterface_initFreeType(JNIEnv *env, jclass type) {
+                                                                                     ^
+C:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/src/jni/NativeInterface.cpp:14:98: warning: unused parameter 'type' [-Wunused-parameter]
+JNIEXPORT jlong JNICALL Java_main_nativeclasses_NativeInterface_initFreeType(JNIEnv *env, jclass type) {
+                                                                                                 ^
+4 warnings generated.

@@ -1,0 +1,2 @@
+[arm64-v8a] Compile++      : NativeInterface <= NativeInterface.cpp
+[arm64-v8a] SharedLibrary  : libNativeInterface.so

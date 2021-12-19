@@ -1,0 +1,4 @@
+#Sun Jun 21 02:26:06 CEST 2020
+base.0=C\:\\Users\\Unixt\\Downloads\\bomberman_app-2020_10_05\\bomberman_app-20190818T201149Z-001\\bomberman_app\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+path.0=classes.dex
+renamed.0=classes.dex

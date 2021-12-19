@@ -1,0 +1,1 @@
+javac -d build\intermediates\javac\debug\compileDebugJavaWithJavac\classes\  -classpath build\intermediates\javac\debug\compileDebugJavaWithJavac\classes\main src\main\java\main\nativeclasses\* -h src\jni

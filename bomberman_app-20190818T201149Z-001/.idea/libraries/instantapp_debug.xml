@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="instantapp-debug">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/bomberman_app/instantapp/build/outputs/apk/debug/instantapp-debug.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

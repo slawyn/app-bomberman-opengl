@@ -1,1 +1,1 @@
-# app-bomberman-opengl
+Phone app. Bluetooth based multiplayer bomberman-kind of game. Uses opengl for rendering.
