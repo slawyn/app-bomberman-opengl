@@ -73,54 +73,6 @@ public final class Constants
     public final static boolean DEBUG_DRAW_HITBOXES = true;
     public final static boolean DEBUG_DRAW_DEBUG_INFO = false;
 
-    /* Standard Globals for Game*/
-
-    public final static float SCALE_FACTOR = 1.0f;
-    public final static float GAME_WIDTH = 1920 * SCALE_FACTOR;
-    public final static float GAME_HEIGHT = 1080 * SCALE_FACTOR;
-
-
-    /* for 1920 x 1080 , field is 1540 x 1034*/
-    public final static int FIELD_X1 = (int) ((190) * SCALE_FACTOR);//190;
-    public final static int FIELD_X2 = (int) ((GAME_WIDTH - FIELD_X1));   // out of 1920
-    public final static int FIELD_Y1 = (int) ((36) * SCALE_FACTOR);
-    public final static int FIELD_Y2 = (int) ((GAME_HEIGHT - 10));     // out of 1080
-
-
-    public final static int NUMBER_OF_X_CELLS = 11;
-    public final static int NUMBER_OF_Y_CELLS = 11;
-
-    // CELLSIZEX = 140    // CELLSIZEY = 94
-    public final static int CELLSIZE_X = (FIELD_X2 - FIELD_X1) / NUMBER_OF_X_CELLS;
-    public final static int CELLSIZE_Y = (FIELD_Y2 - FIELD_Y1) / NUMBER_OF_Y_CELLS;
-    public final static float CELL_RATIO = (float) CELLSIZE_Y / CELLSIZE_X;
-
-    // if object_block is 150 x 150
-    public final static int BLOCK_BOX_WIDTH = CELLSIZE_X;
-    public final static int BLOCK_BOX_HEIGHT = CELLSIZE_Y;
-    public final static int BLOCK_BOX_OFFSET_X = 0;
-    public final static int BLOCK_BOX_OFFSET_Y = 0;
-
-    // if object_block is 150 x 150
-    public final static int CRATE_BOX_WIDTH = CELLSIZE_X;
-    public final static int CRATE_BOX_HEIGHT = CELLSIZE_Y;
-    public final static int CRATE_BOX_OFFSET_X = 0;
-    public final static int CRATE_BOX_OFFSET_Y = 0;
-
-    // if sprite is
-    public final static int BOMB_BOX_WIDTH = (int) (CELLSIZE_X / 2.34f);
-    public final static int BOMB_BOX_HEIGHT = (int) (CELL_RATIO * BOMB_BOX_WIDTH);
-    public final static int BOMB_BOX_OFFSET_X = (int) ((CELLSIZE_X - BOMB_BOX_WIDTH) / 2);
-    public final static int BOMB_BOX_OFFSET_Y = (int) (BOMB_BOX_OFFSET_X * CELL_RATIO);
-
-    public final static int LEVEL1_MAP = 0;
-    public final static int LEVEL2_MAP = 1;
-
-
-    public final static float PLAYER_BOX_RATIO_X = 2.34f;
-    public final static float PLAYER_BOX_RATIO_Y = 0.78571f;
-    public final static int PLAYER_BOX_OFFSET_X  =  (int)((CELLSIZE_X / PLAYER_BOX_RATIO_X));
-    public final static int PLAYER_BOX_OFFSET_Y  =     (int)(((PLAYER_BOX_OFFSET_X + CELLSIZE_X * PLAYER_BOX_RATIO_Y) * CELL_RATIO));
 
     /* Other Constants */
     public final static int CONNECTION_TYPE_CLASSIC = 0;

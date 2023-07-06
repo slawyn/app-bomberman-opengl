@@ -125,14 +125,4 @@ public class GameLogic
         }
         return mRemovalEvents;
     }
-
-    public int getPositionXFromCell(int cellposx)
-    {
-        return (FIELD_X1 + (CELLSIZE_X * cellposx));
-    }
-
-    public int getPositionYFromCell(int cellposy)
-    {
-        return (FIELD_Y1 + (CELLSIZE_Y * cellposy));
-    }
 }

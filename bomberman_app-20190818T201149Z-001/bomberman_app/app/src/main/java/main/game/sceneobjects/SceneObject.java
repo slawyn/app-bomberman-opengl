@@ -13,7 +13,6 @@ public class SceneObject extends EventObject
     public int mState;
     public int mPositionX;
     public int mPositionY;
-    public boolean mRemove;
     public int[] mAdditionals;
     public int mLayer;
     public RenderElement ro;
