@@ -38,7 +38,8 @@ public class TextRenderer
             136f, 136f, 1f, 1f
     };
 
-    public TextRenderer(){
+    public TextRenderer()
+    {
         // Create an empty, mutable bitmap
         bitmap = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
         textPaint = new Paint();

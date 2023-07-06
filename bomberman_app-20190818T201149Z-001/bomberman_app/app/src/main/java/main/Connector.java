@@ -1,6 +1,7 @@
 package main;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
@@ -47,8 +48,7 @@ import static main.Constants.FINE_LOCATION_ENABLE_REQUEST_CODE;
 
 /* Bluetooth: http://www.doepiccoding.com/blog/?p=232 */
 /* Optimization: https://developer.android.com/training/articles/perf-tips*/
-public class Connector extends Activity
-{
+public class Connector extends Activity {
     private static final String TAG = "MainActivity";
     private static Application mApplication;
     private static final int mBluetoothBroadcastTime = 30;
@@ -84,21 +84,16 @@ public class Connector extends Activity
     private static int typeOfConnection;
 
 
-    public void setConnectionType(int conntype)
-    {
+    public void setConnectionType(int conntype) {
         typeOfConnection = conntype;
     }
 
-    public PacketQueue attachGameToServer()
-    {
-        try
-        {
+    public PacketQueue attachGameToServer() {
+        try {
             mLocalServerBootable = true;
             Logger.log(Logger.DEBUG, TAG, Messages.dTextConnectingServerToPipe);
-            if(mLocalServerBootable)
-            {
-                switch(typeOfConnection)
-                {
+            if (mLocalServerBootable) {
+                switch (typeOfConnection) {
                     case Constants.CONNECTION_TYPE_CLASSIC:
                         mServer = new ServerBluetoothCLASSIC(mBluetoothBroadcastTime);
                         break;
@@ -112,21 +107,17 @@ public class Connector extends Activity
                 return mServer.createPacketQueue();
             }
 
-        } catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public PacketQueue attachGameToClient(String name)
-    {
-        Logger.log(Logger.DEBUG, TAG, "Connecting mClient pipe: " + name);
-        try
-        {
+    public PacketQueue attachGameToClient(String name) {
+        Logger.log(Logger.DEBUG, TAG, "Connecting mClient pipe: ".concat(name));
+        try {
 
-            switch(typeOfConnection)
-            {
+            switch (typeOfConnection) {
                 case Constants.CONNECTION_TYPE_CLASSIC:
                     mClient = new ClientBluetoothCLASSIC(devices.get(deviceNames.indexOf(name)));
                     devices.clear();
@@ -141,47 +132,41 @@ public class Connector extends Activity
             }
 
             return mClient.createPacketQueue();
-        } catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
 
         }
         return null;
     }
 
-    public boolean hasDevices()
-    {
+    public boolean hasDevices() {
         return lastDiscoveredDevice < devices.size();
     }
 
-    public String discoveredDevice()
-    {
+    public String discoveredDevice() {
         String s = deviceNames.get(lastDiscoveredDevice);
         lastDiscoveredDevice++;
         return s;
     }
 
     // For mClient
-    public void startDiscovery()
-    {
+    @SuppressLint("MissingPermission")
+    public void startDiscovery() {
         BluetoothAdapter adapter;
 
-        switch(typeOfConnection)
-        {
+        switch (typeOfConnection) {
             case Constants.CONNECTION_TYPE_CLASSIC:
-                mBluetoothBroadcastReceiver = new BroadcastReceiver()
-                {
+                mBluetoothBroadcastReceiver = new BroadcastReceiver() {
 
                     @Override
-                    public void onReceive(Context context, Intent intent)
-                    {
-                        BluetoothDevice bdevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                        String name = bdevice.getName() + " " + bdevice.getAddress();
+                    public void onReceive(Context context, Intent intent) {
+                        BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                        String name = device.getName().concat(" ").concat(device.getAddress());
                         if(!deviceNames.contains(name))
                         {
-                            devices.add(bdevice);
+                            devices.add(device);
                             deviceNames.add(name);
-                            Logger.log(Logger.INFO, TAG, "Found new device:" + name);
+                            Logger.log(Logger.INFO, TAG, "Found new device:".concat(name));
                         }
                     }
                 };
@@ -206,6 +191,7 @@ public class Connector extends Activity
     }
 
     // Stop discovery
+    @SuppressLint("MissingPermission")
     public void stopDiscovery()
     {
         BluetoothAdapter adapter;
@@ -228,6 +214,7 @@ public class Connector extends Activity
     }
 
     // For bluetoothServer
+    @SuppressLint("MissingPermission")
     public void broadcastServerInformation()
     {
         mBluetoothEnabled = true;
@@ -253,6 +240,7 @@ public class Connector extends Activity
         }
     }
 
+    @SuppressLint("MissingPermission")
     public boolean isBluetoothEnabled()
     {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -478,8 +466,9 @@ public class Connector extends Activity
         Display.Mode[] mode =  getWindowManager().getDefaultDisplay().getSupportedModes();
 
         // TODO Show Display Modes in the Options
-        for(int idx=0;idx<mode.length;idx++){
-            Logger.log(Logger.INFO,TAG, "Refreshrate Mode:" +mode[idx].getRefreshRate());
+        for(int idx=0;idx<mode.length;idx++)
+        {
+            Logger.log(Logger.INFO,TAG, "Refreshrate Mode:".concat(Float.toString(mode[idx].getRefreshRate())));
         }
 
         // Logger.log(Logger.VERBOSE,TAG,(String.format("0x%08X", NativeInterface.initFreeType())));

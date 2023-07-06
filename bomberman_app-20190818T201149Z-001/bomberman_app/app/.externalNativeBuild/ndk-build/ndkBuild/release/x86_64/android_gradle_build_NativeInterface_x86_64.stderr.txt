@@ -1,7 +1,0 @@
-C:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/src/jni/NativeInterface.cpp:14:86: warning: unused parameter 'env' [-Wunused-parameter]
-JNIEXPORT jlong JNICALL Java_main_nativeclasses_NativeInterface_initFreeType(JNIEnv *env, jclass type) {
-                                                                                     ^
-C:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/src/jni/NativeInterface.cpp:14:98: warning: unused parameter 'type' [-Wunused-parameter]
-JNIEXPORT jlong JNICALL Java_main_nativeclasses_NativeInterface_initFreeType(JNIEnv *env, jclass type) {
-                                                                                                 ^
-2 warnings generated.

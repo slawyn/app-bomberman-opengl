@@ -53,9 +53,9 @@ public abstract class ShaderProgram {
                     body.append('\n');
                 }
             } catch (IOException e) {
-                throw new RuntimeException("Could not open resource:" + resourceId, e);
+                throw new RuntimeException("Could not open resource:".concat(Integer.toString(resourceId)));
             } catch (Resources.NotFoundException nfe) {
-                throw new RuntimeException("Resource not found:" + resourceId, nfe);
+                throw new RuntimeException("Resource not found:".concat(Integer.toString(resourceId)));
             } return body.toString();
         }
     }

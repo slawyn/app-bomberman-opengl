@@ -46,7 +46,7 @@ public class ClientBluetoothCLASSIC extends Client
             try
             {
 
-                Logger.log(Logger.DEBUG, TAG, "Services: " + mServerDevice.fetchUuidsWithSdp());
+                Logger.log(Logger.DEBUG, TAG, "Services: ".concat(Boolean.toString(mServerDevice.fetchUuidsWithSdp())));
                 serversocket = mServerDevice.createInsecureRfcommSocketToServiceRecord(uuid);
                 serversocket.connect();
 

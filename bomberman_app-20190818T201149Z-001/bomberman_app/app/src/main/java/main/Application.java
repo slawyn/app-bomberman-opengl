@@ -3,11 +3,11 @@ package main;
 import android.os.Build;
 
 import main.communication.PacketQueue;
-import main.game.GameLogic;
-import main.game.NetcodeLogic;
+import main.nativeclasses.GameLogic;
+import main.game.logic.NetcodeLogic;
 import main.game.SceneManager;
 import main.rendering.GameRenderer;
-import main.rendering.animation.DisplayManager;
+import main.rendering.display.DisplayManager;
 import main.sounds.SoundManager;
 
 import static main.Constants.*;
@@ -31,7 +31,7 @@ public class Application implements Runnable
     Application(Connector connector,GameRenderer gr)
     {
         mConnector = connector;
-        mDisplayManager = gr.getmDisplayManager();
+        mDisplayManager = gr.getDisplayManager();
         mGameRenderer = gr;
 
 
@@ -49,11 +49,6 @@ public class Application implements Runnable
         app.start();
     }
 
-    private boolean updateGamePhaseTime(int dt)
-    {
-        return  (mAppPhaseTime += dt) >= mAppWaitTime;
-    }
-
     private void phaseDelay(int wait)
     {
         mAppWaitTime = mAppPhaseTime + wait;
@@ -62,7 +57,7 @@ public class Application implements Runnable
     /////////////////////
     // All Game States //
     /////////////////////
-    private void updateLogic(int dt, int[] input)
+    private void updateApp(int dt, int[] input)
     {
         // 0: x
         // 1: y
@@ -71,7 +66,7 @@ public class Application implements Runnable
         // 4: y2
         // 5: touch
         // 6: player movement player action
-        if(updateGamePhaseTime(dt))
+        if((mAppPhaseTime += dt) >= mAppWaitTime)
         {
             switch(mAppPhase)
             {
@@ -92,7 +87,6 @@ public class Application implements Runnable
                     break;
 
                 case ST_APP_LOAD:
-                    /**/
                     if(mGameRenderer.getLoadedResourcesCount() == mDisplayManager.getResourceCount())
                     {
                         mSceneManager.createSelectionScene();
@@ -105,16 +99,16 @@ public class Application implements Runnable
 
                 // Selection screen
                 case ST_APP_SELECTION:
-
                     if(Build.MODEL.equals("SM-J415FN")) //
                     {
                         mAppPhase = ST_APP_SERVER_DISCOVERABLE; //ST_APP_CLIENT_DISCOVER_BLUETOOTH;
-                    } else if(Build.MODEL.equals("Ulefone_S1")) //SM-J415FN
+                    }
+                    else if(Build.MODEL.equals("Ulefone_S1")) //SM-J415FN
                     {
                         mAppPhase = ST_APP_CLIENT_DISCOVER_BLUETOOTH;
-                    } else
+                    }
+                    else
                     {
-
                         int selectedState = mSceneManager.parseSelection(input);
                         if(selectedState != -1)
                         {
@@ -130,15 +124,16 @@ public class Application implements Runnable
                 // No Bluetooth routines
                 case ST_APP_OFFLINE_START:
                     mSceneManager.createGameScene();
-                    mGameLogicManager.createGameOffline();
+                    mGameLogicManager.createGameLevel(0);
                     mAppPhase = ST_APP_OFFLINE_GAME_RUNNING;
                     break;
 
                 // Running offline game with local input
                 case ST_APP_OFFLINE_GAME_RUNNING:
+                    mSceneManager.setTimer( mGameLogicManager.getGameTime());
                     mGameLogicManager.updateGameTicker();
                     mGameLogicManager.updateGameOfflineInput(input[6]);
-                    mGameLogicManager.updateGameState(dt);
+
                     break;
 
 
@@ -222,7 +217,6 @@ public class Application implements Runnable
                 case ST_APP_CLIENT_GAME_RUNNING:
                     mNetcodeLogicManager.getUpdatesFromServer();
                     mNetcodeLogicManager.updateClientState(dt, input[6]);
-
                     break;
 
                 //////////////////////////////////////////////////
@@ -260,7 +254,15 @@ public class Application implements Runnable
             }
         }
 
-        mSceneManager.updateSceneObjects(dt, input);
+        /* Update other state machines */
+        mGameLogicManager.run(dt);
+        mSceneManager.run(dt, input);
+
+        /* Wait for Bluetooth to render */
+        synchronized(mSyncObject)
+        {
+            mSyncObject.notify();
+        }
     }
 
     @Override
@@ -269,62 +271,66 @@ public class Application implements Runnable
         long frameStartTime;
         long lastframeStartTime = System.nanoTime();
         long deltaMax = 0;
-        long oneSecond = 0;
-        long desiredFrameDelta = SERVER_TICK_TIME * 1000000;      // time in nanoseconds
-        long loopTime;
+        long printPeriodCounter = 0;
+        long desiredFrameDeltaNano = SERVER_TICK_TIME * 1000000;
+        long execTime;
         long accumulator = 0;
         boolean mGameRunning = true;
+        final long printPeriod = 1000;
 
         // Game Loop
         while(mGameRunning)
         {
-            frameStartTime = System.nanoTime();                                             // <------ here starts the frame
+            /* Frame starts here */
+            frameStartTime = System.nanoTime();
             accumulator += frameStartTime - (lastframeStartTime);
             lastframeStartTime = frameStartTime;
 
-            if(accumulator >= desiredFrameDelta)
+
+            if(accumulator >= desiredFrameDeltaNano)
             {
-                // Update Game
-                updateLogic(SERVER_TICK_TIME, mConnector.getInput());
+                /* Update Game */
+                updateApp(SERVER_TICK_TIME, mConnector.getInput());
 
-                loopTime = System.nanoTime() - frameStartTime;
+                /* Update Renderobjects for the next run */
+                mDisplayManager.updateRenderObjectsForGPU(mGameLogicManager, mSceneManager);
 
-                if(loopTime > Globals.mDebugLoopMax)
-                    Globals.mDebugLoopMax = loopTime;
-                else if(loopTime < Globals.mDebugLoopMin)
-                    Globals.mDebugLoopMin = loopTime;
-
-                synchronized(mSyncObject){
-                    mSyncObject.notify();
-                }
-
-                // Update Renderobjects
-                mDisplayManager.updateRenderObjects(mGameLogicManager, mSceneManager);
-
-                loopTime = System.nanoTime() - frameStartTime;
-                if(loopTime > Globals.mDebugLoopTotal)
-                {
-                    Globals.mDebugLoopTotal = loopTime;
-                }
-
-                accumulator -= desiredFrameDelta;
-                if(accumulator > deltaMax)
+                /* Subtract tick time: deltaMax symbolizes max logic update withhold time */
+                if((accumulator -= desiredFrameDeltaNano) > deltaMax)
                 {
                     deltaMax = accumulator;
                 }
 
-                if((oneSecond += SERVER_TICK_TIME) >= 1000)
+                /* @measure server exec logic */
+                if((execTime = System.nanoTime() - frameStartTime) > Globals.mDebugLoopMax)
+                {
+                    Globals.mDebugLoopMax = execTime;
+                }
+                else if(execTime < Globals.mDebugLoopMin)
+                {
+                    Globals.mDebugLoopMin = execTime;
+                }
+
+                /* @measure server exec total */
+                if((execTime = System.nanoTime() - frameStartTime)  > Globals.mDebugLoopTotal)
+                {
+                    Globals.mDebugLoopTotal = execTime;
+                }
+
+                /* Print deltaMax every second */
+                if((printPeriodCounter += SERVER_TICK_TIME)  >= printPeriod)
                 {
                     Logger.logTimes(deltaMax);
-                    oneSecond %= 1000;
+                    printPeriodCounter %= printPeriod;
                     deltaMax = 0;
                 }
 
+                /* Wait to be scheduled */
                 Thread.yield();
-
-            } else
+            }
+            else
             {
-
+                /* Update only when accumulator is >= server_tick*/
             }
         }
         Logger.log(Logger.DEBUG, TAG, Messages.dTextApplicationFinished);

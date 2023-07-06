@@ -84,7 +84,6 @@ public class Button extends SceneObject
                 break;
         }
 
-        mRequiresUpdate = true;
         return released;
     }
 

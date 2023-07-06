@@ -73,7 +73,7 @@ public class ServerWLAN extends Server
                         {
                             newid = generateClientID();
                             mConnections.add(new Connection(socket, newid));
-                            Logger.log(Logger.DEBUG, TAG, "Socket accepted..." + (newid));
+                            Logger.log(Logger.DEBUG, TAG, "Socket accepted...".concat(Integer.toString(newid)));
                         }
                     } catch(IOException e)
                     {

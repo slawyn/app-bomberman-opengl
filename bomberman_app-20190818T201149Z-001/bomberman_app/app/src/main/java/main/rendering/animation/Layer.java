@@ -1,39 +1,38 @@
 package main.rendering.animation;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import main.rendering.elements.RenderElement;
 
 public class Layer
 {
     private final static String TAG = "Layer";
-    private RenderObject[] mSortedArrayForGPU;
+    private RenderElement[] mSortedArrayForGPU;
     private int mArraySize;
     private boolean mDirty;
 
-    private ConcurrentLinkedQueue<RenderObject> mNewRenderObjectsQueue;
+    private ConcurrentLinkedQueue<RenderElement> mNewRenderObjectsQueue;
 
     public Layer(int sz)
     {
 
-        mSortedArrayForGPU = new RenderObject[sz];
+        mSortedArrayForGPU = new RenderElement[sz];
         mNewRenderObjectsQueue = new ConcurrentLinkedQueue<>();
         mDirty = true;
     }
 
 
-
-
-    public void addRenderObjectToLayer(RenderObject ro)
+    public void addRenderObjectToLayer(RenderElement ro)
     {
         mNewRenderObjectsQueue.add(ro);
     }
 
-    public RenderObject[] getSortedArray()
+    public RenderElement[] getSortedArray()
     {
         int size = mNewRenderObjectsQueue.size();
         for(int idx = size - 1; idx >= 0; idx--)
         {
-            RenderObject ro = mNewRenderObjectsQueue.remove();
+            RenderElement ro = mNewRenderObjectsQueue.remove();
             add(ro);
         }
 
@@ -42,7 +41,7 @@ public class Layer
             // remove objects
             for(int idx = mArraySize - 1; idx >= 0; --idx)
             {
-                if(mSortedArrayForGPU[idx].removeFromGPUthread)
+                if(mSortedArrayForGPU[idx].removeFromRenderingGpu)
                 {
                     mSortedArrayForGPU[idx] = mSortedArrayForGPU[mArraySize - 1];
                     --mArraySize;
@@ -53,7 +52,7 @@ public class Layer
         return mSortedArrayForGPU;
     }
 
-    public void add(RenderObject ro)
+    public void add(RenderElement ro)
     {
         if(mArraySize < mSortedArrayForGPU.length)
         {
@@ -120,7 +119,7 @@ public class Layer
 
     private void exchange(int i, int j)
     {
-        RenderObject temp = mSortedArrayForGPU[i];
+        RenderElement temp = mSortedArrayForGPU[i];
         mSortedArrayForGPU[i] = mSortedArrayForGPU[j];
         mSortedArrayForGPU[j] = temp;
     }

@@ -32,7 +32,7 @@ public class ShaderLoader {
         final int[]compileStatus=new int[1];
         glGetShaderiv(shaderObjectId,GL_COMPILE_STATUS,compileStatus,0);
         //Print the shader info log to the Android log output
-        Logger.log(Logger.DEBUG,TAG,"Results of compiling source:"+"\n"+glGetShaderInfoLog(shaderObjectId));//shaderCode+"\n:"+glGetShaderInfoLog(shaderObjectId));
+        Logger.log(Logger.DEBUG,TAG,"Results of compiling source:\n".concat(glGetShaderInfoLog(shaderObjectId)));//shaderCode+"\n:"+glGetShaderInfoLog(shaderObjectId));
 
         if(compileStatus[0]==0){
             glDeleteShader(shaderObjectId);
@@ -57,7 +57,7 @@ public class ShaderLoader {
         final int [] linkStatus = new int[1];
         glGetProgramiv(programObjectId, GL_LINK_STATUS, linkStatus, 0);
 
-        Logger.log(Logger.DEBUG,TAG, "Results of linking PROGRAM:\n"+glGetProgramInfoLog(programObjectId));
+        Logger.log(Logger.DEBUG,TAG, "Results of linking PROGRAM:\n".concat(glGetProgramInfoLog(programObjectId)));
 
         if(linkStatus[0] == 0){
 
@@ -74,7 +74,7 @@ public class ShaderLoader {
         final int[] validateStatus = new int[1];
         glGetProgramiv(programObjectId, GL_VALIDATE_STATUS, validateStatus,0);
 
-        Logger.log(Logger.DEBUG,TAG,"Results of validating PROGRAM: "+validateStatus[0]+"\nLog:"+glGetProgramInfoLog(programObjectId));
+        Logger.log(Logger.DEBUG,TAG,String.format("Results of validating PROGRAM: %d \nLog:%s",validateStatus[0],glGetProgramInfoLog(programObjectId)));
 
         return validateStatus[0] != 0;
     }

@@ -32,20 +32,19 @@ public class Touch extends SceneObject {
                     mPositionX = - 1000;
                     mPositionY = - 1000;
                     mState = Constants.STATE_UNPRESSED;
-                    mRequiresUpdate = true;
                 }
-                else{
+                else
+                {
                     mPositionX = (input[mInputSelector]);
                     mPositionY = (input[mInputSelector+1]);
-                    mRequiresUpdate = true;
                 }
                 break;
             case Constants.STATE_UNPRESSED:
-                if(input[mInputSelector+2]>0){
+                if(input[mInputSelector+2]>0)
+                {
                     mPositionX = (input[mInputSelector]);
                     mPositionY = (input[mInputSelector+1]);
                     mState = Constants.STATE_PRESSED;
-                    mRequiresUpdate = true;
                 }
                 break;
         }

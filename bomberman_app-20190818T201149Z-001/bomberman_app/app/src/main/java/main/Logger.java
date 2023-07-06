@@ -13,8 +13,8 @@ public class Logger
     public static final int WARNING = 3;
     public static final int ERROR = 4;
     public static final int ASSERT = 5;
-    static StringBuilder mOutput = new StringBuilder();
-    static StringBuilder mOutput2 = new StringBuilder();
+    static StringBuilder mOutput = new StringBuilder(100);
+    static StringBuilder mOutput2 = new StringBuilder(100);
     static final String LOG = String.format("%-8s", "BOMBER");
     static final String TIME = String.format("%-8s", "TIME");
     static int mColors;
@@ -45,9 +45,9 @@ public class Logger
         mOutput2.append("\n>------------------------------<\n");
         mOutput2.append("Free Memory: (KB): ");
         mOutput2.append(getAvailableMemory());
-        mOutput2.append("\nLoop: time offset (us): ");
+        mOutput2.append("\nSV: offset(us): ");
         mOutput2.append(deltaerror / 1000);
-        mOutput2.append(" loop(us): [");
+        mOutput2.append("\n    loop  (us): [");
         mOutput2.append(Globals.mDebugLoopMin / 1000);
         mOutput2.append(", ");
         mOutput2.append(Globals.mDebugLoopMax / 1000);
