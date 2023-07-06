@@ -1,1 +1,0 @@
-make: 'C:/Users/Unixt/Downloads/bomberman_app-2020_10_05/bomberman_app-20190818T201149Z-001/bomberman_app/app/build/intermediates/ndkBuild/debug/obj/local/x86_64/libNativeInterface.so' is up to date.

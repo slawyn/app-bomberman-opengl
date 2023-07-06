@@ -1,2 +1,0 @@
-[x86_64] Compile++      : NativeInterface <= NativeInterface.cpp
-[x86_64] SharedLibrary  : libNativeInterface.so
