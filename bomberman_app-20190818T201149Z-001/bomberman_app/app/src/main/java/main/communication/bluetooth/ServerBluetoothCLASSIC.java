@@ -70,7 +70,7 @@ public class ServerBluetoothCLASSIC extends Server
                         {
                             newid = generateClientID();
                             mConnections.put(newid, new BluetoothConnection(socket, newid));
-                            Logger.log(Logger.DEBUG, TAG, "Socket accepted..." + (newid));
+                            Logger.log(Logger.DEBUG, TAG, "Socket accepted...".concat(Integer.toString(newid)));
                         }
                     }
 

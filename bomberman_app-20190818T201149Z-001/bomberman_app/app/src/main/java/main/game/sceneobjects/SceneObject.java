@@ -1,8 +1,8 @@
 package main.game.sceneobjects;
 
 
-import main.game.EventObject;
-import main.rendering.animation.RenderObject;
+import main.game.events.EventObject;
+import main.rendering.elements.RenderElement;
 
 public class SceneObject extends EventObject
 {
@@ -13,10 +13,10 @@ public class SceneObject extends EventObject
     public int mState;
     public int mPositionX;
     public int mPositionY;
-    public boolean mRequiresUpdate;
     public boolean mRemove;
+    public int[] mAdditionals;
     public int mLayer;
-    public RenderObject ro;
+    public RenderElement ro;
 
     public SceneObject(int objtype, int objid)
     {
@@ -24,12 +24,12 @@ public class SceneObject extends EventObject
         mObjectType = objtype;
         mState = -1;
         mPreviousState = -1;
-        mRequiresUpdate = true;
-    }
-
-    public boolean stateChanged(){
-        return mState != mPreviousState;
     }
 
     public void updateState(long dt, int[] input){};
+
+    public int[] getUpdatedAdditionals()
+    {
+        return mAdditionals;
+    }
 }

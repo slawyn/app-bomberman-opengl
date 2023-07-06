@@ -27,11 +27,14 @@ LOCAL_SRC_FILES:= \
 	src/truetype/truetype.c \
 	src/cff/cff.c \
 	src/psnames/psnames.c \
-	src/pshinter/pshinter.c\
+	src/pshinter/pshinter.c
 
 LOCAL_C_INCLUDES += \
+    $(LOCAL_PATH)/code/misc\
+    $(LOCAL_PATH)/code/objects\
 	$(LOCAL_PATH)/builds \
-	$(LOCAL_PATH)/include
+	$(LOCAL_PATH)/include\
+	$(LOCAL_PATH)
 
 LOCAL_CFLAGS += -W -Wall
 LOCAL_CFLAGS += -fPIC -DPIC
@@ -45,17 +48,28 @@ include $(BUILD_STATIC_LIBRARY)
 ##########################################
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := libNativeInterface
+LOCAL_MODULE := libGameLogic
 
 # compile in ARM mode, since the glyph loader/renderer is a hotspot
 # when loading complex pages in the browser
 #
-LOCAL_ARM_MODE := arm
-LOCAL_SRC_FILES:= NativeInterface.cpp
+LOCAL_ARM_MODE:= arm
+LOCAL_SRC_FILES:= \
+	GameLogic.cpp\
+    code/misc/Hitbox.cpp\
+    code/objects/Block.cpp\
+    code/objects/Bomb.cpp\
+    code/objects/Crate.cpp\
+    code/objects/Explosion.cpp\
+    code/objects/Player.cpp\
+    code/misc/Level.cpp
 
-LOCAL_C_INCLUDES += $(LOCAL_PATH)\
-    $(LOCAL_PATH)/builds \
-	$(LOCAL_PATH)/include
+LOCAL_C_INCLUDES += \
+	$(LOCAL_PATH)/builds \
+	$(LOCAL_PATH)/include\
+    $(LOCAL_PATH)/code/misc\
+    $(LOCAL_PATH)/code/objects\
+	$(LOCAL_PATH)
 
 LOCAL_STATIC_LIBRARIES:=libfreetype
 LOCAL_CFLAGS += -W -Wall

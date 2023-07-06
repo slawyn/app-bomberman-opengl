@@ -7,6 +7,8 @@ import java.util.UUID;
 
 public final class Constants
 {
+
+
     /* Network */
     public final static int PACKET_HEADER_SIZE = 5;
     public final static int PACKET_MIN_SIZE = PACKET_HEADER_SIZE + 4;
@@ -60,10 +62,11 @@ public final class Constants
     /* Size configurations*/
     public final static int NUMBER_OF_RENDER_OBJECTS = 50;
     public final static int NUMBER_OF_ANIMATED_OBJECTS = 50;
+    public final static int NUMBER_OF_TEXTURES = 300;
 
 
     public final static int EXTRACT_OBJ_ID = 0x00000fff;    // TODO if we ever have object overrun then there we need to change this approach
-    public final static int EXTRACT_OBJ_TYPE = 0xfff00000;
+    public final static int EXTRACT_OBJ_TYPE = 0xfff000;
     //////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////
     /* DEBUG_INFORMATION*/
@@ -82,12 +85,6 @@ public final class Constants
     public final static int FIELD_X2 = (int) ((GAME_WIDTH - FIELD_X1));   // out of 1920
     public final static int FIELD_Y1 = (int) ((36) * SCALE_FACTOR);
     public final static int FIELD_Y2 = (int) ((GAME_HEIGHT - 10));     // out of 1080
-
-    /* for 1920 x 1080 , field is 1540 x 1034
-    public final static int FIELD_X1 = (int) ((190) *SCALE_FACTOR);//190;
-    public final static int FIELD_X2 = (int)((1540 + 190));   // out of 1920
-    public final static int FIELD_Y1 = (int) ((36) * SCALE_FACTOR);
-    public final static int FIELD_Y2 = (int) ((GAME_HEIGHT -FIELD_Y1) );     // out of 1080*/
 
 
     public final static int NUMBER_OF_X_CELLS = 11;
@@ -110,67 +107,20 @@ public final class Constants
     public final static int CRATE_BOX_OFFSET_X = 0;
     public final static int CRATE_BOX_OFFSET_Y = 0;
 
-    // if player sprite is 180 x 180
-    public final static int PLAYER_BOX_WIDTH = (int) (CELLSIZE_X / 2.34f);
-    public final static int PLAYER_BOX_HEIGHT = (int) (CELL_RATIO * PLAYER_BOX_WIDTH);
-    public final static int PLAYER_BOX_OFFSET_X = (int) (CELLSIZE_X / 2.34f);
-    public final static int PLAYER_BOX_OFFSET_Y = (int) ((PLAYER_BOX_OFFSET_X + CELLSIZE_X * 0.78571) * CELL_RATIO);
-    public final static int PLAYER_BASE_SPEED = 6;
-    public final static int PLAYER_BOMB_STARTING_AMOUNT = 10;
-    public final static int PLAYER_BOMB_EXPLOSION_STRENGTH = 1;
-
     // if sprite is
     public final static int BOMB_BOX_WIDTH = (int) (CELLSIZE_X / 2.34f);
     public final static int BOMB_BOX_HEIGHT = (int) (CELL_RATIO * BOMB_BOX_WIDTH);
     public final static int BOMB_BOX_OFFSET_X = (int) ((CELLSIZE_X - BOMB_BOX_WIDTH) / 2);
     public final static int BOMB_BOX_OFFSET_Y = (int) (BOMB_BOX_OFFSET_X * CELL_RATIO);
-    public final static int BOMB_TIMER = 3000;
-    public final static long EXPLOSION_TIME = 1000;
-
-    public final static int[][] STARTING_CELL_POSITIONS = new int[][]{{0, 0}, {10, 0}};
 
     public final static int LEVEL1_MAP = 0;
     public final static int LEVEL2_MAP = 1;
-    public final static int[][][] LEVELS = new int[][][]
-            {{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    {0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0},
-                    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    {0, 1, 0, 1, 0, 2, 0, 1, 2, 1, 2},
-                    {0, 0, 0, 0, 2, 0, 2, 2, 0, 0, 0},
-                    {0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0},
-                    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    {0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0},
-                    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    {0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0},
-                    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            },
-                    {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0},
-                            {0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 1, 0, 0, 0, 2, 0, 0, 2, 1, 2},
-                            {0, 0, 2, 0, 2, 0, 2, 2, 2, 0, 0},
-                            {0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0},
-                            {0, 0, 2, 0, 2, 0, 0, 2, 0, 0, 0},
-                            {0, 1, 0, 2, 0, 0, 0, 0, 0, 1, 0},
-                            {0, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0},
-                            {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    },
 
-                    {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                    },
 
-            };
+    public final static float PLAYER_BOX_RATIO_X = 2.34f;
+    public final static float PLAYER_BOX_RATIO_Y = 0.78571f;
+    public final static int PLAYER_BOX_OFFSET_X  =  (int)((CELLSIZE_X / PLAYER_BOX_RATIO_X));
+    public final static int PLAYER_BOX_OFFSET_Y  =     (int)(((PLAYER_BOX_OFFSET_X + CELLSIZE_X * PLAYER_BOX_RATIO_Y) * CELL_RATIO));
 
     /* Other Constants */
     public final static int CONNECTION_TYPE_CLASSIC = 0;
