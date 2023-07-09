@@ -36,31 +36,16 @@ public class DisplayManager
     private final String TAG = "DisplayManager";
 
     public final static float SCALE_FACTOR = 1.0f;
-    public final static float GAME_WIDTH = 1920 * SCALE_FACTOR;
-    public final static float GAME_HEIGHT = 1080 * SCALE_FACTOR;
 
-
-    /* for 1920 x 1080 , field is 1540 x 1034*/
-    public final static int FIELD_X1 = (int) ((190) * SCALE_FACTOR);//190;
-    public final static int FIELD_X2 = (int) ((GAME_WIDTH - FIELD_X1));   // out of 1920
-    public final static int FIELD_Y1 = (int) ((36) * SCALE_FACTOR);
-    public final static int FIELD_Y2 = (int) ((GAME_HEIGHT - 10));     // out of 1080
-
-
-    public final static int NUMBER_OF_X_CELLS = 11;
-    public final static int NUMBER_OF_Y_CELLS = 11;
-
-    // CELLSIZEX = 140    // CELLSIZEY = 94
-    public final static int CELLSIZE_X = (FIELD_X2 - FIELD_X1) / NUMBER_OF_X_CELLS;
-    public final static int CELLSIZE_Y = (FIELD_Y2 - FIELD_Y1) / NUMBER_OF_Y_CELLS;
-
-    public static float mScaleFactor = 1;
-    public static int mGamePortWidth = 1920;
-    public static int mGamePortHeight = 1080;
+    public static float mScaleFactor = SCALE_FACTOR;
+    public final static float GAME_HEIGHT= 1080;
+    public final static float GAME_WIDTH = 1920;
+    public static int mGamePortWidth = (int)GAME_WIDTH;
+    public static int mGamePortHeight = (int)GAME_HEIGHT;
     public static int[] gamePortOffsetXY = {0, 0};
     public static int[] gameBombOffsetXY      = {-136 / 2, -136/2};
-    public static int[] gameObjectOffsetXY    = {-136 / 2, (CELLSIZE_Y - 136)-CELLSIZE_Y/2};
-    public static int[] gameExplosionOffsetXY = {0, 0 + ((CELLSIZE_Y - 100))};
+    public static int[] gameObjectOffsetXY    = {-136 / 2, (94 - 136)-94/2};
+    public static int[] gameExplosionOffsetXY = {0, 0 + ((94 - 100))};
     public static int[] gamePlayerOffsetXY = {-180/2, -180/2 - 40};
 
     // Scene objects

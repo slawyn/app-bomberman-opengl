@@ -40,8 +40,8 @@ import static android.opengl.Matrix.orthoM;
 import static android.opengl.Matrix.setIdentityM;
 import static android.opengl.Matrix.translateM;
 import static main.Constants.NUMBER_OF_TEXTURES;
-import static main.rendering.display.DisplayManager.GAME_HEIGHT;
-import static main.rendering.display.DisplayManager.GAME_WIDTH;
+import static main.rendering.display.DisplayManager.mGamePortHeight;
+import static main.rendering.display.DisplayManager.mGamePortWidth;
 
 /* View, used as main game loop */
 public class GameRenderer implements GLSurfaceView.Renderer
@@ -96,21 +96,21 @@ public class GameRenderer implements GLSurfaceView.Renderer
     {
         int newScreenWidth, newScreenHeight;
         float ratioPhysicScreen = (float) mMeasuredWidth / (float) mMeasuredHeight;
-        float ratioWanted = GAME_WIDTH / GAME_HEIGHT;
+        float ratioWanted = mGamePortWidth / (float)mGamePortHeight;
 
         if(ratioWanted > ratioPhysicScreen)
         {
             newScreenWidth = (mMeasuredWidth);
-            newScreenHeight = (int) (mMeasuredWidth * (GAME_HEIGHT) / (GAME_WIDTH));
+            newScreenHeight = (int) (mMeasuredWidth * (mGamePortHeight) / (mGamePortWidth));
         }
         else
         {
-            newScreenWidth = (int) (mMeasuredHeight / (GAME_HEIGHT) * (GAME_WIDTH));
+            newScreenWidth = (int) (mMeasuredHeight / (mGamePortHeight) * (mGamePortWidth));
             newScreenHeight = (mMeasuredHeight);
         }
 
         mDisplayManager.setPrimaries( newScreenWidth, newScreenHeight,
-                            (float) newScreenWidth / GAME_WIDTH,
+                            (float) newScreenWidth / mGamePortWidth,
                                 (mMeasuredWidth - newScreenWidth) / 2,
                                 (mMeasuredHeight - newScreenHeight) / 2);
         mDisplayManager.createQuads();

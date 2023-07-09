@@ -35,7 +35,6 @@ public class GameLogic
     private Events mRemovalEvents;
 
     private int mNextFreeGameObject;
-    private int mNextFreeSlotForGameObject;
     private final GameElement[] mGameObjectPool;
     private int mGameTime;
 
@@ -48,7 +47,6 @@ public class GameLogic
         mBombEvents = new Events();
         mGameObjectPool = new GameElement[maxobjects];
         mNextFreeGameObject = 0;
-        mNextFreeSlotForGameObject = 0;
         mGameTime = 0;
     }
 
