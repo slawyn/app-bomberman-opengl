@@ -148,17 +148,21 @@ public class AnimationManager {
         return mLayers;
     }
 
-    public void loadAnimations(ConcurrentLinkedQueue<int[]> loadables) {
+    public void loadAnimations(Loader loader) {
 
-        for(int i = 0, texIndex = 0; i < DRAWABLES.length; i++)
+        for(int drawnum = 0, texIndex = 0; drawnum < DRAWABLES.length; drawnum++)
         {
-            final int type = DRAWABLES[i][0];
-            final int numOfFrames = DRAWABLES[i][2];
+            final int type = DRAWABLES[drawnum][0];
+            final int resource = DRAWABLES[drawnum][1];
+            final int numOfFrames = DRAWABLES[drawnum][2];
             final int animtextureindex = texIndex;
 
-            // create parameters: first parameter is duration, second is looped
+            loader.putLoadable(new Loadable(animtextureindex,numOfFrames,resource));
+
+            // Create parameters: duration, looped
             int[] animparams;
             int[] sequence;
+
             switch(type)
             {
                 case ANIMATION_LOADING:
@@ -309,13 +313,6 @@ public class AnimationManager {
                     }
                     break;
             }
-
-
-            int[] load = new int[3];
-            load[0] = animtextureindex;
-            load[1] = numOfFrames;
-            load[2] = DRAWABLES[i][1];
-            loadables.add(load);
 
             texIndex += numOfFrames;
         }

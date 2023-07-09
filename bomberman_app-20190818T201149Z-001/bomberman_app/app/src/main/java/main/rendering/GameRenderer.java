@@ -16,6 +16,8 @@ import main.Logger;
 import main.game.SceneManager;
 import main.rendering.animation.Animation;
 import main.rendering.display.DisplayManager;
+import main.rendering.display.Loadable;
+import main.rendering.display.Loader;
 import main.rendering.elements.DebugElement;
 import main.rendering.animation.Layer;
 import main.rendering.color.ColorShaderProgram;
@@ -109,7 +111,7 @@ public class GameRenderer implements GLSurfaceView.Renderer
             newScreenHeight = (mMeasuredHeight);
         }
 
-        mDisplayManager.setPrimaries( newScreenWidth, newScreenHeight,
+        mDisplayManager.setLoaderConfig( newScreenWidth, newScreenHeight,
                             (float) newScreenWidth / mGamePortWidth,
                                 (mMeasuredWidth - newScreenWidth) / 2,
                                 (mMeasuredHeight - newScreenHeight) / 2);
@@ -121,20 +123,20 @@ public class GameRenderer implements GLSurfaceView.Renderer
     public void loadTextures()
     {
         /* Loadables are fed from the main thread */
-        if(mDisplayManager.hasLoadables())
+        Loader loader = mDisplayManager.getLoader();
+        if(loader.hasLoadables())
         {
-            int[] data = mDisplayManager.getLoadable();
-            BitmapFactory.Options opts = mDisplayManager.getLoaderOptions();
-            Bitmap bigBitmap = BitmapFactory.decodeResource(mResources, data[2], opts);
+            Loadable loadable = loader.getLoadable();
+            Bitmap bigBitmap = BitmapFactory.decodeResource(mResources, loadable.resourceid, loader.getLoaderOptions());
 
-            int width = bigBitmap.getWidth() / data[1];
+            int width = bigBitmap.getWidth() / loadable.numberoftextures;
             int height = bigBitmap.getHeight();
 
             // Loader texture in OPENGL Memory
-            for(int c = 0; c < data[1]; c++)
+            for(int c = 0; c < loadable.numberoftextures; c++)
             {
                 Bitmap bitmap = Bitmap.createBitmap(bigBitmap, width * c, 0, width, height);
-                mTextures[data[0] + c] = TextureLoader.loadTexture(bitmap);
+                mTextures[loadable.texturebaseindex + c] = TextureLoader.loadTexture(bitmap);
                 bitmap.recycle();
                 ++mTextureIndex;
             }

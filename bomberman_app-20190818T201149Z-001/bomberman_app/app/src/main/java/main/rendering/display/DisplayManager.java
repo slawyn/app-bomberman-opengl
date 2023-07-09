@@ -60,12 +60,10 @@ public class DisplayManager
     private SparseArray<VertexArray> mVertexData;
 
     private int mTotalNumberOfRenderObjects;
-
     public RenderElement[] mFreeRenderElements;
 
 
-    public LoaderConfig mLoaderConfig;
-    private ConcurrentLinkedQueue<int[]> mLoadables;
+    public Loader mLoader;
     private SparseArray<RenderElement> mRos;
     private AnimationManager mAnimationManager;
 
@@ -86,12 +84,6 @@ public class DisplayManager
         }
 
         mRos = new SparseArray<>(NUMBER_OF_RENDER_OBJECTS);
-        loadAnimations();
-    }
-
-    public BitmapFactory.Options getLoaderOptions()
-    {
-        return mLoaderConfig.opts;
     }
 
     public int getResourceCount()
@@ -99,8 +91,11 @@ public class DisplayManager
         return mAnimationManager.getDrawableCount();
     }
 
-    public void setPrimaries(int width, int height, float scalefactor, int portx, int porty)
+    public void setLoaderConfig(int width, int height, float scalefactor, int portx, int porty)
     {
+
+        mLoader = new Loader(mGamePortWidth, scalefactor);
+
         mGamePortWidth = width;
         mGamePortHeight = height;
         mScaleFactor = scalefactor;
@@ -123,18 +118,19 @@ public class DisplayManager
         if (ro == null)
         {
             ro = getFreeRenderObjectFromPool();
-            int laynum = 1;
+            final int layerAnimation = 1;
+            final int layerHitbox = 4;
 
             /* Save previous movement state */
             ro.init(go.mObjectType,go.mObjectSubtype, go.getState(), unique);
-            mAnimationManager.createAnimatedObject(ro, laynum);
+            mAnimationManager.createAnimatedObject(ro, layerAnimation);
             mRos.put(unique, ro);
 
             /* Add a visible hitbox */
             if(drawhitbox)
             {
                 ro.addDebugObject(go, mScaleFactor);
-                mAnimationManager.getLayers().get(4).addRenderObjectToLayer(ro.mDebugObject);
+                mAnimationManager.getLayers().get(layerHitbox).addRenderObjectToLayer(ro.mDebugObject);
             }
         }
         return ro;
@@ -163,7 +159,7 @@ public class DisplayManager
         mAnimationManager.returnAnimationsToPool(ro.getUsedAnimatedObjects());
     }
 
-    public void updateGameManager(GameLogic gamemanager)
+    private void updateGameManager(GameLogic gamemanager)
     {
         Events goupdates = gamemanager.getUpdateEvents();
         Events goremovals = gamemanager.getRemovalEvents();
@@ -177,12 +173,12 @@ public class DisplayManager
 
             /* Translate and sort after 'Z' all animations that are attached to the render object */
             long pos[] = go.getPositionXY();
-            ro.setTranslation(pos[0] * mScaleFactor,
-                    pos[1] * mScaleFactor);
+            ro.setTranslation(pos[0] * mScaleFactor, pos[1] * mScaleFactor);
             ro.updateSortCriteria(go.getZ());
             mAnimationManager.updateAnimatedObject(ro, go.getState());
         }
 
+        /* Remove objects */
         sz = goremovals.getCount();
         while (--sz >= 0)
         {
@@ -193,7 +189,7 @@ public class DisplayManager
         goremovals.resetEvents();
         goupdates.resetEvents();
     }
-    public void updateSceneManager(SceneManager manager)
+    private void updateSceneManager(SceneManager manager)
     {
         // Updates RenderObjects from SceneManager
         Events soupdates = manager.getUpdateEvents();
@@ -237,24 +233,6 @@ public class DisplayManager
         RenderElement.latch();
     }
 
-    /* Load animations into OPENGL Space
-    * Textures are loaded on the opengl thread */
-    private void loadAnimations()
-    {
-        mLoadables = new ConcurrentLinkedQueue<>();
-        mAnimationManager.loadAnimations(mLoadables);
-    }
-
-    public boolean hasLoadables()
-    {
-        return !mLoadables.isEmpty();
-    }
-
-    public int[] getLoadable()
-    {
-        return mLoadables.remove();
-    }
-
     public VertexArray getQuad(int type)
     {
         return mVertexData.get(type);
@@ -262,7 +240,9 @@ public class DisplayManager
 
     public void recalculateOffsets()
     {
-        mLoaderConfig = new LoaderConfig(mScaleFactor);
+        /* Load animations into OPENGL Space
+        * Textures are loaded on the opengl thread */
+        mAnimationManager.loadAnimations(mLoader);
         gameBombOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameBombOffsetXY[0] * mScaleFactor);
         gameBombOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameBombOffsetXY[1] * mScaleFactor);
 
@@ -445,18 +425,7 @@ public class DisplayManager
         mVertexData.put(SOBJ_TIMER, vert78x78);
     }
 
-
-    class LoaderConfig
-    {
-        BitmapFactory.Options opts;
-        LoaderConfig(float scale)
-        {
-            opts = new BitmapFactory.Options();
-            opts.inScaled = true;
-            opts.inDensity = (int) GAME_WIDTH;
-            opts.inTargetDensity = (int) (GAME_WIDTH * scale);
-            opts.inJustDecodeBounds = false;
-            opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        }
+    public Loader getLoader() {
+        return mLoader;
     }
 }
