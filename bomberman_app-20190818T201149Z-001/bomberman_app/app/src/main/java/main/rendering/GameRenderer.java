@@ -111,12 +111,11 @@ public class GameRenderer implements GLSurfaceView.Renderer
             newScreenHeight = (mMeasuredHeight);
         }
 
-        mDisplayManager.setLoaderConfig( newScreenWidth, newScreenHeight,
-                            (float) newScreenWidth / mGamePortWidth,
-                                (mMeasuredWidth - newScreenWidth) / 2,
-                                (mMeasuredHeight - newScreenHeight) / 2);
-        mDisplayManager.createQuads();
-        mDisplayManager.recalculateOffsets();
+
+        mDisplayManager.load(newScreenWidth, newScreenHeight,
+                (float) newScreenWidth / mGamePortWidth,
+                (mMeasuredWidth - newScreenWidth) / 2,
+                (mMeasuredHeight - newScreenHeight) / 2);
     }
 
 
