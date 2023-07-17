@@ -38,6 +38,8 @@ public final class Constants
     public static final int STATE_MOVELEFT = 3;
     public static final int STATE_MOVERIGHT = 4;
     public static final int STATE_DEAD = 5;
+    public static final int STATE_REMOVE = 6;
+    public static final int STATE_EXPLODED = 7;
     public static final int STATE_PRESSED = 6;
     public static final int STATE_UNPRESSED = 7;
     public static final int STATE_DETONATED = 8;

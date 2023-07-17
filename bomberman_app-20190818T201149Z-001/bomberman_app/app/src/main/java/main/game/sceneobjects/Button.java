@@ -1,10 +1,11 @@
 package main.game.sceneobjects;
 
 import main.Constants;
+import main.game.SceneElement;
 
 import static main.game.SceneManager.SOBJ_BUTTON;
 
-public class Button extends SceneObject
+public class Button extends SceneElement
 {
     private final int mSizeX;
     private final int mSizeY;

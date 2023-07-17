@@ -11,12 +11,6 @@ extern "C"
                             int16_t i16x,
                             int16_t i16y)
     {
-        /*
-        pxHitbox1->i16Left = (i16x + pxHitbox1->i16OffsetX);
-        pxHitbox1->i16Right = (pxHitbox1->i16Left + pxHitbox1->i16HalfSizeX);
-        pxHitbox1->i16Top = (i16y + pxHitbox1->i16OffsetY);
-        pxHitbox1->i16Bottom = (pxHitbox1->i16Top + pxHitbox1->i16HalfSizeY);
-         */
         pxHitbox1->i16Left = (i16x - pxHitbox1->i16HalfSizeX);
         pxHitbox1->i16Right = (i16x + pxHitbox1->i16HalfSizeX);
         pxHitbox1->i16Top = (i16y - pxHitbox1->i16HalfSizeY);

@@ -10,7 +10,7 @@ import main.Logger;
 import main.communication.PacketQueue;
 import main.communication.SimpleQueue;
 import main.game.Command;
-import main.nativeclasses.GameLogic;
+import main.nativeclasses.GameManager;
 
 
 import static main.Constants.MAX_NUMBER_OF_PLAYERS;
@@ -28,7 +28,7 @@ public class NetcodeLogic
 {
     private final String TAG = "NetcodeLogic";
     private PacketQueue mPacketqueue;
-    private GameLogic mGameLogicManager;
+    private GameManager mGameLogicManager;
 
     private byte mIdentification;
     private int mQunatifiedByteOffset;
@@ -48,7 +48,7 @@ public class NetcodeLogic
     private SparseArray<Integer> mNetworkIdTranslator;
 
 
-    public NetcodeLogic(GameLogic gamelogicmanager, PacketQueue packetqueue)
+    public NetcodeLogic(GameManager gamelogicmanager, PacketQueue packetqueue)
     {
         mGameLogicManager = gamelogicmanager;
         mPacketqueue = packetqueue;

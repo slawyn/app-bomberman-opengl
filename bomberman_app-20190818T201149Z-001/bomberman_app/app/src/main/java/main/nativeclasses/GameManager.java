@@ -4,10 +4,9 @@ import android.annotation.SuppressLint;
 
 import main.game.events.Events;
 
-import static main.Constants.*;
 import static main.nativeclasses.GameElement.OBJ_PLAYR;
 
-public class GameLogic
+public class GameManager
 {
 
     static {
@@ -39,7 +38,7 @@ public class GameLogic
     private int mGameTime;
 
     @SuppressLint("UseSparseArrays")
-    public GameLogic(int maxobjects)
+    public GameManager(int maxobjects)
     {
         mStateUpdateEvents = new Events();
         mRemovalEvents = new Events();
@@ -58,13 +57,13 @@ public class GameLogic
 
     public void updatePlayerInput(int index, byte playerinput)
     {
-        GameLogic.setInput(OBJ_PLAYR,index, playerinput);
+        GameManager.setInput(OBJ_PLAYR,index, playerinput);
     }
 
     public void run(int dt)
     {
         mGameTime +=dt;
-        GameLogic.updateGame(dt);
+        GameManager.updateGame(dt);
     }
 
 
@@ -88,7 +87,7 @@ public class GameLogic
     public void createGameLevel(int level)
     {
         deleteAllGameObjects();
-        GameLogic.createGame();
+        GameManager.createGame();
     }
 
     public void deleteAllGameObjects()
@@ -100,7 +99,7 @@ public class GameLogic
 
     public Events getUpdateEvents()
     {
-        int[] objs = GameLogic.getObjects();
+        int[] objs = GameManager.getObjects();
         int total = objs.length - 1;
         for(int i = total; i >= 0; i--)
         {
@@ -113,7 +112,7 @@ public class GameLogic
 
     public Events getRemovalEvents()
     {
-        int[] objs = GameLogic.getRemovedObjects();
+        int[] objs = GameManager.getRemovedObjects();
         int total = objs.length - 1;
         for(int i = total; i >= 0; i--)
         {

@@ -20,8 +20,7 @@
 
 extern "C"
 {
-static Hitbox_t xHitbox = {.i16OffsetX = (uint16_t)PLAYER_BOX_OFFSET_X,
-        .i16OffsetY = (uint16_t)PLAYER_BOX_OFFSET_Y,
+static Hitbox_t xHitbox = {
         .i16HalfSizeX = (uint16_t)PLAYER_BOX_WIDTH,
         .i16HalfSizeY = (uint16_t)PLAYER_BOX_HEIGHT,
         .i16Top =0,
@@ -52,8 +51,8 @@ void vPlayerGetCollisionPoints(Player_t* pxPlayer, int16_t x[4], int16_t y[4])
 
 void vPlayerGetHitboxValues(Player_t * pxPlayer, jint *jiHitboxes) {
     vHitboxUpdateEdges(&xHitbox, pxPlayer->i16PosX, pxPlayer->i16PosY);
-    jiHitboxes[0] = xHitbox.i16OffsetX;
-    jiHitboxes[1] = xHitbox.i16OffsetY;
+    jiHitboxes[0] = 0;
+    jiHitboxes[1] = 0;
     jiHitboxes[2] = xHitbox.i16HalfSizeX;
     jiHitboxes[3] = xHitbox.i16HalfSizeY;
     jiHitboxes[4] = xHitbox.i16Left;

@@ -12,8 +12,6 @@ extern "C" {
     {
         int32_t i16HalfSizeX;
         int32_t i16HalfSizeY;
-        int32_t i16OffsetX;
-        int32_t i16OffsetY;
         int16_t i16Top;
         int16_t i16Left;
         int16_t i16Bottom;

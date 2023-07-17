@@ -16,7 +16,7 @@
 #define PLAYER_BOMB_STARTING_AMOUNT                             (10)
 #define PLAYER_BOMB_EXPLOSION_STRENGTH                          (1)
 #define BOMB_TIMER                                              (3000)
-#define EXPLOSION_TIME                                          (1000)
+#define EXPLOSION_TIME                                          (2000)
 
 #define GAME_TICKER_START                                       (0)
 

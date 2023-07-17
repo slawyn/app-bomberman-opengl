@@ -1,11 +1,10 @@
 package main.game.sceneobjects;
 
-import static main.game.SceneManager.SOBJ_BACKGROUND_LOADING;
 import static main.game.SceneManager.SOBJ_TIMER;
 
-import main.Constants;
+import main.game.SceneElement;
 
-public class Timer extends SceneObject
+public class Timer extends SceneElement
 {
     public int mTime;
     public int mNewTime;

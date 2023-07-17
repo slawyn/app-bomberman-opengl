@@ -18,9 +18,9 @@ extern "C" {
 
 
 #define OBJ_MASK                    (0xF000)
-JNIEXPORT jlong JNICALL Java_main_nativeclasses_GameLogic_initFreeType(JNIEnv *env, jclass type);
-JNIEXPORT jint JNICALL Java_main_nativeclasses_GameLogic_updateGameTicker(JNIEnv * env, jclass type);
-JNIEXPORT jint JNICALL Java_main_nativeclasses_GameLogic_getState(JNIEnv * env, jclass type, jint i32ObjType, jint i32ObjectStateOffset);
+JNIEXPORT jlong JNICALL Java_main_nativeclasses_GameManager_initFreeType(JNIEnv *env, jclass type);
+JNIEXPORT jint JNICALL Java_main_nativeclasses_GameManager_updateGameTicker(JNIEnv * env, jclass type);
+JNIEXPORT jint JNICALL Java_main_nativeclasses_GameManager_getState(JNIEnv * env, jclass type, jint i32ObjType, jint i32ObjectStateOffset);
 
 JNIEXPORT void JNICALL
 Java_main_nativeclasses_GameLogic_init(JNIEnv * env,
@@ -32,11 +32,11 @@ Java_main_nativeclasses_GameLogic_init(JNIEnv * env,
 
 
 JNIEXPORT void JNICALL
-Java_main_nativeclasses_GameLogic_setInput(JNIEnv * env,
-                         jclass type,
-                         jint i32ObjType,
-                         jint i32ObjectStateOffset,
-                         jbyte ui8Input);
+Java_main_nativeclasses_GameManager_setInput(JNIEnv * env,
+                                             jclass type,
+                                             jint i32ObjType,
+                                             jint i32ObjectStateOffset,
+                                             jbyte ui8Input);
 JNIEXPORT jint JNICALL
 Java_main_nativeclasses_GameLogic_updateState(JNIEnv *env,
                                                     jclass type,
@@ -50,7 +50,7 @@ Java_main_nativeclasses_GameLogic_updateBoundingBoxes(JNIEnv *env,
                                     jint i32ObjType,
                                     jint i32ObjectStateOffset);
 JNIEXPORT jint JNICALL
-        Java_main_nativeclasses_GameLogic_getZ(JNIEnv * env,jclass type,jint i32ObjType,jint i32ObjectStateOffset);
+        Java_main_nativeclasses_GameManager_getZ(JNIEnv * env, jclass type, jint i32ObjType, jint i32ObjectStateOffset);
 
 }
 

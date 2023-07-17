@@ -2,10 +2,11 @@ package main.game.sceneobjects;
 
 
 import main.Constants;
+import main.game.SceneElement;
 
 import static main.game.SceneManager.SOBJ_TOUCH;
 
-public class Touch extends SceneObject {
+public class Touch extends SceneElement {
 
     private int mInputSelector;
     public Touch(int id, int type){

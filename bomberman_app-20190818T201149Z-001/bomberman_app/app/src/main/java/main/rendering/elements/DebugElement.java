@@ -22,40 +22,8 @@ public class DebugElement extends RenderElement
             int[] box1 = hitboxes[idx];
             float[] data0 = new float[12];
 
-            /*
-            jiHitboxes[0] = xHitbox.i16OffsetX;
-            jiHitboxes[1] = xHitbox.i16OffsetY;
-            jiHitboxes[2] = xHitbox.i16HalfSizeX;
-            jiHitboxes[3] = xHitbox.i16HalfSizeY;
-            jiHitboxes[4] = xHitbox.i16Left;
-            jiHitboxes[5] = xHitbox.i16Bottom;
-            jiHitboxes[6] = xHitbox.i16Right;
-            jiHitboxes[7] = xHitbox.i16Top;
-            */
 
-            /*
-            // first triangle
-            data0[0] = (box1[0] + box1[2]) * scale;
-            data0[1] = box1[1] * scale;
-
-            data0[2] = box1[0] * scale;
-            data0[3] = box1[1] * scale;
-
-            data0[4] = box1[0] * scale;
-            data0[5] = (box1[1] + box1[3]) * scale;
-
-            // second triangle
-            data0[6] = (box1[0] + box1[2]) * scale;
-            data0[7] = box1[1] * scale;
-
-            data0[8] = box1[0] * scale;
-            data0[9] = (box1[1] + box1[3]) * scale;
-
-            data0[10] = (box1[0] + box1[2]) * scale;
-            data0[11] = (box1[1] + box1[3]) * scale;
-            */
-
-            /* first triangle */
+            /* first triangle
             // top right
             data0[0] = (0 + box1[2]) * scale;
             data0[1] = 0 * scale;
@@ -68,7 +36,7 @@ public class DebugElement extends RenderElement
             data0[4] = 0 * scale;
             data0[5] = (0 + box1[3]) * scale;
 
-            /* second triangle */
+            // second triangle
             data0[6] = (0 + box1[2]) * scale;
             data0[7] = 0 * scale;
 
@@ -77,6 +45,7 @@ public class DebugElement extends RenderElement
 
             data0[10] = (0 + box1[2]) * scale;
             data0[11] = (0 + box1[3]) * scale;
+            */
 
             /* first triangle */
             // top right

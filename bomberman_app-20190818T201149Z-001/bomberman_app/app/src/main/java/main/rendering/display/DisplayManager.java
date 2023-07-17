@@ -1,17 +1,14 @@
 package main.rendering.display;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.SparseArray;
 
 import java.util.Vector;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import main.game.events.Events;
-import main.nativeclasses.GameLogic;
+import main.nativeclasses.GameManager;
 import main.game.SceneManager;
 import main.nativeclasses.GameElement;
-import main.game.sceneobjects.SceneObject;
+import main.game.SceneElement;
 import main.rendering.elements.RenderElement;
 import main.rendering.VertexArray;
 import main.rendering.animation.Layer;
@@ -26,10 +23,12 @@ public class DisplayManager
     public static float mScaleFactor = 1.0f;
     public static int mGamePortWidth = 1920;
     public static int mGamePortHeight = 1080;
+    public static final int GAME_H = 136;
+    public static final int GAME_V = 94;
     public static int[] gamePortOffsetXY = {0, 0};
-    public static int[] gameBombOffsetXY      = {-136 / 2, -136/2};
-    public static int[] gameObjectOffsetXY    = {-136 / 2, (94 - 136)-94/2};
-    public static int[] gameExplosionOffsetXY = {0, 0 + ((94 - 100))};
+    public static int[] gameBombOffsetXY      = {-GAME_H / 2, -GAME_H/2};
+    public static int[] gameObjectOffsetXY    = {-GAME_H / 2, (94 - GAME_H)-GAME_V/2};
+    public static int[] gameExplosionOffsetXY = {-GAME_H / 2, -GAME_H/2};
     public static int[] gamePlayerOffsetXY = {-180/2, -180/2 - 40};
 
     // Scene objects
@@ -131,7 +130,7 @@ public class DisplayManager
         mAnimationManager.returnAnimationsToPool(ro.getUsedAnimatedObjects());
     }
 
-    private void updateGameManager(GameLogic gamemanager)
+    private void updateGameManager(GameManager gamemanager)
     {
         Events goupdates = gamemanager.getUpdateEvents();
         Events goremovals = gamemanager.getRemovalEvents();
@@ -169,7 +168,7 @@ public class DisplayManager
         int sz = soupdates.getCount();
         while (--sz >= 0)
         {
-            SceneObject so = (SceneObject) soupdates.getEvent(sz);
+            SceneElement so = (SceneElement) soupdates.getEvent(sz);
             RenderElement ro = so.ro;
             if(ro == null)
             {
@@ -190,7 +189,7 @@ public class DisplayManager
         sz = soremovals.getCount();
         while (--sz >= 0)
         {
-            SceneObject so = (SceneObject) soremovals.getEvent(sz);
+            SceneElement so = (SceneElement) soremovals.getEvent(sz);
             RenderElement ro = so.ro;
             returnRenderObjectToPool(ro);
         }
@@ -198,7 +197,7 @@ public class DisplayManager
         soremovals.resetEvents();
     }
 
-    public void updateRenderObjectsForGPU(GameLogic gamemanager, SceneManager scenemanager)
+    public void updateRenderObjectsForGPU(GameManager gamemanager, SceneManager scenemanager)
     {
         updateGameManager(gamemanager);
         updateSceneManager(scenemanager);
@@ -215,9 +214,11 @@ public class DisplayManager
         /* Load animations into OPENGL Space
         * Textures are loaded on the opengl thread */
 
+        mVertices = new Vertices(scalefactor);
+
         mLoader = new Loader(mGamePortWidth, scalefactor);
         mAnimationManager.loadAnimations(mLoader);
-        mVertices = new Vertices(scalefactor);
+
 
         mGamePortWidth = width;
         mGamePortHeight = height;
@@ -232,7 +233,7 @@ public class DisplayManager
         gamePlayerOffsetXY[1] = gamePortOffsetXY[1] + (int)(gamePlayerOffsetXY[1]* scalefactor);
 
         gameExplosionOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameExplosionOffsetXY[0] * scalefactor);
-        gameExplosionOffsetXY[0] = gamePortOffsetXY[1] + (int) (gameExplosionOffsetXY[1] * scalefactor);
+        gameExplosionOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameExplosionOffsetXY[1] * scalefactor);
 
         gameObjectOffsetXY[0] = gamePortOffsetXY[0]  + (int) (gameObjectOffsetXY[0] * scalefactor);
         gameObjectOffsetXY[1] = (gamePortOffsetXY[1] + (int) (gameObjectOffsetXY[1] * scalefactor));

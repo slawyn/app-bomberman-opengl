@@ -3,12 +3,13 @@ package main.rendering.display;
 import static main.Constants.NUMBER_OF_ANIMATED_OBJECTS;
 import static main.Constants.STATE_ALIVE;
 import static main.Constants.STATE_DEAD;
+import static main.Constants.STATE_EXPLODED;
 import static main.Constants.STATE_MOVEDOWN;
 import static main.Constants.STATE_MOVELEFT;
 import static main.Constants.STATE_MOVERIGHT;
 import static main.Constants.STATE_MOVEUP;
 import static main.Constants.STATE_PRESSED;
-import static main.Constants.STATE_UNPRESSED;
+import static main.Constants.*;
 import static main.game.SceneManager.SOBJ_BACKGROUND;
 import static main.game.SceneManager.SOBJ_BACKGROUND_LOADING;
 import static main.game.SceneManager.SOBJ_BUTTON;
@@ -22,7 +23,10 @@ import static main.nativeclasses.GameElement.OBJ_ITEM;
 import static main.nativeclasses.GameElement.OBJ_PLAYR;
 import static main.rendering.animation.Animation.ANIMATION_PAR_INFINITE;
 import static main.rendering.animation.Animation.ANIMATION_PAR_ONCE;
+import static main.rendering.display.DisplayManager.GAME_H;
+import static main.rendering.display.DisplayManager.GAME_V;
 import static main.rendering.display.DisplayManager.gameBombOffsetXY;
+import static main.rendering.display.DisplayManager.gameExplosionOffsetXY;
 import static main.rendering.display.DisplayManager.gameLoadingOffsetXY;
 import static main.rendering.display.DisplayManager.gameObjectOffsetXY;
 import static main.rendering.display.DisplayManager.gamePlayerOffsetXY;
@@ -30,6 +34,7 @@ import static main.rendering.display.DisplayManager.gamePortOffsetXY;
 import static main.rendering.display.DisplayManager.gameTimer2ndOffsets;
 import static main.rendering.display.DisplayManager.gameTouchOffsetXY;
 import static main.rendering.display.DisplayManager.gameZeroOffsetXY;
+import static main.rendering.display.DisplayManager.mScaleFactor;
 
 import android.util.SparseArray;
 
@@ -416,6 +421,76 @@ public class AnimationManager {
                             break;
                     }
                     break;
+                case OBJ_BOMB:
+                    switch (state) {
+                        case STATE_EXPLODED:
+                            int animset = 0;
+                            int strength = 1;
+                            int left = 1;
+                            int right = 1;
+                            int up = 1;
+                            int down = 1;
+
+
+                            //  Add animations
+                            ao.init(gameExplosionOffsetXY);
+                            ao.setAnimationParameters(mAnimationSequences.get(ANIMATION_PLAYER_EXPLOSION_CENTER).get(animset),
+                                                        mAnimationParameters.get(ANIMATION_PLAYER_EXPLOSION_CENTER));
+                            //ro.addAnimation(ao);
+                            for(int i = 1; i <= strength; i++)
+                            {
+                                int[] xy = new int[2];
+
+                                // Horizontal
+                                if(i <= left)
+                                {
+                                    xy[0] = (int) (gameExplosionOffsetXY[0] + (-i * GAME_H * mScaleFactor));
+                                    xy[1] = gameExplosionOffsetXY[1];
+                                    ao = getFreeAnimationFromPool();
+                                    ao.init(xy);
+                                    ao.setAnimationParameters(mAnimationSequences.get(ANIMATION_PLAYER_EXPLOSION_LEFTRIGHT).get(animset),
+                                            mAnimationParameters.get(ANIMATION_PLAYER_EXPLOSION_LEFTRIGHT));
+                                    ro.addAnimation(ao);
+                                }
+                                if(i <= right)
+                                {
+                                    xy[0] = (int) (gameExplosionOffsetXY[0] + (i * GAME_H * mScaleFactor));
+                                    xy[1] = gameExplosionOffsetXY[1];
+                                    ao = getFreeAnimationFromPool();
+                                    ao.init(xy);
+                                    ao.setAnimationParameters(mAnimationSequences.get(ANIMATION_PLAYER_EXPLOSION_LEFTRIGHT).get(animset),
+                                            mAnimationParameters.get(ANIMATION_PLAYER_EXPLOSION_LEFTRIGHT));
+                                    ro.addAnimation(ao);
+                                }
+
+                                // Vertical
+                                if(i <= up)
+                                {
+                                    xy[0] = gameExplosionOffsetXY[0];
+                                    xy[1] = (int) (gameExplosionOffsetXY[1] + (-i * GAME_V * mScaleFactor));
+                                    ao = getFreeAnimationFromPool();
+                                    ao.init(xy);
+                                    ao.setAnimationParameters(mAnimationSequences.get(ANIMATION_PLAYER_EXPLOSION_UPDOWN).get(animset),
+                                            mAnimationParameters.get(ANIMATION_PLAYER_EXPLOSION_UPDOWN));
+                                    ro.addAnimation(ao);
+                                }
+                                if(i <= down)
+                                {
+                                    xy[0] = gameExplosionOffsetXY[0];
+                                    xy[1] = (int) (gameExplosionOffsetXY[1] + (i * GAME_V * mScaleFactor));
+                                    ao = getFreeAnimationFromPool();
+                                    ao.init(xy);
+                                    ao.setAnimationParameters(mAnimationSequences.get(ANIMATION_PLAYER_EXPLOSION_UPDOWN).get(animset),
+                                                              mAnimationParameters.get(ANIMATION_PLAYER_EXPLOSION_UPDOWN));
+                                    ro.addAnimation(ao);
+                                }
+
+                                //SoundManager.playSound(SOUND_EXPLOSION);
+                            }
+
+                            break;
+                    }
+                    break;
             }
         }
     }
@@ -490,56 +565,7 @@ public class AnimationManager {
             case OBJ_EXPLN:
 
 
-                /*
 
-                int animset = go.mObjectSubtype;
-                int strength = ((Explosion) go).mStrength;
-                int left = ((Explosion) go).mLeft;
-                int right = ((Explosion) go).mRight;
-                int up = ((Explosion) go).mUp;
-                int down = ((Explosion) go).mDown;
-
-                //  Add animations
-                ao.init(gameExplosionXOffset, gameExplosionYOffset);
-                ao.setAnimation(mAnimationSequences.get(ANIMATION_PLAYER_EXPLOSION_CENTER).get(go.mObjectSubtype), mAnimationParameters.get(ANIMATION_PLAYER_EXPLOSION_CENTER));
-                ro.addAnimation(ao);
-                for(int i = 1; i <= strength; i++)
-                {
-                    // Horizontal
-                    if(i <= left)
-                    {
-                        ao = getFreeAnimationFromPool();
-                        ao.init((int) (gameExplosionXOffset + (-i * CELLSIZE_X * mScaleFactor)), gameExplosionYOffset);
-                        ao.setAnimation(mAnimationSequences.get(ANIMATION_PLAYER_EXPLOSION_LEFTRIGHT).get(go.mObjectSubtype), mAnimationParameters.get(ANIMATION_PLAYER_EXPLOSION_LEFTRIGHT));
-                        ro.addAnimation(ao);
-                    }
-                    if(i <= right)
-                    {
-                        ao = getFreeAnimationFromPool();
-                        ao.init((int) (gameExplosionXOffset + (i * CELLSIZE_X * mScaleFactor)), gameExplosionYOffset);
-                        ao.setAnimation(mAnimationSequences.get(ANIMATION_PLAYER_EXPLOSION_LEFTRIGHT).get(go.mObjectSubtype), mAnimationParameters.get(ANIMATION_PLAYER_EXPLOSION_LEFTRIGHT));
-                        ro.addAnimation(ao);
-                    }
-
-                    // Vertical
-                    if(i <= up)
-                    {
-                        ao = getFreeAnimationFromPool();
-                        ao.init(gameExplosionXOffset, (int) (gameExplosionYOffset + (-i * CELLSIZE_Y * mScaleFactor)));
-                        ao.setAnimation(mAnimationSequences.get(ANIMATION_PLAYER_EXPLOSION_UPDOWN).get(go.mObjectSubtype), mAnimationParameters.get(ANIMATION_PLAYER_EXPLOSION_UPDOWN));
-                        ro.addAnimation(ao);
-                    }
-                    if(i <= down)
-                    {
-                        ao = getFreeAnimationFromPool();
-                        ao.init(gameExplosionXOffset, (int) (gameExplosionYOffset + (i * CELLSIZE_Y * mScaleFactor)));
-                        ao.setAnimation(mAnimationSequences.get(ANIMATION_PLAYER_EXPLOSION_UPDOWN).get(go.mObjectSubtype), mAnimationParameters.get(ANIMATION_PLAYER_EXPLOSION_UPDOWN));
-                        ro.addAnimation(ao);
-                    }
-
-                    //SoundManager.playSound(SOUND_EXPLOSION);
-                }
-*/
                 break;
             case OBJ_ITEM:
                 break;

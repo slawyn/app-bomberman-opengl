@@ -20,6 +20,8 @@
 #include "States.h"
 
 
+bool bBombNeedsToBeRemoved(Bomb_t *ptr);
+
 extern "C"
 {
 #define GET_CURRENT_OBJECT_STATES(x)\
@@ -74,23 +76,6 @@ int16_t i16InitObject(int32_t i32ObjectStateOffset,
         case OBJ_BOMB:
             pxBomb->ui16Id = ID(i32ObjectStateOffset, OBJ_BOMB);
             i16BombInit(pxBomb, i32PositionX, i32PositionY);
-            break;
-        case OBJ_EXPLN:
-            //createBoundingBoxes(2);
-            /*
-
-            mEpicenterX = cellx;
-            mEpicenterY = celly;
-            timer = EXPLOSION_TIME;
-            owner = owner_;
-            mStrength = strength_;
-            mLeft = radius[0];
-            mRight = radius[1];
-            mUp = radius[2];
-            mDown = radius[3];
-            addBoundingBox(0,(-mLeft * CELLSIZE_X),  0,((mRight + mLeft + 1) * CELLSIZE_X), (CELLSIZE_Y));
-            addBoundingBox(1, (0), (-mUp * CELLSIZE_Y), (CELLSIZE_X), ((mUp + mDown + 1) * CELLSIZE_Y));
-             */
             break;
     }
     return 0;
@@ -256,8 +241,8 @@ jint jiUpdateObjects(jint ji32Dt, uint32_t *ui32PlayerUpdates)
 
 
 JNIEXPORT jintArray JNICALL
-Java_main_nativeclasses_GameLogic_getObjects(JNIEnv * env,
-                                            jclass type) {
+Java_main_nativeclasses_GameManager_getObjects(JNIEnv * env,
+                                               jclass type) {
     int16_t i16TotalCount = 0;
     int16_t i16LocalCount = 0;
 
@@ -308,14 +293,14 @@ Java_main_nativeclasses_GameLogic_getObjects(JNIEnv * env,
 }
 
 JNIEXPORT jintArray JNICALL
-Java_main_nativeclasses_GameLogic_getRemovedObjects(JNIEnv * env,
-                                             jclass type) {
+Java_main_nativeclasses_GameManager_getRemovedObjects(JNIEnv * env,
+                                                      jclass type) {
     jint ui32Objects[PLAYER_COUNT_MAX+BLOCK_COUNT_MAX+CRATE_COUNT_MAX] = {0};
     int16_t i16LocalCount = 0;
     int16_t i16TotalCount = 0;
     while(i16LocalCount<BOMB_COUNT_MAX)
     {
-        if(pxBombs[i16LocalCount].ui8State == STATE_REMOVE)
+        if(bBombNeedsToBeRemoved(&pxBombs[i16LocalCount]))
         {
             ui32Objects[i16TotalCount++] = pxBombs[i16LocalCount].ui16Id;
             pxBombs[i16LocalCount].ui16Id = 0;
@@ -330,8 +315,8 @@ Java_main_nativeclasses_GameLogic_getRemovedObjects(JNIEnv * env,
 }
 
 JNIEXPORT jint JNICALL
-Java_main_nativeclasses_GameLogic_createGame(JNIEnv * env,
-                                             jclass type) {
+Java_main_nativeclasses_GameManager_createGame(JNIEnv * env,
+                                               jclass type) {
 
 #define DEBUG_CONSTANT_LEVEL            (0)
 #define DEBUG_CONSTANT_PLAYER_POS       (0)
@@ -346,9 +331,9 @@ Java_main_nativeclasses_GameLogic_createGame(JNIEnv * env,
 }
 
 JNIEXPORT jint JNICALL
-Java_main_nativeclasses_GameLogic_updateGame(JNIEnv * env,
-                                       jclass type,
-                                        jint ji32Dt)
+Java_main_nativeclasses_GameManager_updateGame(JNIEnv * env,
+                                               jclass type,
+                                               jint ji32Dt)
 {
 
     /* Update game objects */
@@ -360,10 +345,10 @@ Java_main_nativeclasses_GameLogic_updateGame(JNIEnv * env,
 
 
 JNIEXPORT jint JNICALL
-Java_main_nativeclasses_GameLogic_getZ(JNIEnv * env,
-                     jclass type,
-                     jint i32ObjType,
-                     jint i32ObjectStateOffset)
+Java_main_nativeclasses_GameManager_getZ(JNIEnv * env,
+                                         jclass type,
+                                         jint i32ObjType,
+                                         jint i32ObjectStateOffset)
     {
         GET_CURRENT_OBJECT_STATES(i32ObjectStateOffset)
         jint ar[] = {0,0,0,0, 0,0,0,0};
@@ -392,11 +377,11 @@ Java_main_nativeclasses_GameLogic_getZ(JNIEnv * env,
 
 
 JNIEXPORT void JNICALL
-Java_main_nativeclasses_GameLogic_setInput(JNIEnv * env,
-                         jclass type,
-                         jint i32ObjType,
-                         jint i32ObjectStateOffset,
-                         jbyte ui8Input)
+Java_main_nativeclasses_GameManager_setInput(JNIEnv * env,
+                                             jclass type,
+                                             jint i32ObjType,
+                                             jint i32ObjectStateOffset,
+                                             jbyte ui8Input)
     {
         Player_t* pxPlayer = &pxPlayers[i32ObjectStateOffset];
         pxPlayer->ui16Input = ui8Input;
@@ -436,10 +421,10 @@ jint jiCheckCollisions(uint32_t ui32Players)
     }
 
     JNIEXPORT jlongArray JNICALL
-        Java_main_nativeclasses_GameLogic_getPosition(JNIEnv * env,
-                                                         jclass type,
-                                                         jint i32ObjType,
-                                                         jint i32ObjectStateOffset)
+        Java_main_nativeclasses_GameManager_getPosition(JNIEnv * env,
+                                                        jclass type,
+                                                        jint i32ObjType,
+                                                        jint i32ObjectStateOffset)
     {
 
         GET_CURRENT_OBJECT_STATES(i32ObjectStateOffset)
@@ -472,10 +457,10 @@ jint jiCheckCollisions(uint32_t ui32Players)
     }
 
     JNIEXPORT jint JNICALL
-    Java_main_nativeclasses_GameLogic_getState(JNIEnv * env,
-                                                     jclass type,
-                                                     jint i32ObjType,
-                                                     jint i32ObjectStateOffset)
+    Java_main_nativeclasses_GameManager_getState(JNIEnv * env,
+                                                 jclass type,
+                                                 jint i32ObjType,
+                                                 jint i32ObjectStateOffset)
     {
         GET_CURRENT_OBJECT_STATES(i32ObjectStateOffset)
 
@@ -501,8 +486,8 @@ jint jiCheckCollisions(uint32_t ui32Players)
     }
 
     JNIEXPORT jint JNICALL
-    Java_main_nativeclasses_GameLogic_updateGameTicker(JNIEnv *env,
-                                     jclass type)
+    Java_main_nativeclasses_GameManager_updateGameTicker(JNIEnv *env,
+                                                         jclass type)
     {
         uint32_t ui32PreviousTick = ui32GameTicker;
         ui32GameTicker = (ui32GameTicker + 1) % TOTAL_STATE_COUNT;
@@ -530,10 +515,10 @@ jint jiCheckCollisions(uint32_t ui32Players)
     }
 
 JNIEXPORT jobjectArray  JNICALL
-Java_main_nativeclasses_GameLogic_getHitboxes(JNIEnv *env,
-                                                            jclass type,
-                                                            jint i32ObjType,
-                                                            jint i32ObjectStateOffset)
+Java_main_nativeclasses_GameManager_getHitboxes(JNIEnv *env,
+                                                jclass type,
+                                                jint i32ObjType,
+                                                jint i32ObjectStateOffset)
     {
 
         jobjectArray array2D = env->NewObjectArray(
@@ -564,8 +549,8 @@ Java_main_nativeclasses_GameLogic_getHitboxes(JNIEnv *env,
     }
 
     JNIEXPORT jlong JNICALL
-    Java_main_nativeclasses_GameLogic_initFreeType(JNIEnv *env,
-                                 jclass type)
+    Java_main_nativeclasses_GameManager_initFreeType(JNIEnv *env,
+                                                     jclass type)
     {
 
         uint32_t error = 0;//FT_Init_FreeType(&library);
@@ -577,4 +562,6 @@ Java_main_nativeclasses_GameLogic_getHitboxes(JNIEnv *env,
     }
 
 }
+
+
 

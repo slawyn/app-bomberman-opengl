@@ -16,7 +16,8 @@ enum
     STATE_MOVELEFT,
     STATE_MOVERIGHT,
     STATE_DEAD,
-    STATE_REMOVE
+    STATE_REMOVE,
+    STATE_EXPLODED
 };
 #ifdef __cplusplus
 }

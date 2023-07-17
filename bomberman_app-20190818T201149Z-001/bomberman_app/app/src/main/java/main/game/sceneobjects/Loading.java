@@ -1,12 +1,11 @@
 package main.game.sceneobjects;
 
-import main.Constants;
-import main.Globals;
-
 import static main.game.SceneManager.SOBJ_BACKGROUND_LOADING;
 
+import main.game.SceneElement;
 
-public class Loading extends SceneObject
+
+public class Loading extends SceneElement
 {
     public int mLoadedPercent;
     public Loading(int id,  int subtype) {

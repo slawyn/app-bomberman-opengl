@@ -6,7 +6,6 @@ import main.game.events.Events;
 import main.game.sceneobjects.Background;
 import main.game.sceneobjects.Button;
 import main.game.sceneobjects.Loading;
-import main.game.sceneobjects.SceneObject;
 import main.game.sceneobjects.Timer;
 import main.game.sceneobjects.Touch;
 import main.rendering.display.DisplayManager;
@@ -31,7 +30,7 @@ public class SceneManager
     public final static int SOBJ_TIMER = 0x60000000;
 
     private SparseArray<Button> mButtons;
-    private SparseArray<SceneObject> mSceneObjects;
+    private SparseArray<SceneElement> mSceneObjects;
     private Events mUpdateEvents;
     private Events mRemoveEvents;
     private SparseArray<Touch> mTouches;
@@ -57,7 +56,7 @@ public class SceneManager
         return mUpdateEvents;
     }
 
-    public SceneObject getSceneObject(int key){
+    public SceneElement getSceneObject(int key){
         return mSceneObjects.get(key);
     }
 
@@ -135,7 +134,7 @@ public class SceneManager
         int sz = mSceneObjects.size();
         for(int idx = 0;idx<sz;idx++)
         {
-            SceneObject so = mSceneObjects.valueAt(idx);
+            SceneElement so = mSceneObjects.valueAt(idx);
             so.updateState(dt, input);
             mUpdateEvents.addEvent(so);
         }
@@ -156,7 +155,7 @@ public class SceneManager
          // buttons
         for(int i = size; i >=2; --i)
         {
-            SceneObject so = mSceneObjects.valueAt(i);
+            SceneElement so = mSceneObjects.valueAt(i);
             mSceneObjects.removeAt(i);
             mRemoveEvents.addEvent(so);
         }

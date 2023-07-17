@@ -1,9 +1,6 @@
 package main.nativeclasses;
 
 import main.game.events.EventObject;
-import main.nativeclasses.GameLogic;
-import main.rendering.elements.DebugElement;
-import main.rendering.elements.RenderElement;
 
 
 public class GameElement extends EventObject {
@@ -32,27 +29,27 @@ public class GameElement extends EventObject {
 
     public int getZ()
     {
-        return GameLogic.getZ(mObjectType, mObjectStateOffset);
+        return GameManager.getZ(mObjectType, mObjectStateOffset);
     }
 
     public long[] getPositionXY()
     {
-        return GameLogic.getPosition(mObjectType, mObjectStateOffset);
+        return GameManager.getPosition(mObjectType, mObjectStateOffset);
     }
 
     public int getState()
     {
-        return GameLogic.getState(mObjectType, mObjectStateOffset);
+        return GameManager.getState(mObjectType, mObjectStateOffset);
     }
 
     public void setInput(byte input)
     {
-        GameLogic.setInput(mObjectType, mObjectStateOffset, input);
+        GameManager.setInput(mObjectType, mObjectStateOffset, input);
     }
 
     public int[][] getHitBoxes()
     {
-        return GameLogic.getHitboxes(mObjectType, mObjectStateOffset);
+        return GameManager.getHitboxes(mObjectType, mObjectStateOffset);
     }
 
 }

@@ -3,7 +3,7 @@ package main;
 import android.os.Build;
 
 import main.communication.PacketQueue;
-import main.nativeclasses.GameLogic;
+import main.nativeclasses.GameManager;
 import main.game.logic.NetcodeLogic;
 import main.game.SceneManager;
 import main.rendering.GameRenderer;
@@ -22,7 +22,7 @@ public class Application implements Runnable
     private long mAppWaitTime;
     private int mAppPhase;
     private NetcodeLogic mNetcodeLogicManager;
-    private GameLogic mGameLogicManager;
+    private GameManager mGameManager;
     private SceneManager mSceneManager;
     private SoundManager mSoundManager;
     private GameRenderer mGameRenderer;
@@ -74,7 +74,7 @@ public class Application implements Runnable
                 ////////////////////   LOADING  //////////////////
                 //////////////////////////////////////////////////
                 case ST_APP_START:
-                    mGameLogicManager = new GameLogic(50);// Game container
+                    mGameManager = new GameManager(50);// Game container
                     mSceneManager = new SceneManager(mDisplayManager);
                     mAppPhase = ST_APP_PRELOAD;
                     break;
@@ -124,15 +124,15 @@ public class Application implements Runnable
                 // No Bluetooth routines
                 case ST_APP_OFFLINE_START:
                     mSceneManager.createGameScene();
-                    mGameLogicManager.createGameLevel(0);
+                    mGameManager.createGameLevel(0);
                     mAppPhase = ST_APP_OFFLINE_GAME_RUNNING;
                     break;
 
                 // Running offline game with local input
                 case ST_APP_OFFLINE_GAME_RUNNING:
-                    mSceneManager.setTimer( mGameLogicManager.getGameTime());
-                    mGameLogicManager.updateGameTicker();
-                    mGameLogicManager.updateGameOfflineInput(input[6]);
+                    mSceneManager.setTimer( mGameManager.getGameTime());
+                    mGameManager.updateGameTicker();
+                    mGameManager.updateGameOfflineInput(input[6]);
 
                     break;
 
@@ -196,7 +196,7 @@ public class Application implements Runnable
                             PacketQueue packetqueue = mConnector.attachGameToClient(t);
                             if(packetqueue != null)
                             {
-                                mNetcodeLogicManager = new NetcodeLogic(mGameLogicManager, packetqueue);
+                                mNetcodeLogicManager = new NetcodeLogic(mGameManager, packetqueue);
                                 mConnector.stopDiscovery();
                                 mAppPhase = ST_APP_CLIENT_SYNC;
                             }
@@ -234,7 +234,7 @@ public class Application implements Runnable
                     PacketQueue packetqueue = mConnector.attachGameToServer();
                     if(packetqueue != null)
                     {
-                        mNetcodeLogicManager = new NetcodeLogic(mGameLogicManager, packetqueue);
+                        mNetcodeLogicManager = new NetcodeLogic(mGameManager, packetqueue);
                         mAppPhase = ST_APP_SERVER_SYNC;
                     }
                     break;
@@ -254,9 +254,12 @@ public class Application implements Runnable
             }
         }
 
-        /* Update other state machines */
-        mGameLogicManager.run(dt);
+        /* Update logic of game and scene */
+        mGameManager.run(dt);
         mSceneManager.run(dt, input);
+
+        /* Update Renderobjects for the next run */
+        mDisplayManager.updateRenderObjectsForGPU(mGameManager, mSceneManager);
 
         /* Wait for Bluetooth to render */
         synchronized(mSyncObject)
@@ -292,8 +295,6 @@ public class Application implements Runnable
                 /* Update Game */
                 updateApp(SERVER_TICK_TIME, mConnector.getInput());
 
-                /* Update Renderobjects for the next run */
-                mDisplayManager.updateRenderObjectsForGPU(mGameLogicManager, mSceneManager);
 
                 /* Subtract tick time: deltaMax symbolizes max logic update withhold time */
                 if((accumulator -= desiredFrameDeltaNano) > deltaMax)

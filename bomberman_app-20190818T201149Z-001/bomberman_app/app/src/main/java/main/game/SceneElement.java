@@ -1,10 +1,10 @@
-package main.game.sceneobjects;
+package main.game;
 
 
 import main.game.events.EventObject;
 import main.rendering.elements.RenderElement;
 
-public class SceneObject extends EventObject
+public class SceneElement extends EventObject
 {
     public int mObjectID;
     public int mObjectType;
@@ -17,7 +17,7 @@ public class SceneObject extends EventObject
     public int mLayer;
     public RenderElement ro;
 
-    public SceneObject(int objtype, int objid)
+    public SceneElement(int objtype, int objid)
     {
         mObjectID = objid;
         mObjectType = objtype;

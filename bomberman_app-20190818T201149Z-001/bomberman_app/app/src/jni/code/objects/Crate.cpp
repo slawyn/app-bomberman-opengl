@@ -15,8 +15,7 @@
 
 extern "C"
 {
-static Hitbox_t xHitbox = {.i16OffsetX = (uint16_t) CRATE_BOX_OFFSET_X,
-        .i16OffsetY = (uint16_t) CRATE_BOX_OFFSET_Y,
+static Hitbox_t xHitbox = {
         .i16HalfSizeX = (uint16_t) CRATE_BOX_WIDTH,
         .i16HalfSizeY = (uint16_t) CRATE_BOX_HEIGHT,
         .i16Top =0,
@@ -34,8 +33,8 @@ Hitbox_t * pxCrateGetHitbox(Crate_t* pxCrate)
 void vCrateGetHitboxValues(Crate_t* pxCrate, jint *jiHitboxes)
 {
     vHitboxUpdateEdges(&xHitbox, pxCrate->i16PosX, pxCrate->i16PosY);
-    jiHitboxes[0] = xHitbox.i16OffsetX;
-    jiHitboxes[1] = xHitbox.i16OffsetY;
+    jiHitboxes[0] = 0;
+    jiHitboxes[1] = 0;
     jiHitboxes[2] = xHitbox.i16HalfSizeX;
     jiHitboxes[3] = xHitbox.i16HalfSizeY;
     jiHitboxes[4] = xHitbox.i16Left;
