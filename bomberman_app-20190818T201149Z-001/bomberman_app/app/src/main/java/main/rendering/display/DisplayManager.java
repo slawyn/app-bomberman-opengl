@@ -40,8 +40,6 @@ public class DisplayManager
     public static int[] gameZeroOffsetXY = {0, 0};
     public static int[][] gameTimer2ndOffsets = {{0,0},{78,0},{200,0},{278,0}};
 
-
-
     private int mTotalNumberOfRenderObjects;
     private RenderElement[] mFreeRenderElements;
     private SparseArray<RenderElement> mRos;
@@ -153,7 +151,7 @@ public class DisplayManager
         sz = goremovals.getCount();
         while (--sz >= 0)
         {
-            GameElement go = (GameElement) goupdates.getEvent(sz);
+            GameElement go = (GameElement) goremovals.getEvent(sz);
             RenderElement ro = getRenderObject(go, DEBUG_DRAW_HITBOXES);
             returnRenderObjectToPool(ro);
         }

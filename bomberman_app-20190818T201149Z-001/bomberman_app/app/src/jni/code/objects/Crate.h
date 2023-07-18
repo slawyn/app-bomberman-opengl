@@ -21,6 +21,7 @@ int16_t i16CrateUpdateState(Crate_t *pxCrate, int32_t dt);
 int16_t i16CrateInit(Crate_t * pxCrate, int16_t i16PositionX, int16_t i16PositionY);
 void vCrateGetHitboxValues(Crate_t* pxCrate, jint *jiHitboxes);
 Hitbox_t * pxCrateGetHitbox(Crate_t* pxCrate);
+bool bCrateNeedsToBeRemoved(Crate_t* pxCrate);
 #ifdef __cplusplus
 }
 #endif

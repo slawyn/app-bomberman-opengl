@@ -18,6 +18,7 @@ extern "C" {
 extern int16_t LEVELS[][NUMBER_OF_X_CELLS][NUMBER_OF_Y_CELLS];
 
 int16_t i16LevelGetPositionFromCellXY(int16_t ri16Positions[2], int16_t i16X, int16_t i16Y);
+int16_t i16LevelGetCenteredPositionXY(int16_t ri16Positions[2], int16_t i16X, int16_t i16Y);
 #ifdef __cplusplus
 }
 #endif

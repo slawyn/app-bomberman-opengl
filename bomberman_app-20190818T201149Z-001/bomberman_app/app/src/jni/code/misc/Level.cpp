@@ -51,8 +51,9 @@ int16_t i16LevelGetPositionFromCellXY(int16_t ri16Positions[2], int16_t i16X, in
 
 int16_t i16LevelGetCenteredPositionXY(int16_t ri16Positions[2], int16_t i16X, int16_t i16Y)
 {
-    int16_t i16CellPosX = i16X/NUMBER_OF_X_CELLS;
-    int16_t i16CellPosY = i16Y/NUMBER_OF_Y_CELLS;
+    ri16Positions[0] = (i16X-FIELD_X1)/CELLSIZE_X;
+    ri16Positions[1] = (i16Y-FIELD_Y1)/CELLSIZE_Y;
+    return 0;
 }
 
 

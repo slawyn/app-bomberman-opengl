@@ -45,6 +45,12 @@ extern "C"
 
     int16_t i16BlockUpdateState(Block_t *pxBlock, int32_t dt) {
         vHitboxUpdateEdges(&xHitbox, pxBlock->i16PosX, pxBlock->i16PosY);
+        switch(pxBlock->ui8State)
+        {
+            case STATE_DEAD:
+                pxBlock->ui8State = STATE_REMOVE;
+                break;
+        }
         return 1;
     }
 

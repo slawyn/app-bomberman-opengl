@@ -42,10 +42,22 @@ void vCrateGetHitboxValues(Crate_t* pxCrate, jint *jiHitboxes)
     jiHitboxes[6] = xHitbox.i16Right;
     jiHitboxes[7] = xHitbox.i16Top;
 }
+bool bCrateNeedsToBeRemoved(Crate_t* pxCrate)
+{
+    return (pxCrate->ui8State == STATE_REMOVE);
+}
+
+
 
 int16_t i16CrateUpdateState(Crate_t *pxCrate, int32_t dt)
 {
     vHitboxUpdateEdges(&xHitbox, pxCrate->i16PosX, pxCrate->i16PosY);
+    switch(pxCrate->ui8State)
+    {
+        case STATE_DEAD:
+            pxCrate->ui8State = STATE_REMOVE;
+            break;
+    }
     return 1;
 }
 

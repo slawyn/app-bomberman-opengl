@@ -82,7 +82,10 @@ int16_t i16InitObject(int32_t i32ObjectStateOffset,
 }
 
 
-
+/**
+ * @brief Initialize Map
+ *
+ **/
 int16_t jiInitMap(int16_t ri16Levels[NUMBER_OF_Y_CELLS][NUMBER_OF_X_CELLS])
 {
 
@@ -120,8 +123,8 @@ int16_t jiInitMap(int16_t ri16Levels[NUMBER_OF_Y_CELLS][NUMBER_OF_X_CELLS])
 
 
 
-/* Update according to priority which is set by the type: mPlayers > Bombs > Explosions> Crates > Blocks > Items */
-// Get Updated Objects
+/** @brief Update according to priority which is set by the type: mPlayers > Bombs > Explosions> Crates > Blocks > Items
+ * */
 jint jiUpdateObjects(jint ji32Dt, uint32_t *ui32PlayerUpdates)
 {
     /* Get all sets */
@@ -144,6 +147,8 @@ jint jiUpdateObjects(jint ji32Dt, uint32_t *ui32PlayerUpdates)
         /* Go to the next one*/
         pxBlock = &(pxBlocks[++ui32Idx]);
     }
+
+    /* Update crates */
     ui32Idx = 0;
     while(pxCrate->ui16Id)
     {
@@ -160,12 +165,26 @@ jint jiUpdateObjects(jint ji32Dt, uint32_t *ui32PlayerUpdates)
         pxCrate = &(pxCrates[++ui32Idx]);
     }
 
+    /* Update bombs */
+    ui32Idx = 0;
+    while(pxBomb->ui16Id)
+    {
+        i16BombUpdateState(pxBomb, ji32Dt);
+
+        /* Place in the map */
+        vBombGetHitboxValues(pxBomb, jiHitbox);
+        int16_t x = (jint)(((jiHitbox[4] + jiHitbox[2] / 2) - FIELD_X1) / CELLSIZE_X);
+        int16_t y = (jint)(((jiHitbox[7] + jiHitbox[3]/ 2) - FIELD_Y1) / CELLSIZE_Y);
+        ui16FieldMap[x][y] = pxBomb->ui16Id;
+
+        pxBomb = &(pxBombs[++ui32Idx]);
+    }
+
+
     /* Update players */
     ui32Idx = 0;
     int16_t x[4];
     int16_t y[4];
-
-
     while(pxPlayer->ui16Id)
     {
 #define DEBUG_FIRST_BOMB            (0)
@@ -212,28 +231,105 @@ jint jiUpdateObjects(jint ji32Dt, uint32_t *ui32PlayerUpdates)
                     pxHitbox = pxBlockGetHitbox(&pxBlocks[ui16IdCollide&(~OBJ_MASK)]);
                     jiCorrectPlayerPosition(pxPlayer,pxHitbox);
                     break;
+                case OBJ_BOMB:
+                    break;
                 default:
                     break;
             }
             ++ui8IdxCell;
         }
 
-
         pxPlayer = &(pxPlayers[++ui32Idx]);
     }
-
+    /* All positions have been set in the field
+       Run explosions */
     ui32Idx = 0;
+    pxBomb = &pxBombs[0];
     while(pxBomb->ui16Id)
     {
-        i16BombUpdateState(pxBomb, ji32Dt);
+        if(bBombHasExploded(pxBomb))
+        {
+            int16_t cellsCovered[] = {0, 0, 0, 0};
+            bool expansionUnderway[] = {true, true, true, true};
+            int16_t strength = pxBomb->ui16ExplosionStrength;
 
-        /* Place in the map */
-        vBombGetHitboxValues(pxBomb, jiHitbox);
-        int16_t x = (jint)(((jiHitbox[4] + jiHitbox[2] / 2) - FIELD_X1) / CELLSIZE_X);
-        int16_t y = (jint)(((jiHitbox[7] + jiHitbox[3]/ 2) - FIELD_Y1) / CELLSIZE_Y);
-        ui16FieldMap[x][y] = pxBomb->ui16Id;
+            int16_t i16Pos[2];
+            i16LevelGetCenteredPositionXY(i16Pos, pxBomb->i16PosX, pxBomb->i16PosY);
 
+            int cellposx = i16Pos[0];
+            int cellposy = i16Pos[1];
+            for(int16_t direction = 0; direction < 4 && expansionUnderway[direction]; direction++)
+            {
+                // Continue only if the exposion didn't hit a wall
+                for(int radius = 1; radius <= strength; radius++)
+                {
+                    int posx = 0;
+                    int posy = 0;
+
+                    switch(direction)
+                    {
+                        case 0: // mLeft
+                            posx = cellposx - radius;
+                            posy = cellposy;
+                            break;
+                        case 1: // mRight
+                            posx = cellposx + radius;
+                            posy = cellposy;
+                            break;
+                        case 2: // mUp
+                            posx = cellposx;
+                            posy = cellposy - radius;
+                            break;
+                        case 3: // mDown
+                            posx = cellposx;
+                            posy = cellposy + radius;
+                            break;
+                    }
+
+                    if((posx >= 0 && posx < NUMBER_OF_X_CELLS) && (posy >= 0 && posy < NUMBER_OF_Y_CELLS))
+                    {
+
+
+                        int id_obj = ui16FieldMap[posx][posy];
+                        int id_type = (id_obj &OBJ_MASK);
+                        int idx = (id_obj&~OBJ_MASK);
+
+                        int explosionid = 0;
+                        switch(id_type) {
+                            case OBJ_BOMB:
+                                /* TODO add next explosion */
+                                if(!bBombHasExploded(&pxBomb[idx]))
+                                {
+                                    pxBombs[idx].ui8State = STATE_DEAD;
+                                }
+
+                                expansionUnderway[direction] = false;
+                                break;
+                            case OBJ_CRATE:
+                                pxCrates[idx].ui8State = STATE_DEAD;
+                                expansionUnderway[direction] = false;
+                                cellsCovered[direction]++;
+                                break;
+                            case OBJ_BLOCK:
+                                expansionUnderway[direction] = false;
+                                break;
+                            default:
+                                /* TODO Set correct explosion id */
+                                ui16FieldMap[posx][posy] = (explosionid);
+                                cellsCovered[direction]++;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        expansionUnderway[direction] = false;
+                    }
+
+                }
+            }
+        }
         pxBomb = &(pxBombs[++ui32Idx]);
+
     }
 
     return 0;
@@ -305,6 +401,18 @@ Java_main_nativeclasses_GameManager_getRemovedObjects(JNIEnv * env,
             ui32Objects[i16TotalCount++] = pxBombs[i16LocalCount].ui16Id;
             pxBombs[i16LocalCount].ui16Id = 0;
             pxBombs[i16LocalCount].ui8State = 0;
+        }
+        ++i16LocalCount;
+    }
+
+    i16LocalCount= 0;
+    while(i16LocalCount<CRATE_COUNT_MAX)
+    {
+        if(bCrateNeedsToBeRemoved(&pxCrates[i16LocalCount]))
+        {
+            ui32Objects[i16TotalCount++] = pxCrates[i16LocalCount].ui16Id;
+            pxCrates[i16LocalCount].ui16Id = 0;
+            pxCrates[i16LocalCount].ui8State = 0;
         }
         ++i16LocalCount;
     }

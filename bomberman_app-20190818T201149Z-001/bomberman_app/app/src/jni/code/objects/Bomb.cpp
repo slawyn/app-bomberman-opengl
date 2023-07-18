@@ -63,12 +63,12 @@ extern "C"
 
     bool bBombHasExploded(Bomb_t* pxBomb)
     {
-        return pxBomb->ui8State == STATE_EXPLODED;
+        return (pxBomb->ui8State == STATE_EXPLODED);
     }
 
     bool bBombNeedsToBeRemoved(Bomb_t* pxBomb)
     {
-        return pxBomb->ui8State == STATE_REMOVE;
+        return (pxBomb->ui8State == STATE_REMOVE);
     }
 
     void vExplosionGetHitboxValues(Bomb_t* pxBomb, jint *jiHitboxes)
@@ -106,7 +106,7 @@ extern "C"
                 break;
             case STATE_EXPLODED:
                 if ((pxBomb->ui16BombCountdown -= dt) <= 0) {
-                    pxBomb->ui8State = STATE_REMOVE;
+                    pxBomb->ui8State = STATE_DEAD;
                 }
                 break;
             case STATE_DEAD:
