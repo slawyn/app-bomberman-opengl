@@ -4,7 +4,7 @@
 #include "Level.h"
 #include "Config.h"
 #include "Bomb.h"
-#include "GameLogic.h"
+#include "code/GameLogic.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -123,6 +123,8 @@ int16_t i16ExpandExplosion(Bomb_t * pxBomb, int16_t *rri16Fieldmap[])
             }
         }
     }
+
+    return 0;
 }
 
 

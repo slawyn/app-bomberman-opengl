@@ -10,7 +10,7 @@ public class GameManager
 {
 
     static {
-        System.loadLibrary("GameLogic");
+        System.loadLibrary("JniC");
     }
 
 
@@ -25,6 +25,7 @@ public class GameManager
     public native static int getZ(int type, int offset);
     public native static int[] getObjects();
     public native static int[] getRemovedObjects();
+
 
     private final String TAG = "GameLogicManager";
     private final int mCapacity = 50;

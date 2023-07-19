@@ -48,14 +48,15 @@ include $(BUILD_STATIC_LIBRARY)
 ##########################################
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := libGameLogic
+LOCAL_MODULE := libJniC
 
 # compile in ARM mode, since the glyph loader/renderer is a hotspot
 # when loading complex pages in the browser
 #
 LOCAL_ARM_MODE:= arm
 LOCAL_SRC_FILES:= \
-	GameLogic.cpp\
+    JniC.cpp\
+	code/GameLogic.cpp\
     code/misc/Hitbox.cpp\
     code/objects/Block.cpp\
     code/objects/Bomb.cpp\
@@ -67,6 +68,7 @@ LOCAL_SRC_FILES:= \
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/builds \
 	$(LOCAL_PATH)/include\
+	$(LOCAL_PATH)/code\
     $(LOCAL_PATH)/code/misc\
     $(LOCAL_PATH)/code/objects\
 	$(LOCAL_PATH)
