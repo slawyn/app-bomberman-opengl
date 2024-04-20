@@ -4,6 +4,7 @@ import android.util.SparseArray;
 
 import java.util.Vector;
 
+import main.Globals;
 import main.game.events.Events;
 import main.nativeclasses.GameManager;
 import main.game.SceneManager;
@@ -14,7 +15,6 @@ import main.rendering.VertexArray;
 import main.rendering.animation.Layer;
 
 import static main.Constants.*;
-import static main.Constants.DEBUG_DRAW_HITBOXES;
 
 
 public class DisplayManager
@@ -48,6 +48,17 @@ public class DisplayManager
     private Vertices mVertices;
     private AnimationManager mAnimationManager;
 
+    public static final int LAYER_0000 = 0000;
+    public static final int LAYER_0001 = 0001;
+    public static final int LAYER_0002 = 0002;
+    public static final int LAYER_0003 = 0003;
+    public static final int LAYER_0004 = 0004;
+
+    private Vector<Layer> mLayers;
+
+    private static boolean DEBUG_DRAW_HITBOXES = false;
+
+
     /* Display manager controls renderelements based on game object states*/
     public DisplayManager()
     {
@@ -65,6 +76,15 @@ public class DisplayManager
         }
 
         mRos = new SparseArray<>(NUMBER_OF_RENDER_OBJECTS);
+
+        /* Warning! LAYER_xxxx constants are used outside of this class as indices */
+        int[][] layerConfiguration = {{LAYER_0000, 10},
+                                      {LAYER_0001, 50},
+                                      {LAYER_0002, 10},
+                                      {LAYER_0003, 10},
+                                      {LAYER_0004, 50}};
+        mLayers = Layer.createLayers(layerConfiguration);
+
     }
 
     public int getResourceCount()
@@ -74,13 +94,19 @@ public class DisplayManager
 
     public Vector<Layer> getLayers()
     {
-        return mAnimationManager.getLayers();
+        return mLayers;
     }
 
 
-    public RenderElement getRenderObject(GameElement go, boolean drawhitbox)
+    public static void toggleDebugHitboxes()
     {
-        int unique = go.getUniqeueID();
+        DEBUG_DRAW_HITBOXES = !DEBUG_DRAW_HITBOXES;
+    }
+
+    public RenderElement getRenderObject(GameElement go)
+    {
+        final int layerHitbox = 4;
+        final int unique = go.getUniqeueID();
         RenderElement ro = mRos.get(unique);
 
 
@@ -88,20 +114,37 @@ public class DisplayManager
         {
             ro = getFreeRenderObjectFromPool();
             final int layerAnimation = 1;
-            final int layerHitbox = 4;
 
             /* Save previous movement state */
             ro.init(go.mObjectType,go.mObjectSubtype, go.getState(), unique);
             mAnimationManager.createAnimatedObject(ro, layerAnimation);
+            mLayers.get(layerAnimation).addRenderObjectToLayer(ro);
             mRos.put(unique, ro);
 
-            /* Add a visible hitbox */
-            if(drawhitbox)
+        }
+
+        /* Add a visible hitbox */
+        if(DEBUG_DRAW_HITBOXES)
+        {
+            if((ro.mDebugObject == null))
             {
                 ro.addDebugObject(go, mScaleFactor);
-                mAnimationManager.getLayers().get(layerHitbox).addRenderObjectToLayer(ro.mDebugObject);
+                mLayers.get(layerHitbox).addRenderObjectToLayer(ro.mDebugObject);
+            }
+        } else if(ro.mDebugObject != null)
+        {
+            if(ro.mDebugObject.removed)
+            {
+                ro.mDebugObject = null;
+            }
+            else {
+                ro.mDebugObject.removeFromRenderingGpu = true;
+                //ro.mDebugObject = null;
+                /* TODO: destroy object */
             }
         }
+
+
         return ro;
     }
 
@@ -113,12 +156,6 @@ public class DisplayManager
 
     public void returnRenderObjectToPool(RenderElement ro)
     {
-        if(ro.mDebugObject != null)
-        {
-            ro.mDebugObject.removeFromRenderingGpu = true;
-            /* TODO: destroy object */
-        }
-
         /* Return RenderElement to pool*/
         ro.removeFromRenderingGpu = true;
         mRos.remove(ro.getUniqueId());
@@ -138,7 +175,7 @@ public class DisplayManager
         while (--sz >= 0)
         {
             GameElement go = (GameElement) goupdates.getEvent(sz);
-            RenderElement ro = getRenderObject(go, DEBUG_DRAW_HITBOXES);
+            RenderElement ro = getRenderObject(go);
 
             /* Translate and sort after 'Z' all animations that are attached to the render object */
             long pos[] = go.getPositionXY();
@@ -152,7 +189,7 @@ public class DisplayManager
         while (--sz >= 0)
         {
             GameElement go = (GameElement) goremovals.getEvent(sz);
-            RenderElement ro = getRenderObject(go, DEBUG_DRAW_HITBOXES);
+            RenderElement ro = getRenderObject(go);
             returnRenderObjectToPool(ro);
         }
         goremovals.resetEvents();
@@ -177,6 +214,7 @@ public class DisplayManager
                 ro.init(so.mObjectType, so.mObjectSubtype, so.mState, so.mObjectID);
                 ro.setAdditionalParams(so.getUpdatedAdditionals());
                 mAnimationManager.createAnimatedObject(ro, laynum);
+                mLayers.get(laynum).addRenderObjectToLayer(ro);
             }
 
             mAnimationManager.updateAnimatedObject(ro, so.mState);

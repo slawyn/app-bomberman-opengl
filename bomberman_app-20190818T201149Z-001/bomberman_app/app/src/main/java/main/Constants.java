@@ -72,7 +72,6 @@ public final class Constants
     //////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////
     /* DEBUG_INFORMATION*/
-    public final static boolean DEBUG_DRAW_HITBOXES = true;
     public final static boolean DEBUG_DRAW_DEBUG_INFO = false;
 
 
@@ -129,6 +128,29 @@ public final class Constants
 
     public static final int ST_APP_OFFLINE_START = ST_APP_SERVER_GAME_RUNNING + 1;
     public static final int ST_APP_OFFLINE_GAME_RUNNING = ST_APP_OFFLINE_START + 1;
+
+    public static final int[] ST_APP_STATES = {
+            ST_APP_START,
+            ST_APP_PRELOAD,
+            ST_APP_LOAD,
+            ST_APP_SELECTION,
+            ST_APP_SELECTION_MAIN,
+            ST_APP_SELECTION_BLUETOOTH,
+            ST_APP_SELECTION_WLAN,
+            ST_APP_CLIENT_DISCOVER_WLAN,
+            ST_APP_CLIENT_DISCOVER_BLUETOOTH,
+            ST_APP_CLIENT_SELECT_SERVER,
+            ST_APP_CLIENT_SYNC,
+            ST_APP_CLIENT_GAME_RUNNING,
+            ST_APP_SERVER_BLUETOOTH,
+            ST_APP_SERVER_WLAN,
+            ST_APP_SERVER_DISCOVERABLE,
+            ST_APP_SERVER_WAIT_FOR_DISCOVERABLE,
+            ST_APP_SERVER_SYNC,
+            ST_APP_SERVER_GAME_RUNNING,
+            ST_APP_OFFLINE_START,
+            ST_APP_OFFLINE_GAME_RUNNING
+    };
 
 
 }

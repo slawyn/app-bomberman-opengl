@@ -1,11 +1,12 @@
 package main.game.sceneobjects;
 
+
 import main.Constants;
 import main.game.SceneElement;
 
 import static main.game.SceneManager.SOBJ_BUTTON;
 
-public class Button extends SceneElement
+public abstract class Button extends SceneElement
 {
     private final int mSizeX;
     private final int mSizeY;
@@ -13,10 +14,9 @@ public class Button extends SceneElement
     public int mAction;
 
 
-    public Button(int id, int posx, int posy, int sizex, int sizey, int action, int type)
+    public Button(int subtype, int id, int posx, int posy, int sizex, int sizey, int action, int animation)
     {
-        super(SOBJ_BUTTON, id);
-        mObjectSubtype = type;
+        super(subtype, id, animation);
         mAction = action;
         mSizeX = sizex;
         mSizeY = sizey;

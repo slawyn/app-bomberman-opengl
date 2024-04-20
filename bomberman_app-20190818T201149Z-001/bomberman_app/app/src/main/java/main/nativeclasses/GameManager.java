@@ -3,6 +3,7 @@ package main.nativeclasses;
 import android.annotation.SuppressLint;
 
 import main.game.events.Events;
+import main.rendering.display.AnimationManager;
 
 import static main.nativeclasses.GameElement.OBJ_PLAYR;
 
@@ -105,7 +106,7 @@ public class GameManager
         for(int i = total; i >= 0; i--)
         {
             GameElement go = getFreeGameObject();
-            go.init( objs[i]&0xF000, objs[i]&0x0FFF,0);
+            go.init( objs[i]&0xF000, objs[i]&0x0FFF, AnimationManager.AG000);
             mStateUpdateEvents.addEvent(go);
         }
         return mStateUpdateEvents;
@@ -118,7 +119,7 @@ public class GameManager
         for(int i = total; i >= 0; i--)
         {
             GameElement go = getFreeGameObject();
-            go.init( objs[i]&0xF000, objs[i]&0x0FFF,0);
+            go.init( objs[i]&0xF000, objs[i]&0x0FFF,AnimationManager.AG000);
             mRemovalEvents.addEvent(go);
         }
         return mRemovalEvents;

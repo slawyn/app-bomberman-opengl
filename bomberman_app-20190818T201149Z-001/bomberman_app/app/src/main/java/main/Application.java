@@ -1,8 +1,10 @@
 package main;
 
 import android.os.Build;
+import android.util.Log;
 
 import main.communication.PacketQueue;
+import main.game.events.ButtonCallback;
 import main.nativeclasses.GameManager;
 import main.game.logic.NetcodeLogic;
 import main.game.SceneManager;
@@ -14,7 +16,7 @@ import static main.Constants.*;
 import static main.Globals.mSyncObject;
 
 
-public class Application implements Runnable
+public class Application implements Runnable, ButtonCallback
 {
     public final String TAG = "Application";
     private Connector mConnector;
@@ -47,6 +49,31 @@ public class Application implements Runnable
         Thread app = new Thread(this, TAG);
         app.setPriority(6);
         app.start();
+    }
+    public void onCallback(int value)
+    {
+        if(mAppPhase == ST_APP_SELECTION)
+        {
+            onChangePhase(value);
+        }
+        else
+        {
+            /*Show hitboxes*/
+            DisplayManager.toggleDebugHitboxes();
+        }
+
+    }
+
+    private void onChangePhase(int phase)
+    {
+        for(int state: ST_APP_STATES)
+        {
+            if(phase == state)
+            {
+                mAppPhase = phase;
+                phaseDelay(100);
+            }
+        }
     }
 
     private void phaseDelay(int wait)
@@ -89,7 +116,7 @@ public class Application implements Runnable
                 case ST_APP_LOAD:
                     if(mGameRenderer.getLoadedResourcesCount() == mDisplayManager.getResourceCount())
                     {
-                        mSceneManager.createSelectionScene();
+                        mSceneManager.createSelectionScene(this);
                         mAppPhase = ST_APP_SELECTION;
                     } else
                     {
@@ -107,15 +134,6 @@ public class Application implements Runnable
                     {
                         mAppPhase = ST_APP_CLIENT_DISCOVER_BLUETOOTH;
                     }
-                    else
-                    {
-                        int selectedState = mSceneManager.parseSelection(input);
-                        if(selectedState != -1)
-                        {
-                            mAppPhase = selectedState;
-                            phaseDelay(100);
-                        }
-                    }
                     break;
 
                 //////////////////////////////////////////////////
@@ -123,7 +141,7 @@ public class Application implements Runnable
                 //////////////////////////////////////////////////
                 // No Bluetooth routines
                 case ST_APP_OFFLINE_START:
-                    mSceneManager.createGameScene();
+                    mSceneManager.createGameScene(this);
                     mGameManager.createGameLevel(0);
                     mAppPhase = ST_APP_OFFLINE_GAME_RUNNING;
                     break;
@@ -144,7 +162,7 @@ public class Application implements Runnable
                     if(mConnector.isBluetoothEnabled() && mConnector.isFineLocationEnabled())
                     {
                         mAppPhase = ST_APP_SELECTION;
-                        mSceneManager.createSelectionBluetoothScene();
+                        mSceneManager.createSelectionBluetoothScene(this);
                     } else
                     {
                         phaseDelay(500);           // loop until bluetooth has been enabled
@@ -158,7 +176,7 @@ public class Application implements Runnable
                     if(true)
                     {
                         mAppPhase = ST_APP_SELECTION;
-                        mSceneManager.createSelectionWlanScene();
+                        mSceneManager.createSelectionWlanScene(this);
                     } else
                     {
                         phaseDelay(500);           // loop until bluetooth has been enabled
@@ -208,7 +226,7 @@ public class Application implements Runnable
                 case ST_APP_CLIENT_SYNC:
                     if(mNetcodeLogicManager.getDistributedId())
                     {
-                        mSceneManager.createGameScene();
+                        mSceneManager.createGameScene(null);
                         mAppPhase = ST_APP_CLIENT_GAME_RUNNING;
                     }
                     break;
@@ -240,7 +258,7 @@ public class Application implements Runnable
                     break;
                 // Create Server game
                 case ST_APP_SERVER_SYNC:
-                    mSceneManager.createGameScene();
+                    mSceneManager.createGameScene(null);
                     mNetcodeLogicManager.serverInit();
                     mNetcodeLogicManager.resetMasterState();
                     mAppPhase = ST_APP_SERVER_GAME_RUNNING;

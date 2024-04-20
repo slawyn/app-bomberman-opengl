@@ -46,18 +46,17 @@ import static main.rendering.display.DisplayManager.mGamePortHeight;
 import static main.rendering.display.DisplayManager.mGamePortWidth;
 
 /* View, used as main game loop */
-public class GameRenderer implements GLSurfaceView.Renderer
-{
+public class GameRenderer implements GLSurfaceView.Renderer {
     private final String TAG = "GameRenderer";
     private int mMeasuredWidth;
     private int mMeasuredHeight;
-    private int[] mTextures;       // holds mTextures together with references to the DRAWABLES
-    private float[] projectionMatrix = new float[16];
+    private int[] mTextures; // holds mTextures together with references to the DRAWABLES
+    private float[] mProjectionMatrix = new float[16];
     private float[] mModelMatrix = new float[16];
     private float[] mModelViewProjectionMatrix = new float[16];
 
-    private TextureShaderProgram textureProgram;
-    private ColorShaderProgram colorProgram;
+    private TextureShaderProgram mTextureProgram;
+    private ColorShaderProgram mColorProgram;
     private DisplayManager mDisplayManager;
     private float mFpsCounter;
     private int mFpsUpdateFrequency;
@@ -65,13 +64,12 @@ public class GameRenderer implements GLSurfaceView.Renderer
     private int mFpsDecimalCurrent1;
     private int mResourcesLoaded;
     private int mTextureIndex;
-    private long mFrameStartTime;
-    private long mFrameLastTime;
+    private long mDebugFrameStartTime;
+    private long mDebugFrameLastTime;
     private float mTotalTime;
     private Resources mResources;
 
-    public GameRenderer(Resources res, int widthpixels, int heightpixels)
-    {
+    public GameRenderer(Resources res, int widthpixels, int heightpixels) {
         mResources = res;
         mDisplayManager = new DisplayManager();
         mTextures = new int[NUMBER_OF_TEXTURES];
@@ -80,37 +78,35 @@ public class GameRenderer implements GLSurfaceView.Renderer
         rescale();
     }
 
-    public DisplayManager getDisplayManager()
-    {
+    public int getTextureNumerical(int number) {
+        return mTextures[mTextureIndex - 10 + number];
+    }
+
+    public DisplayManager getDisplayManager() {
         return mDisplayManager;
     }
 
-
-    /* Calculate offsets
-      36x36 (0.75x) for low-density (ldpi)
-      48x48 (1.0x baseline) for medium-density (mdpi)
-      72x72 (1.5x) for high-density (hdpi)
-      96x96 (2.0x) for extra-high-density (xhdpi)
-      144x144 (3.0x) for extra-extra-high-density (xxhdpi)
-      192x192 (4.0x) for extra-extra-extra-high-density (xxxhdpi)
-  */
-    private void rescale()
-    {
+    /*
+     * Calculate offsets
+     * 36x36 (0.75x) for low-density (ldpi)
+     * 48x48 (1.0x baseline) for medium-density (mdpi)
+     * 72x72 (1.5x) for high-density (hdpi)
+     * 96x96 (2.0x) for extra-high-density (xhdpi)
+     * 144x144 (3.0x) for extra-extra-high-density (xxhdpi)
+     * 192x192 (4.0x) for extra-extra-extra-high-density (xxxhdpi)
+     */
+    private void rescale() {
         int newScreenWidth, newScreenHeight;
         float ratioPhysicScreen = (float) mMeasuredWidth / (float) mMeasuredHeight;
-        float ratioWanted = mGamePortWidth / (float)mGamePortHeight;
+        float ratioWanted = mGamePortWidth / (float) mGamePortHeight;
 
-        if(ratioWanted > ratioPhysicScreen)
-        {
+        if (ratioWanted > ratioPhysicScreen) {
             newScreenWidth = (mMeasuredWidth);
             newScreenHeight = (int) (mMeasuredWidth * (mGamePortHeight) / (mGamePortWidth));
-        }
-        else
-        {
+        } else {
             newScreenWidth = (int) (mMeasuredHeight / (mGamePortHeight) * (mGamePortWidth));
             newScreenHeight = (mMeasuredHeight);
         }
-
 
         mDisplayManager.load(newScreenWidth, newScreenHeight,
                 (float) newScreenWidth / mGamePortWidth,
@@ -118,13 +114,20 @@ public class GameRenderer implements GLSurfaceView.Renderer
                 (mMeasuredHeight - newScreenHeight) / 2);
     }
 
+    public int getLoadedResourcesCount() {
+        return mResourcesLoaded;
+    }
 
-    public void loadTextures()
-    {
+    @Override
+    public void onSurfaceChanged(GL10 unused, int width, int height) {
+        orthoM(mProjectionMatrix, 0, 0, mMeasuredWidth, mMeasuredHeight, 0f, -1f, 1f);
+        // orthoM(mProjectionMatrix, 0, -1 , 1, -1f, 1f, -1f, 1f);
+    }
+
+    public void loadTextures() {
         /* Loadables are fed from the main thread */
         Loader loader = mDisplayManager.getLoader();
-        if(loader.hasLoadables())
-        {
+        if (loader.hasLoadables()) {
             Loadable loadable = loader.getLoadable();
             Bitmap bigBitmap = BitmapFactory.decodeResource(mResources, loadable.resourceid, loader.getLoaderOptions());
 
@@ -132,8 +135,7 @@ public class GameRenderer implements GLSurfaceView.Renderer
             int height = bigBitmap.getHeight();
 
             // Loader texture in OPENGL Memory
-            for(int c = 0; c < loadable.numberoftextures; c++)
-            {
+            for (int c = 0; c < loadable.numberoftextures; c++) {
                 Bitmap bitmap = Bitmap.createBitmap(bigBitmap, width * c, 0, width, height);
                 mTextures[loadable.texturebaseindex + c] = TextureLoader.loadTexture(bitmap);
                 bitmap.recycle();
@@ -145,8 +147,7 @@ public class GameRenderer implements GLSurfaceView.Renderer
         }
     }
 
-
-    public void prepareMatrix(float[] translation){
+    public void prepareMatrix(float[] translation) {
         mModelMatrix[0] = 1.0f;
         mModelMatrix[1] = 0;
         mModelMatrix[2] = 0;
@@ -166,41 +167,37 @@ public class GameRenderer implements GLSurfaceView.Renderer
     }
 
     @Override
-    public void onSurfaceCreated(GL10 unused, EGLConfig config)
-    {
+    public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         glClearColor(1f, 0.0f, 0.0f, 1.0f);
         glViewport(0, 0, mMeasuredWidth, mMeasuredHeight);
-        textureProgram = new TextureShaderProgram(mResources);
-        colorProgram = new ColorShaderProgram(mResources);
+        mTextureProgram = new TextureShaderProgram(mResources);
+        mColorProgram = new ColorShaderProgram(mResources);
 
         /*
-        glDepthFunc(GL_LESS);
-        glEnable(GL_DEPTH_TEST);
-        glDisable(GL_CULL_FACE);
-        // Clear the rendering surface.
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-        */
+         * glDepthFunc(GL_LESS);
+         * glEnable(GL_DEPTH_TEST);
+         * glDisable(GL_CULL_FACE);
+         * // Clear the rendering surface.
+         * glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+         */
 
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);//GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);// GL_ONE_MINUS_SRC_ALPHA);
         Logger.log(Logger.INFO, TAG, "GPU SURFACE CREATED");
 
         /* Initial time */
         getRenderingDelta(System.nanoTime());
     }
 
-    private float getRenderingDelta(long time)
-    {
-        mFrameStartTime = time;
-        float deltatime = (mFrameStartTime - mFrameLastTime) / 1000000.0f;
-        mFrameLastTime = mFrameStartTime;
+    private float getRenderingDelta(long time) {
+        mDebugFrameStartTime = time;
+        float deltatime = (mDebugFrameStartTime - mDebugFrameLastTime) / 1000000.0f;
+        mDebugFrameLastTime = mDebugFrameStartTime;
         return deltatime;
     }
 
     @Override
-    public void onDrawFrame(GL10 unused)
-    {
-        long timetest;
+    public void onDrawFrame(GL10 unused) {
         int previousvertex = -1;
         int currentvertex = -1;
         int previoustexture = -1;
@@ -210,23 +207,21 @@ public class GameRenderer implements GLSurfaceView.Renderer
         loadTextures();
         glClear(GL_COLOR_BUFFER_BIT);
 
-        /* Update and DRAW INFO FPS Counter*/
+        /* Update and DRAW INFO FPS Counter */
         mTotalTime += dt;
-        if((mFpsUpdateFrequency+=1) == 10)
-        {
-            mFpsCounter = 1000.0f/(mTotalTime/mFpsUpdateFrequency);
+        if ((mFpsUpdateFrequency += 1) == 10) {
+            mFpsCounter = 1000.0f / (mTotalTime / mFpsUpdateFrequency);
             mTotalTime = 0;
             mFpsUpdateFrequency = 0;
 
             /**/
-            mFpsDecimalCurrent0 = (int)mFpsCounter % 10;
-            mFpsDecimalCurrent1 = (int)mFpsCounter / 10 % 10;
+            mFpsDecimalCurrent0 = (int) mFpsCounter % 10;
+            mFpsDecimalCurrent1 = (int) mFpsCounter / 10 % 10;
         }
 
-
         /* Update Game */
-        textureProgram.useProgram();
-        RenderElement.updateelapsed(dt);
+        mTextureProgram.useProgram();
+        RenderElement.updateElapsed(dt);
         Vector<Layer> layers = mDisplayManager.getLayers();
         {
             int sx = layers.size() - 1;
@@ -241,23 +236,23 @@ public class GameRenderer implements GLSurfaceView.Renderer
 
                     int animsz = animations.size();
                     currentvertex = ro.mOptimizationObjectType;
-                    for (int j = 0; j < animsz; j++)
-                    {
+                    for (int j = 0; j < animsz; j++) {
                         Animation obj = animations.get(j);
                         prepareMatrix(obj.getTranslation());
-                        multiplyMM(mModelViewProjectionMatrix, 0, projectionMatrix, 0, mModelMatrix, 0);
+                        multiplyMM(mModelViewProjectionMatrix, 0, mProjectionMatrix, 0, mModelMatrix, 0);
 
                         /* Reuse bound texture */
                         currenttexture = obj.getCurrentTexture();
                         if (currenttexture != previoustexture) {
-                            textureProgram.setUniforms(mModelViewProjectionMatrix, mTextures[currenttexture], GL_TEXTURE0);
+                            mTextureProgram.setUniforms(mModelViewProjectionMatrix, mTextures[currenttexture],
+                                    GL_TEXTURE0);
                             previoustexture = currenttexture;
                         } else {
-                            textureProgram.setUniformsFast(mModelViewProjectionMatrix);
+                            mTextureProgram.setUniformsFast(mModelViewProjectionMatrix);
                         }
 
                         if (previousvertex != currentvertex) {
-                            textureProgram.bindData(mDisplayManager.getQuad(currentvertex));
+                            mTextureProgram.bindData(mDisplayManager.getQuad(currentvertex));
                             previousvertex = currentvertex;
                         }
 
@@ -267,73 +262,99 @@ public class GameRenderer implements GLSurfaceView.Renderer
             }
         }
 
-        /* Draw fps only when all resources have been loaded */
-        if(mResourcesLoaded == mDisplayManager.getResourceCount())
-        {
-            textureProgram.bindData(mDisplayManager.getQuad(SceneManager.SOBJ_FPS_COUNTER));
-            if(mFpsDecimalCurrent1 > 0)
-            {
-                setIdentityM(mModelMatrix, 0);
+        /* DEBUG: Draw fps only when all resources have been loaded */
+        if (mResourcesLoaded == mDisplayManager.getResourceCount()) {
+            mTextureProgram.bindData(mDisplayManager.getQuad(SceneManager.SOBJ_FPS_COUNTER));
+            setIdentityM(mModelMatrix, 0);
+            if (mFpsDecimalCurrent1 > 0) {
                 translateM(mModelMatrix, 0, 10, 30, 0);
-                multiplyMM(mModelViewProjectionMatrix, 0, projectionMatrix, 0, mModelMatrix, 0);
-                textureProgram.setUniforms(mModelViewProjectionMatrix, mTextures[mTextureIndex - 10 + mFpsDecimalCurrent1], GL_TEXTURE0);
+                multiplyMM(mModelViewProjectionMatrix, 0, mProjectionMatrix, 0, mModelMatrix, 0);
+                mTextureProgram.setUniforms(mModelViewProjectionMatrix, getTextureNumerical(mFpsDecimalCurrent1),
+                        GL_TEXTURE0);
                 glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
             }
 
             setIdentityM(mModelMatrix, 0);
             translateM(mModelMatrix, 0, 100, 30, 0);
-            multiplyMM(mModelViewProjectionMatrix, 0, projectionMatrix, 0, mModelMatrix, 0);
-            textureProgram.setUniforms(mModelViewProjectionMatrix, mTextures[mTextureIndex - 10 + mFpsDecimalCurrent0], GL_TEXTURE0);
-
+            multiplyMM(mModelViewProjectionMatrix, 0, mProjectionMatrix, 0, mModelMatrix, 0);
+            mTextureProgram.setUniforms(mModelViewProjectionMatrix, getTextureNumerical(mFpsDecimalCurrent0),
+                    GL_TEXTURE0);
             glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
         }
 
-        /* DRAW HITBOXES */
+        /* DEBUG: show hitboxes */
         Layer debuglayer = layers.get(4);
         RenderElement[] sorted = debuglayer.getSortedArray();
         int idz = debuglayer.getSortedArraySize();
+        if (idz > 0) {
+            mColorProgram.useProgram();
 
-        if(idz>0)
-        {
-            colorProgram.useProgram();
-        }
+            while (--idz >= 0) {
+                final DebugElement debugobj = (DebugElement) sorted[idz];
+                final float[] offset = debugobj.getRenderObjectPosition();
+                int idx = debugobj.getNumberOfObjects();
+                while (--idx >= 0) {
+                    final float xPixel = mDisplayManager.gamePortOffsetXY[0] + offset[0];
+                    final float yPixel = mDisplayManager.gamePortOffsetXY[1] + offset[1];
+                    setIdentityM(mModelMatrix, 0);
+                    translateM(mModelMatrix, 0, xPixel, yPixel, 0);
+                    multiplyMM(mModelViewProjectionMatrix, 0, mProjectionMatrix, 0, mModelMatrix, 0);
 
-        while(--idz >= 0)
-        {
-            RenderElement ro = sorted[idz];
-            DebugElement debugobj = (DebugElement) ro;
-
-            float[] offset = debugobj.getRenderObjectPosition();
-            int idx = debugobj.getNumberOfObjects();
-            while(--idx>=0)
-            {
-                setIdentityM(mModelMatrix,0);
-                translateM(mModelMatrix, 0, mDisplayManager.gamePortOffsetXY[0] +offset[0], mDisplayManager.gamePortOffsetXY[1] +offset[1], 0);
-                multiplyMM(mModelViewProjectionMatrix, 0, projectionMatrix, 0, mModelMatrix, 0);
-
-                colorProgram.setUniforms(mModelViewProjectionMatrix);
-                debugobj.bindDebugData(idx, colorProgram);
-                glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+                    mColorProgram.setUniforms(mModelViewProjectionMatrix);
+                    debugobj.bindDebugData(idx, mColorProgram);
+                    glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+                }
             }
         }
 
+        /* DEBUG: show positional data <=9999 */
+        idz = debuglayer.getSortedArraySize();
+        if (idz > 0) {
+            mTextureProgram.useProgram();
+            mTextureProgram.bindData(mDisplayManager.getQuad(SceneManager.SOBJ_DEBUG));
+            while (--idz >= 0) {
+                final DebugElement debugobj = (DebugElement) sorted[idz];
+                final float[] offset = debugobj.getRenderObjectPosition();
+                int idx = debugobj.getNumberOfObjects();
+                while (--idx >= 0) {
+                    final int posx = (int) offset[0];
+                    final int[] xNumbers = { posx / 1000, posx / 100 % 10, posx / 10 % 10, posx % 10 };
+                    for (int idy = 0; idy < xNumbers.length; ++idy) {
+                        final float xPixel = mDisplayManager.gamePortOffsetXY[0] + offset[0] + idy * 16;
+                        final float yPixel = mDisplayManager.gamePortOffsetXY[1] + offset[1];
+
+                        setIdentityM(mModelMatrix, 0);
+                        translateM(mModelMatrix, 0, xPixel, yPixel, 0);
+                        multiplyMM(mModelViewProjectionMatrix, 0, mProjectionMatrix, 0, mModelMatrix, 0);
+
+                        mTextureProgram.setUniforms(mModelViewProjectionMatrix, getTextureNumerical(xNumbers[idy]),
+                                GL_TEXTURE0);
+                        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+                    }
+
+                    final int posy = (int) offset[1];
+                    final int[] yNumbers = { posy / 1000, posy / 100 % 10, posy / 10 % 10, posy % 10 };
+                    for (int idy = 0; idy < yNumbers.length; ++idy) {
+                        final float xPixel = mDisplayManager.gamePortOffsetXY[0] + offset[0] + idy * 16;
+                        final float yPixel = mDisplayManager.gamePortOffsetXY[1] + offset[1] + 16;
+
+                        setIdentityM(mModelMatrix, 0);
+                        translateM(mModelMatrix, 0, xPixel, yPixel, 0);
+                        multiplyMM(mModelViewProjectionMatrix, 0, mProjectionMatrix, 0, mModelMatrix, 0);
+
+                        mTextureProgram.setUniforms(mModelViewProjectionMatrix, getTextureNumerical(yNumbers[idy]),
+                                GL_TEXTURE0);
+                        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+                    }
+                }
+            }
+        }
 
         /* @Measure exec time */
-        if(( timetest = System.nanoTime() - mFrameStartTime) > Globals.mDebugRendererTimeMax)
-            Globals.mDebugRendererTimeMax = timetest;
-        else if(timetest < Globals.mDebugRendererTimeMin)
-            Globals.mDebugRendererTimeMin = timetest;
-    }
-
-    public int getLoadedResourcesCount()
-    {
-        return mResourcesLoaded;
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 unused, int width, int height)
-    {
-        orthoM(projectionMatrix, 0, 0, mMeasuredWidth, mMeasuredHeight, 0f, -1f, 1f);
-        //orthoM(projectionMatrix, 0, -1 , 1, -1f, 1f, -1f, 1f);
+        long debugTimetest = System.nanoTime() - mDebugFrameStartTime;
+        if (debugTimetest > Globals.mDebugRendererTimeMax)
+            Globals.mDebugRendererTimeMax = debugTimetest;
+        else if (debugTimetest < Globals.mDebugRendererTimeMin)
+            Globals.mDebugRendererTimeMin = debugTimetest;
     }
 }

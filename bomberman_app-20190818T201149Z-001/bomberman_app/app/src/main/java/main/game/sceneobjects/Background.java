@@ -6,8 +6,7 @@ import main.game.SceneElement;
 
 public class Background extends SceneElement {
     public Background(int id,  int subtype) {
-        super(SOBJ_BACKGROUND, id );
-        mObjectSubtype = subtype;
+        super(SOBJ_BACKGROUND, id, subtype );
         mPositionX = 0;
         mPositionY = 0;
     }

@@ -16,6 +16,7 @@ public class RenderElement implements Comparable<RenderElement>
     public int mOptimizationObjectType;
     private int mAnimationState;
     public boolean removeFromRenderingGpu;
+    public boolean removed;
     private boolean mInterpolate;
     private static int mBufferIndex;
     public static float elapsed;
@@ -34,6 +35,8 @@ public class RenderElement implements Comparable<RenderElement>
 
     public void init(int type, int subtype, int state, int id)
     {
+        removed = false;
+
         /* Clear the animations */
         mAnimations.clear();
         mAdditionalParams = null;
@@ -91,7 +94,7 @@ public class RenderElement implements Comparable<RenderElement>
         }
     }
 
-    public static void updateelapsed(float dt)
+    public static void updateElapsed(float dt)
     {
         elapsed += dt;
     }

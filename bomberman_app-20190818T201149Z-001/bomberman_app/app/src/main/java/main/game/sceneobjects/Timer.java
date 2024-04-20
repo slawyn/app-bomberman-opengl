@@ -9,8 +9,7 @@ public class Timer extends SceneElement
     public int mTime;
     public int mNewTime;
     public Timer(int id,  int posx, int posy, int subtype) {
-        super(SOBJ_TIMER, id);
-        mObjectSubtype = subtype;
+        super(SOBJ_TIMER, id, subtype);
         mPositionX = posx;
         mPositionY = posy;
         mTime = 0;

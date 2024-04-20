@@ -8,14 +8,15 @@ import static main.game.SceneManager.SOBJ_TOUCH;
 
 public class Touch extends SceneElement {
 
+    private static int MarkerCount =0;
     private int mInputSelector;
-    public Touch(int id, int type){
-        super(SOBJ_TOUCH,id);
-        mObjectSubtype = type;
+    public Touch(int id, int subtype){
+        super(SOBJ_TOUCH,id, subtype);
         mState = Constants.STATE_UNPRESSED;
         mPositionX = -1000;
         mPositionY = -1000;
-        mInputSelector = type *3;
+        mInputSelector = MarkerCount *3;
+        MarkerCount +=1;
     }
 
     // 0: x

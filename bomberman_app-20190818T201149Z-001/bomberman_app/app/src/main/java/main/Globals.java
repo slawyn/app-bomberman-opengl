@@ -22,4 +22,5 @@ public class Globals
     public static int mDebugMinLatency;
     public static int mDebugMaxLatency;
     public static int mDebugCountLatency;
+
 }

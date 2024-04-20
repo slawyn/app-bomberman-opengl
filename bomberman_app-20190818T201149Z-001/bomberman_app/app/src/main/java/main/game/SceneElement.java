@@ -17,10 +17,11 @@ public class SceneElement extends EventObject
     public int mLayer;
     public RenderElement ro;
 
-    public SceneElement(int objtype, int objid)
+    public SceneElement(int objtype, int objid, int objsubtype)
     {
         mObjectID = objid;
         mObjectType = objtype;
+        mObjectSubtype = objsubtype;
         mState = -1;
         mPreviousState = -1;
     }

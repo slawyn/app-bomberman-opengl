@@ -1,5 +1,5 @@
 package main.rendering.animation;
-
+import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import main.rendering.elements.RenderElement;
@@ -15,13 +15,21 @@ public class Layer
 
     public Layer(int sz)
     {
-
         mSortedArrayForGPU = new RenderElement[sz];
         mNewRenderObjectsQueue = new ConcurrentLinkedQueue<>();
         mDirty = true;
         mArraySize = 0;
     }
-
+    public static Vector<Layer> createLayers(int[][] layerconfiguration)
+    {   
+        Vector<Layer> layers = new Vector<>();
+        for(int idx=0; idx<layerconfiguration.length; ++idx)
+        {   
+            final int size = layerconfiguration[idx][1];
+            layers.add(new Layer(size));
+        }
+        return layers;
+    }
 
     public void addRenderObjectToLayer(RenderElement ro)
     {
@@ -37,6 +45,7 @@ public class Layer
             {
                 if(mSortedArrayForGPU[idx].removeFromRenderingGpu)
                 {
+                    mSortedArrayForGPU[idx].removed = true;
                     mSortedArrayForGPU[idx] = mSortedArrayForGPU[mArraySize - 1];
                     --mArraySize;
                 }

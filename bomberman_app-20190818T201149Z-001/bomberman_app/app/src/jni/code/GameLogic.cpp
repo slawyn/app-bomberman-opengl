@@ -26,15 +26,13 @@ extern "C"
 
     STATIC void vUpdateSimpleObjects(jint ji32Dt, Object_t *pxObject, xUpdaterFunction pUpFunction, xHitboxFunction pHbFunction);
 
-
-#define GET_CURRENT_OBJECT_STATES(x)    \
-    Bomb_t *pxBomb = &pxBombs[x];       \
-    Player_t *pxPlayer = &pxPlayers[x]; \
-    Block_t *pxBlock = &pxBlocks[x];    \
-    Crate_t *pxCrate = &pxCrates[x];
+    #define GET_CURRENT_PLAYER(x) (&pxPlayers[x])
+    #define GET_CURRENT_BLOCK(x) (&pxBlocks[x])
+    #define GET_CURRENT_CRATE(x) (&pxCrates[x])
+    #define GET_CURRENT_BOMB(x) (&pxBombs[x])
+    #define GET_CURRENT_OBJECTS(x) Bomb_t *pxBomb = &pxBombs[x]; Player_t *pxPlayer = &pxPlayers[x]; Block_t *pxBlock = &pxBlocks[x]; Crate_t *pxCrate = &pxCrates[x];
 
     /* Constants ------------------------------------               ---------- */
-
     STATIC Player_t rxPlayers[TOTAL_STATE_COUNT][PLAYER_COUNT_MAX];
     STATIC Bomb_t rxBombs[TOTAL_STATE_COUNT][BOMB_COUNT_MAX];
     STATIC Crate_t rxCrates[TOTAL_STATE_COUNT][CRATE_COUNT_MAX];
@@ -52,15 +50,13 @@ extern "C"
     int16_t STARTING_CELL_POSITIONS[2][2] = {{0, 0},
                                              {10, 0}};
 
-    jint pi32Hitbox[8] = {10, 10, 10, 10, 0, 0, 0, 0};
-    jlong rjiPosition[2] = {0, 0};
 
     STATIC int16_t i16InitObject(int32_t i32ObjectStateOffset,
                           int32_t i32ObjType,
                           int32_t i32PositionX,
                           int32_t i32PositionY)
     {
-        GET_CURRENT_OBJECT_STATES(i32ObjectStateOffset)
+        GET_CURRENT_OBJECTS(i32ObjectStateOffset)
         switch (i32ObjType)
         {
         case OBJ_PLAYR:
@@ -139,10 +135,10 @@ extern "C"
 
     STATIC void vUpdateAllPlayers(jint ji32Dt, Player_t *pxPlayer)
     {
-        uint32_t ui32Idx = 0;
+        uint32_t ui32Idx = 0u;
         jint jiHitbox[8] = {0};
 
-        uint32_t ui32PlayerUpdates = 0;
+        uint32_t ui32PlayerUpdates = 0u;
         while (ui32Idx < PLAYER_COUNT_MAX)
         {
             if (pxPlayer->object.ui16Id)
@@ -164,10 +160,7 @@ extern "C"
                         }
                     }
                 }
-
-
                 vCorrectPlayerPosition(pxPlayer);
-              
             }
 
             pxPlayer = &(pxPlayers[++ui32Idx]);
@@ -308,26 +301,23 @@ extern "C"
     {
         /* Get all sets */
         (void)ui32PlayerUpdates;
-        GET_CURRENT_OBJECT_STATES(0)
-
         for (uint32_t ui32Idx = 0; ui32Idx < BLOCK_COUNT_MAX; ++ui32Idx)
         {
-            vUpdateSimpleObjects(ji32Dt, (Object_t *)&(pxBlocks[ui32Idx].object), (xUpdaterFunction)i16BlockUpdateState, (xHitboxFunction)vBlockGetHitboxValues);
+            vUpdateSimpleObjects(ji32Dt, &(GET_CURRENT_BLOCK(ui32Idx)->object), (xUpdaterFunction)i16BlockUpdateState, (xHitboxFunction)vBlockGetHitboxValues);
         }
 
         for (uint32_t ui32Idx = 0; ui32Idx < CRATE_COUNT_MAX; ++ui32Idx)
         {
-            vUpdateSimpleObjects(ji32Dt, (Object_t *)&(pxCrates[ui32Idx].object), (xUpdaterFunction)i16CrateUpdateState, (xHitboxFunction)vCrateGetHitboxValues);
+            vUpdateSimpleObjects(ji32Dt, &(GET_CURRENT_CRATE(ui32Idx)->object), (xUpdaterFunction)i16CrateUpdateState, (xHitboxFunction)vCrateGetHitboxValues);
         }
 
         for (uint32_t ui32Idx = 0; ui32Idx < BOMB_COUNT_MAX; ++ui32Idx)
         {
-            vUpdateSimpleObjects(ji32Dt, (Object_t *)&(pxBombs[ui32Idx].object), (xUpdaterFunction)i16BombUpdateState, (xHitboxFunction)vBombGetHitboxValues);
+            vUpdateSimpleObjects(ji32Dt, &(GET_CURRENT_BOMB(ui32Idx)->object), (xUpdaterFunction)i16BombUpdateState, (xHitboxFunction)vBombGetHitboxValues);
         }
 
-        vUpdateAllPlayers(ji32Dt, pxPlayer);
-        vUpdateExplosions(pxBomb);
-
+        vUpdateAllPlayers(ji32Dt, GET_CURRENT_PLAYER(0));
+        vUpdateExplosions(GET_CURRENT_BOMB(0));
         return 0;
     }
 
@@ -422,17 +412,15 @@ extern "C"
         jiInitMap(LEVELS[DEBUG_CONSTANT_LEVEL]);
 
         int16_t ri16Positions[2];
-        i16LevelGetPositionFromCellXY(ri16Positions, STARTING_CELL_POSITIONS[0][1],
-                                      STARTING_CELL_POSITIONS[0][0]);
+        i16LevelGetPositionFromCellXY(ri16Positions, STARTING_CELL_POSITIONS[0][1], STARTING_CELL_POSITIONS[0][0]);
         i16InitObject(DEBUG_CONSTANT_PLAYER_POS, OBJ_PLAYR, ri16Positions[0], ri16Positions[1]);
-
         return 0;
     }
 
     int16_t i16GameGetObjectZ(int32_t i32ObjType, int32_t i32ObjectStateOffset)
     {
 
-        GET_CURRENT_OBJECT_STATES(i32ObjectStateOffset)
+        GET_CURRENT_OBJECTS(i32ObjectStateOffset)
         jint ar[] = {0, 0, 0, 0, 0, 0, 0, 0};
         switch (i32ObjType)
         {
@@ -514,7 +502,7 @@ extern "C"
 
     uint32_t ui32GameGetState(int32_t i32ObjType, int32_t i32ObjectStateOffset)
     {
-        GET_CURRENT_OBJECT_STATES(i32ObjectStateOffset)
+        GET_CURRENT_OBJECTS(i32ObjectStateOffset)
 
         uint32_t ui32State = 0;
         switch (i32ObjType) 
@@ -538,13 +526,14 @@ extern "C"
         return ui32State;
     }
 
+    jlong rjiPosition[2] = {0, 0};
     EXPORTED jint jiGameGetPositions(jlong **ppi32Positions, int32_t i32ObjType, int32_t i32ObjectStateOffset)
     {
-        GET_CURRENT_OBJECT_STATES(i32ObjectStateOffset)
-
+        GET_CURRENT_OBJECTS(i32ObjectStateOffset)
         switch (i32ObjType)
         {
         case OBJ_PLAYR:
+            
             rjiPosition[0] = pxPlayer->object.i16PosX;
             rjiPosition[1] = pxPlayer->object.i16PosY;
             break;
@@ -564,14 +553,13 @@ extern "C"
             break;
         }
         *ppi32Positions = rjiPosition;
-
         return 0;
     }
 
+    jint pi32Hitbox[8] = {10, 10, 10, 10, 0, 0, 0, 0};
     EXPORTED jint jiGameGetHitbox(jint **ppi32Hitbox, int32_t i32ObjType, int32_t i32ObjectStateOffset)
     {
-        GET_CURRENT_OBJECT_STATES(i32ObjectStateOffset)
-
+        GET_CURRENT_OBJECTS(i32ObjectStateOffset)
         switch (i32ObjType)
         {
         case OBJ_PLAYR:

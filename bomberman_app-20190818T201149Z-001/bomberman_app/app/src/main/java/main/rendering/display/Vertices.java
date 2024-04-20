@@ -11,6 +11,13 @@ public class Vertices {
     private SparseArray<VertexArray> mVertexData;
     public Vertices(float scalefactor)
     {
+        float vertices16x16[] = {
+                16f, 0f, 1f, 0f,
+                0, 0f, 0f, 0f,
+                0, 16f, 0f, 1f,
+                16f, 0f, 1f, 0f,
+                0f, 16f, 0f, 1f,
+                16f, 16f, 1f, 1f};
 
         float vertices78x78[] = {
                 78f, 0f, 1f, 0f,
@@ -84,6 +91,13 @@ public class Vertices {
 
 
         /*Rescale vertices*/
+        vertices16x16[0] = vertices16x16[0] * scalefactor;
+        vertices16x16[9] = vertices16x16[9] * scalefactor;
+        vertices16x16[12] = vertices16x16[12] * scalefactor;
+        vertices16x16[17] = vertices16x16[17] * scalefactor;
+        vertices16x16[20] = vertices16x16[20] * scalefactor;
+        vertices16x16[21] = vertices16x16[21] * scalefactor;
+
         vertices78x78[0] = vertices78x78[0] * scalefactor;
         vertices78x78[9] = vertices78x78[9] * scalefactor;
         vertices78x78[12] = vertices78x78[12] * scalefactor;
@@ -142,6 +156,7 @@ public class Vertices {
 
 
         /* Load into float buffers */
+        VertexArray vert16x16 = new VertexArray(vertices16x16);
         VertexArray vert78x78 = new VertexArray(vertices78x78);
         VertexArray vert136x136 = new VertexArray(vertices136x136);
         VertexArray vert150x100 = new VertexArray(vertices150x100);
@@ -160,11 +175,13 @@ public class Vertices {
         mVertexData.put(OBJ_EXPLN, vert150x100);
         mVertexData.put(OBJ_PLAYR, vert180x180);
         mVertexData.put(SOBJ_TOUCH, vert300x300);
+        mVertexData.put(SOBJ_BUTTON_SQUARED, vert180x180);
         mVertexData.put(SOBJ_BUTTON, vert524x200);
         mVertexData.put(SOBJ_BACKGROUND, vertFullscreen);
         mVertexData.put(SOBJ_BACKGROUND_LOADING, vert600x600);
         mVertexData.put(SOBJ_FPS_COUNTER, vert78x78);
         mVertexData.put(SOBJ_TIMER, vert78x78);
+        mVertexData.put(SOBJ_DEBUG, vert16x16);
     }
     public VertexArray getQuad(int key)
     {
