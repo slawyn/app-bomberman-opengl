@@ -1,3 +1,4 @@
+@echo off
 set NDK_BUILD=C:\Users\Unixt\AppData\Local\Android\Sdk\ndk-bundle\ndk-build.cmd
 set BUILD_DIR=.externalNativeBuild/ndk-build/
 

@@ -27,12 +27,12 @@ extern "C"
 
     Hitbox_t * pxBlockGetHitbox(Block_t* pxBlock)
     {
-        vHitboxUpdateEdges(&xHitbox, pxBlock->i16PosX, pxBlock->i16PosY);
+        vHitboxUpdateEdges(&xHitbox, pxBlock->object.i16PosX, pxBlock->object.i16PosY);
         return &xHitbox;
     }
 
     void vBlockGetHitboxValues(Block_t* pxBlock, jint *jiHitboxes) {
-        vHitboxUpdateEdges(&xHitbox, pxBlock->i16PosX, pxBlock->i16PosY);
+        vHitboxUpdateEdges(&xHitbox, pxBlock->object.i16PosX, pxBlock->object.i16PosY);
         jiHitboxes[0] = 0;
         jiHitboxes[1] = 0;
         jiHitboxes[2] = xHitbox.i16HalfSizeX;
@@ -44,20 +44,20 @@ extern "C"
     }
 
     int16_t i16BlockUpdateState(Block_t *pxBlock, int32_t dt) {
-        vHitboxUpdateEdges(&xHitbox, pxBlock->i16PosX, pxBlock->i16PosY);
-        switch(pxBlock->ui8State)
+        vHitboxUpdateEdges(&xHitbox, pxBlock->object.i16PosX, pxBlock->object.i16PosY);
+        switch(pxBlock->object.ui8State)
         {
             case STATE_DEAD:
-                pxBlock->ui8State = STATE_REMOVE;
+                pxBlock->object.ui8State = STATE_REMOVE;
                 break;
         }
         return 1;
     }
 
     int16_t i16BlockInit(Block_t *pxBlock, int16_t i16PositionX, int16_t i16PositionY) {
-        pxBlock->ui8State = STATE_ALIVE;
-        pxBlock->i16PosX = i16PositionX;
-        pxBlock->i16PosY = i16PositionY;
+        pxBlock->object.ui8State = STATE_ALIVE;
+        pxBlock->object.i16PosX = i16PositionX;
+        pxBlock->object.i16PosY = i16PositionY;
         return 1;
     }
 }

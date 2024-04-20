@@ -5,11 +5,13 @@
 #include "Config.h"
 #include "Bomb.h"
 #include "code/GameLogic.h"
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+    static uint16_t ui16FieldMap[NUMBER_OF_X_CELLS][NUMBER_OF_Y_CELLS] = {0};
     int16_t LEVELS[][NUMBER_OF_X_CELLS][NUMBER_OF_Y_CELLS] =
         {
                 {
@@ -41,6 +43,18 @@ extern "C" {
         };
 
 
+void vLevelMemorySetCell(int16_t x, int16_t y, uint16_t value)
+{
+    ui16FieldMap[x][y] = value;
+} 
+uint16_t vLevelMemoryGetCell(int16_t x, int16_t y)
+{
+    return ui16FieldMap[x][y];
+} 
+void vLevelMemoryReset(void)
+{
+    memset(ui16FieldMap, 0, sizeof(ui16FieldMap[0][0]) * (NUMBER_OF_X_CELLS) * (NUMBER_OF_Y_CELLS));
+}
 
 int16_t i16LevelGetPositionFromCellXY(int16_t ri16Positions[2], int16_t i16X, int16_t i16Y)
 {
@@ -65,8 +79,8 @@ int16_t i16ExpandExplosion(Bomb_t * pxBomb, int16_t *rri16Fieldmap[])
 
     int16_t cellposxy[2];
 
-    i16LevelGetCenteredPositionXY(cellposxy, pxBomb->i16PosX, pxBomb->i16PosY);
-    rri16Fieldmap[cellposxy[0]][cellposxy[1]] = (pxBomb->ui16Id);
+    i16LevelGetCenteredPositionXY(cellposxy, pxBomb->object.i16PosX, pxBomb->object.i16PosY);
+    rri16Fieldmap[cellposxy[0]][cellposxy[1]] = (pxBomb->object.ui16Id);
 
     for(int16_t direction = 0; direction < 4; direction++) {
 
@@ -117,7 +131,7 @@ int16_t i16ExpandExplosion(Bomb_t * pxBomb, int16_t *rri16Fieldmap[])
                             break;
                     }
                 } else {
-                    rri16Fieldmap[posx][posy] = (pxBomb->ui16Id);
+                    rri16Fieldmap[posx][posy] = (pxBomb->object.ui16Id);
                     cellsCovered[direction]++;
                 }
             }

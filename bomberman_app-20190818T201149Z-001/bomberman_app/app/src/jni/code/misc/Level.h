@@ -19,6 +19,9 @@ extern int16_t LEVELS[][NUMBER_OF_X_CELLS][NUMBER_OF_Y_CELLS];
 
 int16_t i16LevelGetPositionFromCellXY(int16_t ri16Positions[2], int16_t i16X, int16_t i16Y);
 int16_t i16LevelGetCenteredPositionXY(int16_t ri16Positions[2], int16_t i16X, int16_t i16Y);
+uint16_t vLevelMemoryGetCell(int16_t x, int16_t y);
+void vLevelMemorySetCell(int16_t x, int16_t y, uint16_t value);
+void vLevelMemoryReset(void);
 #ifdef __cplusplus
 }
 #endif

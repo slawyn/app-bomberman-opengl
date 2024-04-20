@@ -26,13 +26,13 @@ extern "C"
 
     Hitbox_t *pxCrateGetHitbox(Crate_t *pxCrate)
     {
-        vHitboxUpdateEdges(&xHitbox, pxCrate->i16PosX, pxCrate->i16PosY);
+        vHitboxUpdateEdges(&xHitbox, pxCrate->object.i16PosX, pxCrate->object.i16PosY);
         return &xHitbox;
     }
 
     void vCrateGetHitboxValues(Crate_t *pxCrate, jint *jiHitboxes)
     {
-        vHitboxUpdateEdges(&xHitbox, pxCrate->i16PosX, pxCrate->i16PosY);
+        vHitboxUpdateEdges(&xHitbox, pxCrate->object.i16PosX, pxCrate->object.i16PosY);
         jiHitboxes[0] = 0;
         jiHitboxes[1] = 0;
         jiHitboxes[2] = xHitbox.i16HalfSizeX;
@@ -44,16 +44,16 @@ extern "C"
     }
     bool bCrateNeedsToBeRemoved(Crate_t *pxCrate)
     {
-        return (pxCrate->ui8State == STATE_REMOVE);
+        return (pxCrate->object.ui8State == STATE_REMOVE);
     }
 
     int16_t i16CrateUpdateState(Crate_t *pxCrate, int32_t dt)
     {
-        vHitboxUpdateEdges(&xHitbox, pxCrate->i16PosX, pxCrate->i16PosY);
-        switch (pxCrate->ui8State)
+        vHitboxUpdateEdges(&xHitbox, pxCrate->object.i16PosX, pxCrate->object.i16PosY);
+        switch (pxCrate->object.ui8State)
         {
         case STATE_DEAD:
-            pxCrate->ui8State = STATE_REMOVE;
+            pxCrate->object.ui8State = STATE_REMOVE;
             break;
         }
         return 1;
@@ -61,9 +61,9 @@ extern "C"
 
     int16_t i16CrateInit(Crate_t *pxCrate, int16_t i16PositionX, int16_t i16PositionY)
     {
-        pxCrate->ui8State = STATE_ALIVE;
-        pxCrate->i16PosX = i16PositionX;
-        pxCrate->i16PosY = i16PositionY;
+        pxCrate->object.ui8State = STATE_ALIVE;
+        pxCrate->object.i16PosX = i16PositionX;
+        pxCrate->object.i16PosY = i16PositionY;
         return 1;
     }
 }

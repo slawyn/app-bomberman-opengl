@@ -6,15 +6,13 @@
 #define CRATE_H
 #include <jni.h>
 #include "Hitbox.h"
+#include "Object.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
 typedef struct
 {
-    int16_t ui16Id;
-    int16_t i16PosX;
-    int16_t i16PosY;
-    uint8_t ui8State;
+    Object_t object;
 } Crate_t;
 
 int16_t i16CrateUpdateState(Crate_t *pxCrate, int32_t dt);

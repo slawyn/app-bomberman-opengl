@@ -70,7 +70,7 @@ public class GameManager
 
 
     /* Get Free Game object to fill with live information */
-    public GameElement getFreeGameObject()
+    private GameElement getFreeGameObject()
     {
         GameElement go = mGameObjectPool[mNextFreeGameObject];
         mNextFreeGameObject=(mNextFreeGameObject+1)%mGameObjectPool.length;

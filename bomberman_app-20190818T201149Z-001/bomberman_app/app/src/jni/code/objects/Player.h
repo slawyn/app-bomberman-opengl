@@ -7,15 +7,13 @@
 #include <jni.h>
 #include "Hitbox.h"
 #include "Bomb.h"
-
+#include "Object.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
 typedef struct
 {
-    uint16_t ui16Id;
-    int16_t i16PosX;
-    int16_t i16PosY;
+    Object_t object;
     int16_t i16PreviousX;
     int16_t i16PreviousY;
     uint16_t ui16BaseSpeed;
@@ -24,7 +22,6 @@ typedef struct
     uint16_t ui16BombCountdown;
     uint16_t ui16ExplosionStrength;
     uint16_t ui16Input;
-    uint8_t ui8State;
 } Player_t;
 
 void vPlayerGetCollisionPoints(Player_t* pxPlayer, int16_t x[4], int16_t y[4]);

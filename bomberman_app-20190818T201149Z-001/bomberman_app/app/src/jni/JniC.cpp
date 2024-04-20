@@ -47,13 +47,7 @@ extern "C"
         return jiGameCreate();
     }
 
-    /**
-     * @brief
-     * @param env
-     * @param type
-     * @param ji32Dt
-     * @return
-     */
+
     JNIEXPORT jint JNICALL
     Java_main_nativeclasses_GameManager_updateGame(JNIEnv *env,
                                                    jclass type,
@@ -65,14 +59,7 @@ extern "C"
         return jiUpdateObjects(ji32Dt, &ui32UpdatedPlayers);
     }
 
-    /**
-     * @brief
-     * @param env
-     * @param type
-     * @param i32ObjType
-     * @param i32ObjectStateOffset
-     * @return
-     */
+
     JNIEXPORT jint JNICALL
     Java_main_nativeclasses_GameManager_getZ(JNIEnv *env,
                                              jclass type,
@@ -82,15 +69,6 @@ extern "C"
         return i16GameGetObjectZ(i32ObjType, i32ObjectStateOffset);
     }
 
-    /**
-     * @brief
-     * @param env
-     * @param type
-     * @param i32ObjType
-     * @param i32ObjectStateOffset
-     * @param ui8Input
-     * @return
-     */
     JNIEXPORT void JNICALL
     Java_main_nativeclasses_GameManager_setInput(JNIEnv *env,
                                                  jclass type,
