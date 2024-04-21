@@ -62,7 +62,6 @@ public class AnimationManager {
     private final int ANIMATION_NONE = 0;
     private final int ANIMATION_BACKGROUND = 1;
     private final int ANIMATION_LOADING = 2;
-    private final int ANIMATION_FIELD = 10;
     private final int ANIMATION_PLAYER_WALK_LEFT = 20;
     private final int ANIMATION_PLAYER_WALK_RIGHT = 30;
     private final int ANIMATION_PLAYER_WALK_UP = 40;
@@ -216,7 +215,6 @@ public class AnimationManager {
                     animparams[1] = ANIMATION_PAR_INFINITE;
                     addAnimationSequence(id, type, sequence, animparams);
                     break;
-                case ANIMATION_FIELD:
                 case ANIMATION_PLAYER_STAND:
                     sequence = new int[1];
                     animparams = new int[2];

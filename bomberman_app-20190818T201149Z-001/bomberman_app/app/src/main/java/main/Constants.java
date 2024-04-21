@@ -62,7 +62,7 @@ public final class Constants
     };
 
     /* Size configurations*/
-    public final static int NUMBER_OF_RENDER_OBJECTS = 50;
+    public final static int CONFIG_RENDER_OBJECTS_MAX = 50;
     public final static int NUMBER_OF_ANIMATED_OBJECTS = 50;
     public final static int NUMBER_OF_TEXTURES = 300;
 

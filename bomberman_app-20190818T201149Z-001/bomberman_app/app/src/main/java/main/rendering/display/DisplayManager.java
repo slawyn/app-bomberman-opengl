@@ -66,25 +66,24 @@ public class DisplayManager
     private static boolean DEBUG_DRAW_HITBOXES = false;
 
 
-    /* Display manager controls renderelements based on game object states*/
     public DisplayManager()
     {
         mAnimationManager = new AnimationManager();
 
-        /* Render Elements hold the base offset and animations
+        /** Render Elements hold the base offset and animations
          *  :Translation is updated on game thread, and is interpolated
          *  :Animation timings are updated on the GPU thread*/
-        mTotalNumberOfRenderObjects = NUMBER_OF_RENDER_OBJECTS;
+        mTotalNumberOfRenderObjects = CONFIG_RENDER_OBJECTS_MAX;
 
         mFreeRenderElements = new RenderElement[mTotalNumberOfRenderObjects];
-        for(int idx = 0; idx < NUMBER_OF_RENDER_OBJECTS; idx++)
+        for(int idx = 0; idx < CONFIG_RENDER_OBJECTS_MAX; idx++)
         {
             mFreeRenderElements[idx] = new RenderElement();
         }
 
-        mRos = new SparseArray<>(NUMBER_OF_RENDER_OBJECTS);
+        mRos = new SparseArray<>(CONFIG_RENDER_OBJECTS_MAX);
 
-        /* Warning! LAYER_xxxx constants are used outside of this class as indices */
+        /** @attention LAYER_xxxx constants are used outside of this class as indices */
         int[][] layerConfiguration = {{LAYER_0000, 10},
                                       {LAYER_0001, 50},
                                       {LAYER_0002, 10},
@@ -155,13 +154,13 @@ public class DisplayManager
         return ro;
     }
 
-    public RenderElement getFreeRenderObjectFromPool()
+    private RenderElement getFreeRenderObjectFromPool()
     {
         RenderElement ro = mFreeRenderElements[--mTotalNumberOfRenderObjects];
         return ro;
     }
 
-    public void returnRenderObjectToPool(RenderElement ro)
+    private void returnRenderObjectToPool(RenderElement ro)
     {
         /* Return RenderElement to pool*/
         ro.removeFromRenderingGpu = true;
@@ -254,20 +253,26 @@ public class DisplayManager
 
     public void load(int width, int height, float scalefactor, int portx, int porty)
     {
-        /* Load animations into OPENGL Space
-        * Textures are loaded on the opengl thread */
 
+        /* Create vertices for drawing  */
         mVertices = new Vertices(scalefactor);
 
+        /* Load animations into OPENGL Space
+         * Textures are loaded on the opengl thread */
         mLoader = new Loader(mGamePortWidth, scalefactor);
         mAnimationManager.loadAnimations(mLoader);
 
-
+        /* Adjust offsets and scalings based on device resolution */
         mGamePortWidth = width;
         mGamePortHeight = height;
         mScaleFactor = scalefactor;
         gamePortOffsetXY[0] = portx;
         gamePortOffsetXY[1] = porty;
+        mGameFieldOffsetX *= scalefactor;
+        mGameFieldOffsetY *= scalefactor;
+        mGameFieldOffsetY2 *=scalefactor;
+        mGameFieldWidth = mGamePortWidth - mGameFieldOffsetX*2;
+        mGameFieldHeight = mGamePortHeight - mGameFieldOffsetY - mGameFieldOffsetY2;
 
         gameBombOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameBombOffsetXY[0] * scalefactor);
         gameBombOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameBombOffsetXY[1] * scalefactor);
@@ -292,13 +297,6 @@ public class DisplayManager
 
         gameTimerOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameTimerOffsetXY[0] * scalefactor);
         gameTimerOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameTimerOffsetXY[1] * scalefactor);
-
-
-        mGameFieldOffsetX *= scalefactor;
-        mGameFieldOffsetY *= scalefactor;
-        mGameFieldOffsetY2 *=scalefactor;
-        mGameFieldWidth = mGamePortWidth - mGameFieldOffsetX*2;
-        mGameFieldHeight = mGamePortHeight - mGameFieldOffsetY - mGameFieldOffsetY2;
     }
 
     public Loader getLoader() {

@@ -289,15 +289,15 @@ public class Application implements Runnable, ButtonCallback
     @Override
     public void run()
     {
+        final long desiredFrameDeltaNano = SERVER_TICK_TIME * 1000000;
+        final long printPeriod = 1000;
+        final boolean mGameRunning = true;
         long frameStartTime;
         long lastframeStartTime = System.nanoTime();
         long deltaMax = 0;
         long printPeriodCounter = 0;
-        long desiredFrameDeltaNano = SERVER_TICK_TIME * 1000000;
         long execTime;
         long accumulator = 0;
-        boolean mGameRunning = true;
-        final long printPeriod = 1000;
 
         // Game Loop
         while(mGameRunning)
@@ -320,7 +320,7 @@ public class Application implements Runnable, ButtonCallback
                     deltaMax = accumulator;
                 }
 
-                /* @measure server exec logic */
+                /* @info measure server exec logic */
                 if((execTime = System.nanoTime() - frameStartTime) > Globals.mDebugLoopMax)
                 {
                     Globals.mDebugLoopMax = execTime;
