@@ -35,7 +35,8 @@ import static main.rendering.display.DisplayManager.gamePortOffsetXY;
 import static main.rendering.display.DisplayManager.gameTimer2ndOffsets;
 import static main.rendering.display.DisplayManager.gameTouchOffsetXY;
 import static main.rendering.display.DisplayManager.gameZeroOffsetXY;
-import static main.rendering.display.DisplayManager.mScaleFactor;
+import main.rendering.display.DisplayManager;
+
 
 import android.util.SparseArray;
 
@@ -87,7 +88,7 @@ public class AnimationManager {
     public static final int AG005 = 5;
     public static final int AG006 = 6;
 
- 
+    private SparseArray<int[][]> mAnimationOffsets;
     /*
      * layer 0: background
      * layer 1: game layer
@@ -159,6 +160,7 @@ public class AnimationManager {
     public AnimationManager() {
         mAnimationParameters = new SparseArray<>();
         mAnimationSequences = new SparseArray<>();
+        mAnimationOffsets  = new SparseArray<>();
 
         mTotalNumberOfAnimatedObjects = NUMBER_OF_ANIMATED_OBJECTS;
         mFreeAnimations = new Animation[mTotalNumberOfAnimatedObjects];
@@ -446,7 +448,7 @@ public class AnimationManager {
 
                                 // Horizontal
                                 if (i <= left) {
-                                    xy[0] = (int) (gameExplosionOffsetXY[0] + (-i * GAME_H * mScaleFactor));
+                                    xy[0] = (int) (gameExplosionOffsetXY[0] + DisplayManager.scale(-i * GAME_H));
                                     xy[1] = gameExplosionOffsetXY[1];
                                     ao = getFreeAnimationFromPool();
                                     ao.init(xy);
@@ -456,7 +458,7 @@ public class AnimationManager {
                                     ro.addAnimation(ao);
                                 }
                                 if (i <= right) {
-                                    xy[0] = (int) (gameExplosionOffsetXY[0] + (i * GAME_H * mScaleFactor));
+                                    xy[0] = (int) (gameExplosionOffsetXY[0] + DisplayManager.scale(i * GAME_H));
                                     xy[1] = gameExplosionOffsetXY[1];
                                     ao = getFreeAnimationFromPool();
                                     ao.init(xy);
@@ -469,7 +471,7 @@ public class AnimationManager {
                                 // Vertical
                                 if (i <= up) {
                                     xy[0] = gameExplosionOffsetXY[0];
-                                    xy[1] = (int) (gameExplosionOffsetXY[1] + (-i * GAME_V * mScaleFactor));
+                                    xy[1] = (int) (gameExplosionOffsetXY[1] + DisplayManager.scale(-i * GAME_V));
                                     ao = getFreeAnimationFromPool();
                                     ao.init(xy);
                                     ao.setAnimationParameters(
@@ -479,7 +481,7 @@ public class AnimationManager {
                                 }
                                 if (i <= down) {
                                     xy[0] = gameExplosionOffsetXY[0];
-                                    xy[1] = (int) (gameExplosionOffsetXY[1] + (i * GAME_V * mScaleFactor));
+                                    xy[1] = (int) (gameExplosionOffsetXY[1] + DisplayManager.scale(i * GAME_V));
                                     ao = getFreeAnimationFromPool();
                                     ao.init(xy);
                                     ao.setAnimationParameters(

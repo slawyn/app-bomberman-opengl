@@ -1,11 +1,11 @@
 @echo off 
 set APP=app\build\outputs\apk\debug\app-debug.apk
-
+set EMULATOR=emulator-5556
 :: Install
-adb -s emulator-5554 install %APP%
+adb -s %EMULATOR% install %APP%
 
 :: Start App
-adb shell am start -n "com.bomber.app/main.Connector" -a android.intent.action.MAIN -c android.intent.category.LAUNCHER
+adb -s %EMULATOR% shell am start -n "com.bomber.app/main.Connector" -a android.intent.action.MAIN -c android.intent.category.LAUNCHER
 
 :: Start logcat
-adb logcat -v color -T 1
+adb -s %EMULATOR% logcat -v color -T 1

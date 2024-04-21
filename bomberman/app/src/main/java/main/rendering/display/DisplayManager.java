@@ -17,11 +17,9 @@ import main.rendering.animation.Layer;
 
 import static main.Constants.*;
 
-
-public class DisplayManager
-{
+public class DisplayManager {
     private final String TAG = "DisplayManager";
-    public static float mScaleFactor = 1.0f;
+    private static float mScaleFactor = 1.0f;
     public static int mGamePortWidth = 1920;
     public static int mGamePortHeight = 1080;
     public static float mGameFieldOffsetX = 190f;
@@ -32,20 +30,20 @@ public class DisplayManager
 
     public static final int GAME_H = 136;
     public static final int GAME_V = 94;
-    public static int[] gamePortOffsetXY = {0, 0};
-    public static int[] gameBombOffsetXY      = {-GAME_H / 2, -GAME_H/2};
-    public static int[] gameObjectOffsetXY    = {-GAME_H / 2, (94 - GAME_H)-GAME_V/2};
-    public static int[] gameExplosionOffsetXY = {-GAME_H / 2, -GAME_H/2};
-    public static int[] gamePlayerOffsetXY = {-180/2, -180/2 - 40};
+    public static int[] gamePortOffsetXY = { 0, 0 };
+    public static int[] gameBombOffsetXY = { -GAME_H / 2, -GAME_H / 2 };
+    public static int[] gameObjectOffsetXY = { -GAME_H / 2, (94 - GAME_H) - GAME_V / 2 };
+    public static int[] gameExplosionOffsetXY = { -GAME_H / 2, -GAME_H / 2 };
+    public static int[] gamePlayerOffsetXY = { -180 / 2, -180 / 2 - 40 };
 
     // Scene objects
-    public static int[] gameTouchOffsetXY  = {(-(300 / 2)),(-(300 / 2))};
-    public static int[] gameLoadingOffsetXY = {(mGamePortWidth) / 2 - 300, (mGamePortHeight) / 2 - 300};
-    public static int[] gameButtonOffsetXY = {gamePortOffsetXY[0],gamePortOffsetXY[1]};
-    public static int[] gameTimerOffsetXY = {mGamePortWidth - 400, 20};
+    public static int[] gameTouchOffsetXY = { (-(300 / 2)), (-(300 / 2)) };
+    public static int[] gameLoadingOffsetXY = { (mGamePortWidth) / 2 - 300, (mGamePortHeight) / 2 - 300 };
+    public static int[] gameButtonOffsetXY = { gamePortOffsetXY[0], gamePortOffsetXY[1] };
+    public static int[] gameTimerOffsetXY = { mGamePortWidth - 400, 20 };
 
-    public static int[] gameZeroOffsetXY = {0, 0};
-    public static int[][] gameTimer2ndOffsets = {{0,0},{78,0},{200,0},{278,0}};
+    public static int[] gameZeroOffsetXY = { 0, 0 };
+    public static int[][] gameTimer2ndOffsets = { { 0, 0 }, { 78, 0 }, { 200, 0 }, { 278, 0 } };
 
     private int mTotalNumberOfRenderObjects;
     private RenderElement[] mFreeRenderElements;
@@ -65,64 +63,60 @@ public class DisplayManager
 
     private static boolean DEBUG_DRAW_HITBOXES = false;
 
-
-    public DisplayManager()
-    {
+    public DisplayManager() {
         mAnimationManager = new AnimationManager();
 
-        /** Render Elements hold the base offset and animations
-         *  :Translation is updated on game thread, and is interpolated
-         *  :Animation timings are updated on the GPU thread*/
+        /*
+         * Render Elements hold the base offset and animations
+         * :Translation is updated on game thread, and is interpolated
+         * :Animation timings are updated on the GPU thread
+         */
         mTotalNumberOfRenderObjects = CONFIG_RENDER_OBJECTS_MAX;
 
         mFreeRenderElements = new RenderElement[mTotalNumberOfRenderObjects];
-        for(int idx = 0; idx < CONFIG_RENDER_OBJECTS_MAX; idx++)
-        {
+        for (int idx = 0; idx < CONFIG_RENDER_OBJECTS_MAX; idx++) {
             mFreeRenderElements[idx] = new RenderElement();
         }
 
         mRos = new SparseArray<>(CONFIG_RENDER_OBJECTS_MAX);
 
-        /** @attention LAYER_xxxx constants are used outside of this class as indices */
-        int[][] layerConfiguration = {{LAYER_0000, 10},
-                                      {LAYER_0001, 50},
-                                      {LAYER_0002, 10},
-                                      {LAYER_0003, 10},
-                                      {LAYER_0004, 50}};
+        /* @attention LAYER_xxxx constants are used outside of this class as indices */
+        int[][] layerConfiguration = { { LAYER_0000, 10 },
+                { LAYER_0001, 50 },
+                { LAYER_0002, 10 },
+                { LAYER_0003, 10 },
+                { LAYER_0004, 50 } };
         mLayers = Layer.createLayers(layerConfiguration);
 
     }
 
-    public int getResourceCount()
-    {
+    public int getResourceCount() {
         return mAnimationManager.getDrawableCount();
     }
 
-    public Vector<Layer> getLayers()
-    {
+    public static float scale(float pos) {
+        return mScaleFactor * pos;
+    }
+
+    public Vector<Layer> getLayers() {
         return mLayers;
     }
 
-
-    public static void toggleDebugHitboxes()
-    {
+    public static void toggleDebugHitboxes() {
         DEBUG_DRAW_HITBOXES = !DEBUG_DRAW_HITBOXES;
     }
 
-    public RenderElement getRenderObject(GameElement go)
-    {
+    public RenderElement getRenderObject(GameElement go) {
         final int layerHitbox = 4;
         final int unique = go.getUniqeueID();
         RenderElement ro = mRos.get(unique);
 
-
-        if (ro == null)
-        {
+        if (ro == null) {
             ro = getFreeRenderObjectFromPool();
             final int layerAnimation = 1;
 
             /* Save previous movement state */
-            ro.init(go.mObjectType,go.mObjectSubtype, go.getState(), unique);
+            ro.init(go.mObjectType, go.mObjectSubtype, go.getState(), unique);
             mAnimationManager.createAnimatedObject(ro, layerAnimation);
             mLayers.get(layerAnimation).addRenderObjectToLayer(ro);
             mRos.put(unique, ro);
@@ -130,39 +124,31 @@ public class DisplayManager
         }
 
         /* Add a visible hitbox */
-        if(DEBUG_DRAW_HITBOXES)
-        {
-            if((ro.mDebugObject == null))
-            {
+        if (DEBUG_DRAW_HITBOXES) {
+            if ((ro.mDebugObject == null)) {
                 ro.addDebugObject(go, mScaleFactor);
                 mLayers.get(layerHitbox).addRenderObjectToLayer(ro.mDebugObject);
             }
-        } else if(ro.mDebugObject != null)
-        {
-            if(ro.mDebugObject.removed)
-            {
+        } else if (ro.mDebugObject != null) {
+            if (ro.mDebugObject.removed) {
                 ro.mDebugObject = null;
-            }
-            else {
+            } else {
                 ro.mDebugObject.removeFromRenderingGpu = true;
-                //ro.mDebugObject = null;
+                // ro.mDebugObject = null;
                 /* TODO: destroy object */
             }
         }
 
-
         return ro;
     }
 
-    private RenderElement getFreeRenderObjectFromPool()
-    {
+    private RenderElement getFreeRenderObjectFromPool() {
         RenderElement ro = mFreeRenderElements[--mTotalNumberOfRenderObjects];
         return ro;
     }
 
-    private void returnRenderObjectToPool(RenderElement ro)
-    {
-        /* Return RenderElement to pool*/
+    private void returnRenderObjectToPool(RenderElement ro) {
+        /* Return RenderElement to pool */
         ro.removeFromRenderingGpu = true;
         mRos.remove(ro.getUniqueId());
         mFreeRenderElements[mTotalNumberOfRenderObjects++] = ro;
@@ -171,19 +157,20 @@ public class DisplayManager
         mAnimationManager.returnAnimationsToPool(ro.getUsedAnimatedObjects());
     }
 
-    private void updateGameManager(GameManager gamemanager)
-    {
+    private void updateGameManager(GameManager gamemanager) {
         Events goupdates = gamemanager.getUpdateEvents();
         Events goremovals = gamemanager.getRemovalEvents();
 
         /* Update/Create Renderobjects */
         int sz = goupdates.getCount();
-        while (--sz >= 0)
-        {
+        while (--sz >= 0) {
             GameElement go = (GameElement) goupdates.getEvent(sz);
             RenderElement ro = getRenderObject(go);
 
-            /* Translate and sort after 'Z' all animations that are attached to the render object */
+            /*
+             * Translate and sort after 'Z' all animations that are attached to the render
+             * object
+             */
             long pos[] = go.getPositionXY();
             ro.setTranslation(pos[0] * mScaleFactor, pos[1] * mScaleFactor);
             ro.updateSortCriteria(go.getZ());
@@ -192,8 +179,7 @@ public class DisplayManager
 
         /* Remove objects */
         sz = goremovals.getCount();
-        while (--sz >= 0)
-        {
+        while (--sz >= 0) {
             GameElement go = (GameElement) goremovals.getEvent(sz);
             RenderElement ro = getRenderObject(go);
             returnRenderObjectToPool(ro);
@@ -201,18 +187,16 @@ public class DisplayManager
         goremovals.resetEvents();
         goupdates.resetEvents();
     }
-    private void updateSceneManager(SceneManager manager)
-    {
+
+    private void updateSceneManager(SceneManager manager) {
         // Updates RenderObjects from SceneManager
         Events soupdates = manager.getUpdateEvents();
         Events soremovals = manager.getRemovalEvents();
         int sz = soupdates.getCount();
-        while (--sz >= 0)
-        {
+        while (--sz >= 0) {
             SceneElement so = (SceneElement) soupdates.getEvent(sz);
             RenderElement ro = so.ro;
-            if(ro == null)
-            {
+            if (ro == null) {
                 ro = getFreeRenderObjectFromPool();
                 so.ro = ro;
 
@@ -229,8 +213,7 @@ public class DisplayManager
 
         // Remove RendersObjects from SceneManager
         sz = soremovals.getCount();
-        while (--sz >= 0)
-        {
+        while (--sz >= 0) {
             SceneElement so = (SceneElement) soremovals.getEvent(sz);
             RenderElement ro = so.ro;
             returnRenderObjectToPool(ro);
@@ -239,26 +222,25 @@ public class DisplayManager
         soremovals.resetEvents();
     }
 
-    public void updateRenderObjectsForGPU(GameManager gamemanager, SceneManager scenemanager)
-    {
+    public void updateRenderObjectsForGPU(GameManager gamemanager, SceneManager scenemanager) {
         updateGameManager(gamemanager);
         updateSceneManager(scenemanager);
         RenderElement.latch();
     }
 
-    public VertexArray getQuad(int type)
-    {
+    public VertexArray getQuad(int type) {
         return mVertices.getQuad(type);
     }
 
-    public void load(int width, int height, float scalefactor, int portx, int porty)
-    {
+    public void load(int width, int height, float scalefactor, int portx, int porty) {
 
-        /* Create vertices for drawing  */
+        /* Create vertices for drawing */
         mVertices = new Vertices(scalefactor);
 
-        /* Load animations into OPENGL Space
-         * Textures are loaded on the opengl thread */
+        /*
+         * Load animations into OPENGL Space
+         * Textures are loaded on the opengl thread
+         */
         mLoader = new Loader(mGamePortWidth, scalefactor);
         mAnimationManager.loadAnimations(mLoader);
 
@@ -270,30 +252,30 @@ public class DisplayManager
         gamePortOffsetXY[1] = porty;
         mGameFieldOffsetX *= scalefactor;
         mGameFieldOffsetY *= scalefactor;
-        mGameFieldOffsetY2 *=scalefactor;
-        mGameFieldWidth = mGamePortWidth - mGameFieldOffsetX*2;
+        mGameFieldOffsetY2 *= scalefactor;
+        mGameFieldWidth = mGamePortWidth - mGameFieldOffsetX * 2;
         mGameFieldHeight = mGamePortHeight - mGameFieldOffsetY - mGameFieldOffsetY2;
 
         gameBombOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameBombOffsetXY[0] * scalefactor);
         gameBombOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameBombOffsetXY[1] * scalefactor);
 
-        gamePlayerOffsetXY[0] = gamePortOffsetXY[0] + (int)(gamePlayerOffsetXY[0]* scalefactor);
-        gamePlayerOffsetXY[1] = gamePortOffsetXY[1] + (int)(gamePlayerOffsetXY[1]* scalefactor);
+        gamePlayerOffsetXY[0] = gamePortOffsetXY[0] + (int) (gamePlayerOffsetXY[0] * scalefactor);
+        gamePlayerOffsetXY[1] = gamePortOffsetXY[1] + (int) (gamePlayerOffsetXY[1] * scalefactor);
 
         gameExplosionOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameExplosionOffsetXY[0] * scalefactor);
         gameExplosionOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameExplosionOffsetXY[1] * scalefactor);
 
-        gameObjectOffsetXY[0] = gamePortOffsetXY[0]  + (int) (gameObjectOffsetXY[0] * scalefactor);
+        gameObjectOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameObjectOffsetXY[0] * scalefactor);
         gameObjectOffsetXY[1] = (gamePortOffsetXY[1] + (int) (gameObjectOffsetXY[1] * scalefactor));
 
         gameTouchOffsetXY[0] = (int) (gameTouchOffsetXY[0] * scalefactor);
         gameTouchOffsetXY[1] = (int) (gameTouchOffsetXY[1] * scalefactor);
 
-        gameLoadingOffsetXY[0]= gamePortOffsetXY[0] + (int) (gameLoadingOffsetXY[0] * scalefactor);
-        gameLoadingOffsetXY[1]= gamePortOffsetXY[1] + (int) (gameLoadingOffsetXY[1] * scalefactor);
+        gameLoadingOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameLoadingOffsetXY[0] * scalefactor);
+        gameLoadingOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameLoadingOffsetXY[1] * scalefactor);
 
-        gameButtonOffsetXY[0]= gamePortOffsetXY[0] + (int) (gameButtonOffsetXY[0] * scalefactor);
-        gameButtonOffsetXY[1]= gamePortOffsetXY[1] + (int) (gameButtonOffsetXY[1] * scalefactor);
+        gameButtonOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameButtonOffsetXY[0] * scalefactor);
+        gameButtonOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameButtonOffsetXY[1] * scalefactor);
 
         gameTimerOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameTimerOffsetXY[0] * scalefactor);
         gameTimerOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameTimerOffsetXY[1] * scalefactor);
@@ -303,8 +285,7 @@ public class DisplayManager
         return mLoader;
     }
 
-    public void bindDebugDataPort(ColorShaderProgram debugprogram)
-    {
+    public void bindDebugDataPort(ColorShaderProgram debugprogram) {
         float[] data0 = new float[12];
 
         /* first triangle */
@@ -339,8 +320,7 @@ public class DisplayManager
                 8);
     }
 
-    public void bindDebugDataField(ColorShaderProgram debugprogram)
-    {
+    public void bindDebugDataField(ColorShaderProgram debugprogram) {
         float[] data0 = new float[12];
 
         /* first triangle */

@@ -78,11 +78,12 @@ public class SceneManager {
 
     private void addRectangularButton(int posx, int posy, int action, int animation, int layer) {
         final int id = ++mObjectCounter;
-        final int xSize = (int) (524 * mDisplayManager.mScaleFactor);
-        final int ySize = (int) (200 * mDisplayManager.mScaleFactor);
+        final int xSize = (int) mDisplayManager.scale(524);
+        final int ySize = (int) mDisplayManager.scale(200);
+
         Button button = new ButtonRectangular(id,
-                (int) (mDisplayManager.gameButtonOffsetXY[0] + posx * mDisplayManager.mScaleFactor),
-                (int) (mDisplayManager.gameButtonOffsetXY[1] + posy * mDisplayManager.mScaleFactor),
+                (int) (mDisplayManager.gameButtonOffsetXY[0] + mDisplayManager.scale(posx)),
+                (int) (mDisplayManager.gameButtonOffsetXY[1] + mDisplayManager.scale(posy)),
                 xSize, ySize,
                 action, animation);
         mButtons.put(id, button);
@@ -92,12 +93,12 @@ public class SceneManager {
 
     private void addSquaredButton(int posx, int posy, int action, int animation, int layer) {
         final int id = ++mObjectCounter;
-        final int ySize = (int) (200 * mDisplayManager.mScaleFactor);
+        final int ySize = (int) (mDisplayManager.scale(200));
         final int xSize = ySize;
 
         ButtonSquared button = new ButtonSquared(id,
-                (int) (mDisplayManager.gameButtonOffsetXY[0] + posx * mDisplayManager.mScaleFactor),
-                (int) (mDisplayManager.gameButtonOffsetXY[1] + posy * mDisplayManager.mScaleFactor),
+                (int) (mDisplayManager.gameButtonOffsetXY[0] + mDisplayManager.scale(posx)),
+                (int) (mDisplayManager.gameButtonOffsetXY[1] + mDisplayManager.scale(posy)),
                 xSize, ySize,
                 action, animation);
         mButtons.put(id, button);
@@ -127,33 +128,21 @@ public class SceneManager {
         background.mLayer = layer;
     }
 
-    public int parseSelection(int[] input) {
-        int size = mButtons.size() - 1;
-        for (int i = size; i >= 0; i--) {
-            int key = mButtons.keyAt(i);
-            Button b = mButtons.get(key);
-            if (b.updateState(input)) {
-                return b.mAction;
-            }
-        }
-        return -1;
-    }
-
     public void setTimer(int time) {
         timer.setTime(time);
     }
 
     public void run(long dt, int[] input) {
-
-        int selected = parseSelection(input);
-        if (selected != -1 && callback != null) {
-            callback.onCallback(selected);
-        }
-
         int sz = mSceneObjects.size();
         for (int idx = 0; idx < sz; idx++) {
             SceneElement so = mSceneObjects.valueAt(idx);
-            so.updateState(dt, input);
+            if(so.updateState(dt, input) && callback != null)
+            {
+                callback.onCallback(so.mAction);
+            }
+
+            /* element has been updated 
+             * TODO: update elements only if it has changed */
             mUpdateEvents.addEvent(so);
         }
     }

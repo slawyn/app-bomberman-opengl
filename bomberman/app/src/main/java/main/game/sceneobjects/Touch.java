@@ -1,6 +1,5 @@
 package main.game.sceneobjects;
 
-
 import main.Constants;
 import main.game.SceneElement;
 
@@ -8,15 +7,16 @@ import static main.game.SceneManager.SOBJ_TOUCH;
 
 public class Touch extends SceneElement {
 
-    private static int MarkerCount =0;
+    private static int MarkerCount = 0;
     private int mInputSelector;
-    public Touch(int id, int subtype){
-        super(SOBJ_TOUCH,id, subtype);
+
+    public Touch(int id, int subtype) {
+        super(SOBJ_TOUCH, id, subtype);
         mState = Constants.STATE_UNPRESSED;
         mPositionX = -1000;
         mPositionY = -1000;
-        mInputSelector = MarkerCount *3;
-        MarkerCount +=1;
+        mInputSelector = MarkerCount * 3;
+        MarkerCount += 1;
     }
 
     // 0: x
@@ -26,29 +26,27 @@ public class Touch extends SceneElement {
     // 4: y2
     // 5: touch
     @Override
-    public void updateState(long dt, int[] input){
+    public boolean updateState(long dt, int[] input) {
         mPreviousState = mState;
-        switch(mState){
+        switch (mState) {
             case Constants.STATE_PRESSED:
-                if(input[mInputSelector+2] == 0){
-                    mPositionX = - 1000;
-                    mPositionY = - 1000;
+                if (input[mInputSelector + 2] == 0) {
+                    mPositionX = -1000;
+                    mPositionY = -1000;
                     mState = Constants.STATE_UNPRESSED;
-                }
-                else
-                {
+                } else {
                     mPositionX = (input[mInputSelector]);
-                    mPositionY = (input[mInputSelector+1]);
+                    mPositionY = (input[mInputSelector + 1]);
                 }
                 break;
             case Constants.STATE_UNPRESSED:
-                if(input[mInputSelector+2]>0)
-                {
+                if (input[mInputSelector + 2] > 0) {
                     mPositionX = (input[mInputSelector]);
-                    mPositionY = (input[mInputSelector+1]);
+                    mPositionY = (input[mInputSelector + 1]);
                     mState = Constants.STATE_PRESSED;
                 }
                 break;
         }
+        return false;
     }
 }
