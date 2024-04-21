@@ -155,7 +155,7 @@ extern "C"
                         int16_t y = (jint)(((jiHitbox[7] + jiHitbox[3] / 2) - FIELD_Y1) / CELLSIZE_Y);
                         if (vLevelMemoryGetCell(x, y) == O_)
                         {
-                            i16InitObject(DEBUG_FIRST_BOMB, OBJ_BOMB, xBomb.object.i16PosX, xBomb.object.i16PosY);
+                            i16InitObject(DEBUG_FIRST_BOMB, OBJ_BOMB, CENTERX(x), CENTERY(y));
                             vLevelMemorySetCell(x,y,(&pxBombs[DEBUG_FIRST_BOMB])->object.ui16Id);
                         }
                     }

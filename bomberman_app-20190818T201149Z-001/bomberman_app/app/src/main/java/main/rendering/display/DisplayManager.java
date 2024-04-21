@@ -10,6 +10,7 @@ import main.nativeclasses.GameManager;
 import main.game.SceneManager;
 import main.nativeclasses.GameElement;
 import main.game.SceneElement;
+import main.rendering.color.ColorShaderProgram;
 import main.rendering.elements.RenderElement;
 import main.rendering.VertexArray;
 import main.rendering.animation.Layer;
@@ -23,6 +24,12 @@ public class DisplayManager
     public static float mScaleFactor = 1.0f;
     public static int mGamePortWidth = 1920;
     public static int mGamePortHeight = 1080;
+    public static float mGameFieldOffsetX = 190f;
+    public static float mGameFieldOffsetY = 36f;
+    public static float mGameFieldOffsetY2 = 10f;
+    public static float mGameFieldWidth = mGamePortWidth - mGameFieldOffsetX;
+    public static float mGameFieldHeight = mGamePortHeight - mGameFieldOffsetY;
+
     public static final int GAME_H = 136;
     public static final int GAME_V = 94;
     public static int[] gamePortOffsetXY = {0, 0};
@@ -285,9 +292,88 @@ public class DisplayManager
 
         gameTimerOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameTimerOffsetXY[0] * scalefactor);
         gameTimerOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameTimerOffsetXY[1] * scalefactor);
+
+
+        mGameFieldOffsetX *= scalefactor;
+        mGameFieldOffsetY *= scalefactor;
+        mGameFieldOffsetY2 *=scalefactor;
+        mGameFieldWidth = mGamePortWidth - mGameFieldOffsetX*2;
+        mGameFieldHeight = mGamePortHeight - mGameFieldOffsetY - mGameFieldOffsetY2;
     }
 
     public Loader getLoader() {
         return mLoader;
+    }
+
+    public void bindDebugDataPort(ColorShaderProgram debugprogram)
+    {
+        float[] data0 = new float[12];
+
+        /* first triangle */
+        // top right
+        data0[0] = (mGamePortWidth);
+        data0[1] = -0;
+
+        // top left
+        data0[2] = -0;
+        data0[3] = -0;
+
+        // bottom left
+        data0[4] = -0;
+        data0[5] = (mGamePortHeight);
+
+        /* second triangle */
+        // top right
+        data0[6] = (mGamePortWidth);
+        data0[7] = -0;
+
+        // bottom left
+        data0[8] = -0;
+        data0[9] = (mGamePortHeight);
+
+        // bottom right
+        data0[10] = (mGamePortWidth);
+        data0[11] = (mGamePortHeight);
+        new VertexArray(data0).setVertexAttribPointer(
+                0,
+                debugprogram.getPositionAttributeLocation(),
+                2,
+                8);
+    }
+
+    public void bindDebugDataField(ColorShaderProgram debugprogram)
+    {
+        float[] data0 = new float[12];
+
+        /* first triangle */
+        // top right
+        data0[0] = (mGameFieldWidth);
+        data0[1] = -0;
+
+        // top left
+        data0[2] = -0;
+        data0[3] = -0;
+
+        // bottom left
+        data0[4] = -0;
+        data0[5] = (mGameFieldHeight);
+
+        /* second triangle */
+        // top right
+        data0[6] = (mGameFieldWidth);
+        data0[7] = -0;
+
+        // bottom left
+        data0[8] = -0;
+        data0[9] = (mGameFieldHeight);
+
+        // bottom right
+        data0[10] = (mGameFieldWidth);
+        data0[11] = (mGameFieldHeight);
+        new VertexArray(data0).setVertexAttribPointer(
+                0,
+                debugprogram.getPositionAttributeLocation(),
+                2,
+                8);
     }
 }

@@ -42,6 +42,8 @@ import static android.opengl.Matrix.orthoM;
 import static android.opengl.Matrix.setIdentityM;
 import static android.opengl.Matrix.translateM;
 import static main.Constants.NUMBER_OF_TEXTURES;
+import static main.rendering.display.DisplayManager.mGameFieldOffsetX;
+import static main.rendering.display.DisplayManager.mGameFieldOffsetY;
 import static main.rendering.display.DisplayManager.mGamePortHeight;
 import static main.rendering.display.DisplayManager.mGamePortWidth;
 
@@ -349,6 +351,27 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                 }
             }
         }
+
+        /* DEBUG: show port edges */
+        mColorProgram.useProgram();
+        final float xPixel = mDisplayManager.gamePortOffsetXY[0];
+        final float yPixel = mDisplayManager.gamePortOffsetXY[1];
+        /*
+        setIdentityM(mModelMatrix, 0);
+        translateM(mModelMatrix, 0, xPixel, yPixel, 0);
+        multiplyMM(mModelViewProjectionMatrix, 0, mProjectionMatrix, 0, mModelMatrix, 0);
+
+        mColorProgram.setUniforms(mModelViewProjectionMatrix);
+        mDisplayManager.bindDebugDataPort(mColorProgram);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 6); */
+
+        setIdentityM(mModelMatrix, 0);
+        translateM(mModelMatrix, 0, xPixel+mGameFieldOffsetX, yPixel+mGameFieldOffsetY, 0);
+        multiplyMM(mModelViewProjectionMatrix, 0, mProjectionMatrix, 0, mModelMatrix, 0);
+
+        mColorProgram.setUniforms(mModelViewProjectionMatrix);
+        mDisplayManager.bindDebugDataField(mColorProgram);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
 
         /* @Measure exec time */
         long debugTimetest = System.nanoTime() - mDebugFrameStartTime;

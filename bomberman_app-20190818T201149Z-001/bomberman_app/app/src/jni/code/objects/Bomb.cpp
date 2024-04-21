@@ -95,7 +95,7 @@ extern "C"
     }
 
     int16_t i16BombUpdateState(Bomb_t *pxBomb, int32_t dt)
-    {
+{
         vHitboxUpdateEdges(&xHitbox, pxBomb->object.i16PosX, pxBomb->object.i16PosY);
         switch (pxBomb->object.ui8State) {
             case STATE_ALIVE:

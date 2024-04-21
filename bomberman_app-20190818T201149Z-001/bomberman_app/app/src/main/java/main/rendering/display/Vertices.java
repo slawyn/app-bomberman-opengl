@@ -11,6 +11,14 @@ public class Vertices {
     private SparseArray<VertexArray> mVertexData;
     public Vertices(float scalefactor)
     {
+        float vertices2x128[] = {// Triangle Fan
+                2f, 0f, 1f, 0f,
+                0, 0f, 0f, 0f,
+                0, 128f, 0f, 1f,
+                2f, 0f, 1f, 0f,
+                0f, 128f, 0f, 1f,
+                2f, 128f, 1f, 1f};
+
         float vertices16x16[] = {
                 16f, 0f, 1f, 0f,
                 0, 0f, 0f, 0f,
@@ -156,6 +164,7 @@ public class Vertices {
 
 
         /* Load into float buffers */
+        VertexArray vert2x128 = new VertexArray(vertices2x128);
         VertexArray vert16x16 = new VertexArray(vertices16x16);
         VertexArray vert78x78 = new VertexArray(vertices78x78);
         VertexArray vert136x136 = new VertexArray(vertices136x136);
@@ -182,6 +191,7 @@ public class Vertices {
         mVertexData.put(SOBJ_FPS_COUNTER, vert78x78);
         mVertexData.put(SOBJ_TIMER, vert78x78);
         mVertexData.put(SOBJ_DEBUG, vert16x16);
+        mVertexData.put(SOBJ_DEBUG_LINE, vert2x128);
     }
     public VertexArray getQuad(int key)
     {

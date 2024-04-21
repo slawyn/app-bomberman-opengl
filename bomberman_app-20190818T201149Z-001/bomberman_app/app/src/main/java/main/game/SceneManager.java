@@ -31,8 +31,9 @@ public class SceneManager {
     public final static int SOBJ_BACKGROUND_LOADING = 0x40000000;
     public final static int SOBJ_FPS_COUNTER = 0x50000000;
     public final static int SOBJ_TIMER = 0x60000000;
-    public final static int SOBJ_DEBUG = 0x70000000;
-    public final static int SOBJ_BUTTON_SQUARED = 0x80000000;
+    public final static int SOBJ_BUTTON_SQUARED = 0x70000000;
+    public final static int SOBJ_DEBUG = 0x80000000;
+    public final static int SOBJ_DEBUG_LINE = 0x90000000;
 
     private SparseArray<Button> mButtons;
     private SparseArray<SceneElement> mSceneObjects;

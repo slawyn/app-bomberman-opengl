@@ -14,6 +14,8 @@ extern "C" {
 #define O_          (0)
 #define BK          (1)
 #define CR          (2)
+#define CENTERX(x) (x*CELLSIZE_X + FIELD_X1 + CELLSIZE_X/2)
+#define CENTERY(y) (y*CELLSIZE_Y + FIELD_Y1 + CELLSIZE_Y/2)
 
 extern int16_t LEVELS[][NUMBER_OF_X_CELLS][NUMBER_OF_Y_CELLS];
 
