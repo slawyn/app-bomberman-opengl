@@ -1,37 +1,34 @@
 apply plugin: 'com.android.internal.application'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 34
 
     ndkVersion  "22.1.7171670"  // NDK r19c
 
-    // Version incrementing
 
-    /*
-    def versionPropsFile = file('version.properties')
     def Properties versionProps = new Properties()
 
+    def versionPropsFile = file('version.properties')
     if (versionPropsFile.canRead()) {
         versionProps.load(new FileInputStream(versionPropsFile))
     }
     else {
-        versionProps['VERSION_CODE']='0'
+        versionProps['BUILD']=0
+        versionProps['VERSION']=''
     }
 
-    def code = versionProps['VERSION_CODE'].toInteger() + 1
+    /* Increment build number */
+    versionProps['BUILD'] = (versionProps['BUILD'].toInteger() + 1).toString()
+    versionProps.store(versionPropsFile.newWriter(), null)
 
-    versionProps['VERSION_CODE']=code.toString()
-    versionProps.store(versionPropsFile.newWriter(), null)*/
-
-    def code = new Date().format('yyMMdd.HHmmss')
-
+    def version = versionProps['VERSION'] +'.'+ versionProps['BUILD']+'.'+new Date().format('yyMMdd')
 
     defaultConfig {
         applicationId "com.bomber.app"
         minSdkVersion 20
         targetSdkVersion 32
         versionCode 1
-        versionName "v0.3."+code
+        versionName version
         //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

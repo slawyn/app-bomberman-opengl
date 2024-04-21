@@ -291,7 +291,7 @@ public class Application implements Runnable, ButtonCallback
     {
         final long desiredFrameDeltaNano = SERVER_TICK_TIME * 1000000;
         final long printPeriod = 1000;
-        final boolean mGameRunning = true;
+        boolean mGameRunning = true;
         long frameStartTime;
         long lastframeStartTime = System.nanoTime();
         long deltaMax = 0;
