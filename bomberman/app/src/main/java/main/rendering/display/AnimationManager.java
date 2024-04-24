@@ -30,7 +30,6 @@ import static main.rendering.display.DisplayManager.gameBombOffsetXY;
 import static main.rendering.display.DisplayManager.gameExplosionOffsetXY;
 import static main.rendering.display.DisplayManager.gameLoadingOffsetXY;
 import static main.rendering.display.DisplayManager.gameObjectOffsetXY;
-import static main.rendering.display.DisplayManager.gamePlayerOffsetXY;
 import static main.rendering.display.DisplayManager.gamePortOffsetXY;
 import static main.rendering.display.DisplayManager.gameTimer2ndOffsets;
 import static main.rendering.display.DisplayManager.gameTouchOffsetXY;
@@ -544,7 +543,7 @@ public class AnimationManager {
             case OBJ_PLAYR:
                 ao = getFreeAnimationFromPool();
                 ro.setInterpolation(true);
-                ao.init(gamePlayerOffsetXY);
+                ao.init(gameObjectOffsetXY);
                 ao.setAnimationParameters(mAnimationSequences.get(ANIMATION_PLAYER_STAND).get(ro.mSubType), mAnimationParameters.get(ANIMATION_PLAYER_STAND));
                 ro.addAnimation(ao);
                 break;

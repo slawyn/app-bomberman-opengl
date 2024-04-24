@@ -246,8 +246,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
                         /* Reuse bound texture */
                         currenttexture = obj.getCurrentTexture();
                         if (currenttexture != previoustexture) {
-                            mTextureProgram.setUniforms(mModelViewProjectionMatrix, mTextures[currenttexture],
-                                    GL_TEXTURE0);
+                            mTextureProgram.setUniforms(mModelViewProjectionMatrix, mTextures[currenttexture], GL_TEXTURE0);
                             previoustexture = currenttexture;
                         } else {
                             mTextureProgram.setUniformsFast(mModelViewProjectionMatrix);

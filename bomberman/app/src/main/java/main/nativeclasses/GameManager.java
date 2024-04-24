@@ -2,8 +2,10 @@ package main.nativeclasses;
 
 import android.annotation.SuppressLint;
 
+import main.Logger;
 import main.game.events.Events;
 import main.rendering.display.AnimationManager;
+import main.rendering.display.DisplayManager;
 
 import static main.nativeclasses.GameElement.OBJ_PLAYR;
 
@@ -21,34 +23,49 @@ public class GameManager
     public native static int createGame();
     public native static int updateGame(int dt);
     public native static int getState(int type, int offset);
-    public native static long[] getPosition(int type, int offset);
+    public native static float[] getPosition(int type, int offset);
     public native static int[][] getHitboxes(int type, int offset);
     public native static int getZ(int type, int offset);
     public native static int[] getObjects();
     public native static int[] getRemovedObjects();
+    public native static int[] getFieldSizes();
 
 
     private final String TAG = "GameLogicManager";
     private final int mCapacity = 50;
     private Events mStateUpdateEvents;
-    private Events mKillEvents;
     private Events mBombEvents;
     private Events mRemovalEvents;
 
     private int mNextFreeGameObject;
     private final GameElement[] mGameObjectPool;
     private int mGameTime;
+    private float mScalesXY[];
 
     @SuppressLint("UseSparseArrays")
     public GameManager(int maxobjects)
     {
         mStateUpdateEvents = new Events();
         mRemovalEvents = new Events();
-        mKillEvents = new Events();
         mBombEvents = new Events();
         mGameObjectPool = new GameElement[maxobjects];
         mNextFreeGameObject = 0;
         mGameTime = 0;
+
+        /* Calculate scales */
+        int [] fieldSizesXY = GameManager.getFieldSizes();
+        mScalesXY = new float[2];
+        mScalesXY[0] = DisplayManager.mGameFieldWidth/fieldSizesXY[0];
+        mScalesXY[1] = DisplayManager.mGameFieldHeight/fieldSizesXY[1];
+        StringBuilder sb = new StringBuilder();
+        sb.append(DisplayManager.mGameFieldWidth);
+        sb.append(" ");
+        sb.append(DisplayManager.mGameFieldHeight);
+        sb.append(" ");
+        sb.append(fieldSizesXY[0]);
+        sb.append(" ");
+        sb.append(fieldSizesXY[1]);
+        Logger.log(Logger.INFO, TAG, sb.toString());
     }
 
     public int getGameTime()

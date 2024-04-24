@@ -19,7 +19,7 @@ import static main.Constants.*;
 
 public class DisplayManager {
     private final String TAG = "DisplayManager";
-    private static float mScaleFactor = 1.0f;
+    private static float mPortScaleFactor = 1.0f;
     public static int mGamePortWidth = 1920;
     public static int mGamePortHeight = 1080;
     public static float mGameFieldOffsetX = 190f;
@@ -32,9 +32,8 @@ public class DisplayManager {
     public static final int GAME_V = 94;
     public static int[] gamePortOffsetXY = { 0, 0 };
     public static int[] gameBombOffsetXY = { -GAME_H / 2, -GAME_H / 2 };
-    public static int[] gameObjectOffsetXY = { -GAME_H / 2, (94 - GAME_H) - GAME_V / 2 };
+    public static int[] gameObjectOffsetXY = { -180 / 2, -180 / 2 - 40  };
     public static int[] gameExplosionOffsetXY = { -GAME_H / 2, -GAME_H / 2 };
-    public static int[] gamePlayerOffsetXY = { -180 / 2, -180 / 2 - 40 };
 
     // Scene objects
     public static int[] gameTouchOffsetXY = { (-(300 / 2)), (-(300 / 2)) };
@@ -95,7 +94,7 @@ public class DisplayManager {
     }
 
     public static float scale(float pos) {
-        return mScaleFactor * pos;
+        return mPortScaleFactor * pos;
     }
 
     public Vector<Layer> getLayers() {
@@ -126,7 +125,7 @@ public class DisplayManager {
         /* Add a visible hitbox */
         if (DEBUG_DRAW_HITBOXES) {
             if ((ro.mDebugObject == null)) {
-                ro.addDebugObject(go, mScaleFactor);
+                ro.addDebugObject(go, mPortScaleFactor);
                 mLayers.get(layerHitbox).addRenderObjectToLayer(ro.mDebugObject);
             }
         } else if (ro.mDebugObject != null) {
@@ -171,8 +170,8 @@ public class DisplayManager {
              * Translate and sort after 'Z' all animations that are attached to the render
              * object
              */
-            long pos[] = go.getPositionXY();
-            ro.setTranslation(pos[0] * mScaleFactor, pos[1] * mScaleFactor);
+            float pos[] = go.getPositionXY();
+            ro.setTranslation(mGameFieldOffsetX + pos[0] * mPortScaleFactor, mGameFieldOffsetY + pos[1] * mPortScaleFactor);
             ro.updateSortCriteria(go.getZ());
             mAnimationManager.updateAnimatedObject(ro, go.getState());
         }
@@ -247,7 +246,7 @@ public class DisplayManager {
         /* Adjust offsets and scalings based on device resolution */
         mGamePortWidth = width;
         mGamePortHeight = height;
-        mScaleFactor = scalefactor;
+        mPortScaleFactor = scalefactor;
         gamePortOffsetXY[0] = portx;
         gamePortOffsetXY[1] = porty;
         mGameFieldOffsetX *= scalefactor;
@@ -258,9 +257,6 @@ public class DisplayManager {
 
         gameBombOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameBombOffsetXY[0] * scalefactor);
         gameBombOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameBombOffsetXY[1] * scalefactor);
-
-        gamePlayerOffsetXY[0] = gamePortOffsetXY[0] + (int) (gamePlayerOffsetXY[0] * scalefactor);
-        gamePlayerOffsetXY[1] = gamePortOffsetXY[1] + (int) (gamePlayerOffsetXY[1] * scalefactor);
 
         gameExplosionOffsetXY[0] = gamePortOffsetXY[0] + (int) (gameExplosionOffsetXY[0] * scalefactor);
         gameExplosionOffsetXY[1] = gamePortOffsetXY[1] + (int) (gameExplosionOffsetXY[1] * scalefactor);

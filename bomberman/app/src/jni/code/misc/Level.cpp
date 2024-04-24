@@ -17,9 +17,9 @@ extern "C" {
                 {
                         {O_, O_, O_, O_, O_, O_, O_, O_, O_, O_, O_},
                         {O_, O_, O_, O_, O_, O_, O_, O_, O_, O_, O_},
+                        {O_, O_, O_, O_, O_, O_, O_, BK, O_, O_, O_},
                         {O_, O_, O_, O_, O_, O_, O_, O_, O_, O_, O_},
-                        {O_, O_, O_, O_, O_, O_, O_, O_, O_, O_, O_},
-                        {O_, O_, O_, O_, O_, O_, O_, O_, O_, O_, O_},
+                        {O_, O_, O_, O_, O_, CR, O_, O_, O_, O_, O_},
                         {O_, O_, O_, O_, O_, O_, O_, O_, O_, O_, O_},
                         {O_, O_, O_, O_, O_, O_, O_, O_, O_, O_, O_},
                         {O_, O_, O_, O_, O_, O_, O_, O_, O_, O_, O_},

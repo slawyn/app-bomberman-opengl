@@ -177,8 +177,8 @@ public class Vertices {
 
         /* Assign objects */
         mVertexData = new SparseArray<>();
-        mVertexData.put(OBJ_CRATE, vert136x136);
-        mVertexData.put(OBJ_BLOCK, vert136x136);
+        mVertexData.put(OBJ_CRATE, vert180x180);
+        mVertexData.put(OBJ_BLOCK, vert180x180);
         mVertexData.put(OBJ_ITEM, vert136x136);
         mVertexData.put(OBJ_BOMB, vert136x136);
         mVertexData.put(OBJ_EXPLN, vert150x100);

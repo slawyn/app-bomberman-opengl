@@ -15,6 +15,7 @@ extern "C" {
 
 
 #define OBJ_MASK                    (0xF000)
+void vGameGetFieldSizes(jint rjiFieldSizes[2]);
 jint jiUpdateObjects(jint ji32Dt, uint32_t *ui32PlayerUpdates);
 jint  jiGameGetObjects(jint ** ppui32Objects);
 jint  jiGameGetRemovedObjects(jint ** ppui32Objects);
@@ -22,7 +23,7 @@ jint jiGameCreate();
 int16_t i16GameGetObjectZ(int32_t i32ObjType, int32_t i32ObjectStateOffset);
 jint jiGameUpdateTicker();
 uint32_t ui32GameGetState(int32_t i32ObjType, int32_t i32ObjectStateOffset);
-jint jiGameGetPositions(jlong ** ppi32Positions, int32_t i32ObjType, int32_t i32ObjectStateOffset);
+jint jiGameGetPositions(jfloat ** ppfPositions, int32_t i32ObjType, int32_t i32ObjectStateOffset);
 void vGameSetInput(int32_t i32ObjectStateOffset, uint8_t ui8Input);
 jint jiGameGetHitbox(jint **ppi32Hitbox, int32_t i32ObjType, int32_t i32ObjectStateOffset);
 }

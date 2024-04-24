@@ -15,13 +15,19 @@ public class GameElement extends EventObject {
     public final static int OBJ_BLOCK = 0x0004000;
     public final static int OBJ_ITEM = 0x0005000;
 
+    private static float xScaling = 1.0f;
+    private static float yScaling = 1.0f;
+
     public void init(int type, int slot, int subtype)
     {
         mObjectType = type;
         mObjectStateOffset = slot;
         mObjectSubtype = 0;
     }
-
+    public static void setScalings(float x, float y){
+        xScaling = x;
+        yScaling = y;
+    }
     public int getUniqeueID()
     {
         return mObjectType | mObjectStateOffset;
@@ -32,9 +38,12 @@ public class GameElement extends EventObject {
         return GameManager.getZ(mObjectType, mObjectStateOffset);
     }
 
-    public long[] getPositionXY()
+    public float[] getPositionXY()
     {
-        return GameManager.getPosition(mObjectType, mObjectStateOffset);
+        float[]  positions = GameManager.getPosition(mObjectType, mObjectStateOffset);
+        positions[0] *=xScaling;
+        positions[1] *=yScaling;
+        return positions;
     }
 
     public int getState()

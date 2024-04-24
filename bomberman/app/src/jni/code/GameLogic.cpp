@@ -51,6 +51,12 @@ extern "C"
                                              {10, 0}};
 
 
+    void vGameGetFieldSizes(jint rjiFieldSizes[2])
+    {
+        rjiFieldSizes[0] = FIELD_SIZE_X;
+        rjiFieldSizes[1] = FIELD_SIZE_Y;
+    }
+
     STATIC int16_t i16InitObject(int32_t i32ObjectStateOffset,
                           int32_t i32ObjType,
                           int32_t i32PositionX,
@@ -526,33 +532,33 @@ extern "C"
         return ui32State;
     }
 
-    jlong rjiPosition[2] = {0, 0};
-    EXPORTED jint jiGameGetPositions(jlong **ppi32Positions, int32_t i32ObjType, int32_t i32ObjectStateOffset)
+    jfloat rjfPosition[2] = {0, 0};
+    EXPORTED jint jiGameGetPositions(jfloat **ppfPositions, int32_t i32ObjType, int32_t i32ObjectStateOffset)
     {
         GET_CURRENT_OBJECTS(i32ObjectStateOffset)
         switch (i32ObjType)
         {
         case OBJ_PLAYR:
             
-            rjiPosition[0] = pxPlayer->object.i16PosX;
-            rjiPosition[1] = pxPlayer->object.i16PosY;
+            rjfPosition[0] = pxPlayer->object.i16PosX;
+            rjfPosition[1] = pxPlayer->object.i16PosY;
             break;
         case OBJ_BLOCK:
-            rjiPosition[0] = pxBlock->object.i16PosX;
-            rjiPosition[1] = pxBlock->object.i16PosY;
+            rjfPosition[0] = pxBlock->object.i16PosX;
+            rjfPosition[1] = pxBlock->object.i16PosY;
             break;
         case OBJ_CRATE:
-            rjiPosition[0] = pxCrate->object.i16PosX;
-            rjiPosition[1] = pxCrate->object.i16PosY;
+            rjfPosition[0] = pxCrate->object.i16PosX;
+            rjfPosition[1] = pxCrate->object.i16PosY;
             break;
         case OBJ_BOMB:
-            rjiPosition[0] = pxBomb->object.i16PosX;
-            rjiPosition[1] = pxBomb->object.i16PosY;
+            rjfPosition[0] = pxBomb->object.i16PosX;
+            rjfPosition[1] = pxBomb->object.i16PosY;
             break;
         case OBJ_EXPLN:
             break;
         }
-        *ppi32Positions = rjiPosition;
+        *ppfPositions = rjfPosition;
         return 0;
     }
 

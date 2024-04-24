@@ -13,8 +13,10 @@
 // if player sprite is 180 x 180
 #define PLAYER_BOX_RATIO_X                                      2.34f
 #define PLAYER_BOX_RATIO_Y                                      0.78571f
+// #define PLAYER_BOX_WIDTH                                        (CELLSIZE_X / 2)
 #define PLAYER_BOX_WIDTH                                        ((CELLSIZE_X / PLAYER_BOX_RATIO_X)/2.0f)
 #define PLAYER_BOX_HEIGHT                                       ((CELL_RATIO * PLAYER_BOX_WIDTH))
+// #define PLAYER_BOX_HEIGHT                                       ((CELLSIZE_Y / 2) )
 #define PLAYER_BOX_OFFSET_X                                     ((CELLSIZE_X / PLAYER_BOX_RATIO_X))
 #define PLAYER_BOX_OFFSET_Y                                     (((PLAYER_BOX_OFFSET_X + CELLSIZE_X * PLAYER_BOX_RATIO_Y) * CELL_RATIO))
 

@@ -13,6 +13,20 @@ extern "C"
     FT_Library library;
 
     JNIEXPORT jintArray JNICALL
+    Java_main_nativeclasses_GameManager_getFieldSizes(JNIEnv *env,
+                                                      jclass type)
+    {
+
+        jint rjiSizes[2];
+        vGameGetFieldSizes(rjiSizes);
+
+        /* Copy to external array */
+        jintArray jArray = env->NewIntArray(2);
+        env->SetIntArrayRegion(jArray, 0, 2, rjiSizes);
+        return jArray;
+    }
+
+    JNIEXPORT jintArray JNICALL
     Java_main_nativeclasses_GameManager_getObjects(JNIEnv *env,
                                                    jclass type)
     {
@@ -47,7 +61,6 @@ extern "C"
         return jiGameCreate();
     }
 
-
     JNIEXPORT jint JNICALL
     Java_main_nativeclasses_GameManager_updateGame(JNIEnv *env,
                                                    jclass type,
@@ -58,7 +71,6 @@ extern "C"
         uint32_t ui32UpdatedPlayers = 0;
         return jiUpdateObjects(ji32Dt, &ui32UpdatedPlayers);
     }
-
 
     JNIEXPORT jint JNICALL
     Java_main_nativeclasses_GameManager_getZ(JNIEnv *env,
@@ -79,18 +91,18 @@ extern "C"
         vGameSetInput(i32ObjectStateOffset, ui8Input);
     }
 
-    JNIEXPORT jlongArray JNICALL
+    JNIEXPORT jfloatArray JNICALL
     Java_main_nativeclasses_GameManager_getPosition(JNIEnv *env,
                                                     jclass type,
                                                     jint i32ObjType,
                                                     jint i32ObjectStateOffset)
     {
-        jlong *pjlPositions = NULL;
+        jfloat *pjlPositions = NULL;
         jiGameGetPositions(&pjlPositions, i32ObjType, i32ObjectStateOffset);
 
         /* Copy to external array */
-        jlongArray jArray = env->NewLongArray(2);
-        env->SetLongArrayRegion(jArray, 0, 2, pjlPositions);
+        jfloatArray jArray = env->NewFloatArray(2);
+        env->SetFloatArrayRegion(jArray, 0, 2, pjlPositions);
         return jArray;
     }
 

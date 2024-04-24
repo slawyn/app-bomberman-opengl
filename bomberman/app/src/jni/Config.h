@@ -30,12 +30,21 @@
 #define FIELD_Y1 ((36 * SCALE_FACTOR))
 #define FIELD_Y2 ((GAME_HEIGHT - 10))
 
+// #define FIELD_X1 ((0))
+// #define FIELD_X2 (1540)
+// #define FIELD_Y1 (0)
+// #define FIELD_Y2 (1034)
+
+
+#define FIELD_SIZE_X (FIELD_X2 - FIELD_X1)
+#define FIELD_SIZE_Y (FIELD_Y2 - FIELD_Y1)
+
 #define NUMBER_OF_X_CELLS (11u)
 #define NUMBER_OF_Y_CELLS (11u)
 
 // CELLSIZEX = 140    // CELLSIZEY = 94
-#define CELLSIZE_X ((FIELD_X2 - FIELD_X1) / NUMBER_OF_X_CELLS)
-#define CELLSIZE_Y ((FIELD_Y2 - FIELD_Y1) / NUMBER_OF_Y_CELLS)
+#define CELLSIZE_X (FIELD_SIZE_X/ NUMBER_OF_X_CELLS)
+#define CELLSIZE_Y (FIELD_SIZE_Y / NUMBER_OF_Y_CELLS)
 #define CELL_RATIO (CELLSIZE_Y / CELLSIZE_X)
 
 #define ID(off, type) (off | type)
