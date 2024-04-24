@@ -9,10 +9,8 @@
 #include "Block.h"
 
 // if object_block is 150 x 150
-#define BLOCK_BOX_WIDTH                                         CELLSIZE_X/2
-#define BLOCK_BOX_HEIGHT                                        CELLSIZE_Y/2
-#define BLOCK_BOX_OFFSET_X                                      0
-#define BLOCK_BOX_OFFSET_Y                                      0
+#define BLOCK_BOX_WIDTH                                         (CELLSIZE_X/2)
+#define BLOCK_BOX_HEIGHT                                        (CELL_RATIO * BLOCK_BOX_WIDTH)
 extern "C"
 {
     static Hitbox_t xHitbox = {

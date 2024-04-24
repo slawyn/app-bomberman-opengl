@@ -8,8 +8,8 @@
 #include "../misc/Hitbox.h"
 #include "Config.h"
 
-#define CRATE_BOX_WIDTH CELLSIZE_X / 2
-#define CRATE_BOX_HEIGHT CELLSIZE_Y / 2
+#define CRATE_BOX_WIDTH     (CELLSIZE_X / 2)
+#define CRATE_BOX_HEIGHT    (CELL_RATIO*CRATE_BOX_WIDTH)
 #define CRATE_BOX_OFFSET_X 0
 #define CRATE_BOX_OFFSET_Y 0
 

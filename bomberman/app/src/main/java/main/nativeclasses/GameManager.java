@@ -40,7 +40,6 @@ public class GameManager
     private int mNextFreeGameObject;
     private final GameElement[] mGameObjectPool;
     private int mGameTime;
-    private float mScalesXY[];
 
     @SuppressLint("UseSparseArrays")
     public GameManager(int maxobjects)
@@ -54,9 +53,11 @@ public class GameManager
 
         /* Calculate scales */
         int [] fieldSizesXY = GameManager.getFieldSizes();
-        mScalesXY = new float[2];
-        mScalesXY[0] = DisplayManager.mGameFieldWidth/fieldSizesXY[0];
-        mScalesXY[1] = DisplayManager.mGameFieldHeight/fieldSizesXY[1];
+        float[] scalesXY = new float[2];
+        scalesXY[0] = DisplayManager.mGameFieldWidth/fieldSizesXY[0];
+        scalesXY[1] = DisplayManager.mGameFieldHeight/fieldSizesXY[1];
+        GameElement.setScalings(scalesXY[0], scalesXY[1]);
+
         StringBuilder sb = new StringBuilder();
         sb.append(DisplayManager.mGameFieldWidth);
         sb.append(" ");

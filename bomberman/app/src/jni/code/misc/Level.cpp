@@ -71,15 +71,15 @@ void vLevelMemoryReset(void)
 
 int16_t i16LevelGetPositionFromCellXY(int16_t ri16Positions[2], int16_t i16X, int16_t i16Y)
 {
-    ri16Positions[0] = (FIELD_X1 + (CELLSIZE_X * i16X) + CELLSIZE_X/2);
-    ri16Positions[1] = (FIELD_Y1 + (CELLSIZE_Y * i16Y) + CELLSIZE_Y/2);
+    ri16Positions[0] = ((CELLSIZE_X * i16X) + CELLSIZE_X/2);
+    ri16Positions[1] = ((CELLSIZE_Y * i16Y) + CELLSIZE_Y/2);
     return 0;
 }
 
 int16_t i16LevelGetCenteredPositionXY(int16_t ri16Positions[2], int16_t i16X, int16_t i16Y)
 {
-    ri16Positions[0] = (i16X-FIELD_X1)/CELLSIZE_X;
-    ri16Positions[1] = (i16Y-FIELD_Y1)/CELLSIZE_Y;
+    ri16Positions[0] = (i16X)/CELLSIZE_X;
+    ri16Positions[1] = (i16Y)/CELLSIZE_Y;
     return 0;
 }
 

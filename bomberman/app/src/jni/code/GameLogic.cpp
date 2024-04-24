@@ -95,8 +95,8 @@ extern "C"
 
             /* Place in the map */
             pHbFunction(pxObject, jiHitbox);
-            int16_t x = (jint)(((jiHitbox[4] + jiHitbox[2] / 2) - FIELD_X1) / CELLSIZE_X);
-            int16_t y = (jint)(((jiHitbox[7] + jiHitbox[3] / 2) - FIELD_Y1) / CELLSIZE_Y);
+            int16_t x = (jint)(((jiHitbox[4] + jiHitbox[2] / 2)) / CELLSIZE_X);
+            int16_t y = (jint)(((jiHitbox[7] + jiHitbox[3] / 2)) / CELLSIZE_Y);
             vLevelMemorySetCell(x,y,pxObject->ui16Id);
         }
     }
@@ -157,8 +157,8 @@ extern "C"
                     if (xBomb.ui16IdOwner)
                     {
                         vBombGetHitboxValues(&xBomb, jiHitbox);
-                        int16_t x = (jint)(((jiHitbox[4] + jiHitbox[2] / 2) - FIELD_X1) / CELLSIZE_X);
-                        int16_t y = (jint)(((jiHitbox[7] + jiHitbox[3] / 2) - FIELD_Y1) / CELLSIZE_Y);
+                        int16_t x = (jint)(((jiHitbox[4] + jiHitbox[2] / 2)) / CELLSIZE_X);
+                        int16_t y = (jint)(((jiHitbox[7] + jiHitbox[3] / 2)) / CELLSIZE_Y);
                         if (vLevelMemoryGetCell(x, y) == O_)
                         {
                             i16InitObject(DEBUG_FIRST_BOMB, OBJ_BOMB, CENTERX(x), CENTERY(y));

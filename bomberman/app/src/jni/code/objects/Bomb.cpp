@@ -8,10 +8,8 @@
 #include "Bomb.h"
 #include "../misc/Hitbox.h"
 
-#define BOMB_BOX_WIDTH                                           ((CELLSIZE_X / 2.34f)/2.0f)
+#define BOMB_BOX_WIDTH                                           (CELLSIZE_X / 4.0f)
 #define BOMB_BOX_HEIGHT                                          (CELL_RATIO * BOMB_BOX_WIDTH)
-#define BOMB_BOX_OFFSET_X                                        ((CELLSIZE_X - BOMB_BOX_WIDTH) / 2)
-#define BOMB_BOX_OFFSET_Y                                        (BOMB_BOX_OFFSET_X * CELL_RATIO)
 
 extern "C"
 {

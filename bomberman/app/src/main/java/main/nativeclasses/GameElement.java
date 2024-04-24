@@ -1,5 +1,4 @@
 package main.nativeclasses;
-
 import main.game.events.EventObject;
 
 
@@ -58,7 +57,14 @@ public class GameElement extends EventObject {
 
     public int[][] getHitBoxes()
     {
-        return GameManager.getHitboxes(mObjectType, mObjectStateOffset);
+        int[][] hitboxes = GameManager.getHitboxes(mObjectType, mObjectStateOffset);
+        for(int idx = 0; idx<hitboxes.length; ++idx)
+        {
+            hitboxes[idx][2] *= xScaling;
+            hitboxes[idx][3] *= yScaling;
+
+        }
+        return hitboxes;
     }
 
 }

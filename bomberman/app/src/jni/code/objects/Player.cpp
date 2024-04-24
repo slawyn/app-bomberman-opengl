@@ -11,14 +11,8 @@
 
 
 // if player sprite is 180 x 180
-#define PLAYER_BOX_RATIO_X                                      2.34f
-#define PLAYER_BOX_RATIO_Y                                      0.78571f
-// #define PLAYER_BOX_WIDTH                                        (CELLSIZE_X / 2)
-#define PLAYER_BOX_WIDTH                                        ((CELLSIZE_X / PLAYER_BOX_RATIO_X)/2.0f)
+#define PLAYER_BOX_WIDTH                                        (CELLSIZE_X /4.0f)
 #define PLAYER_BOX_HEIGHT                                       ((CELL_RATIO * PLAYER_BOX_WIDTH))
-// #define PLAYER_BOX_HEIGHT                                       ((CELLSIZE_Y / 2) )
-#define PLAYER_BOX_OFFSET_X                                     ((CELLSIZE_X / PLAYER_BOX_RATIO_X))
-#define PLAYER_BOX_OFFSET_Y                                     (((PLAYER_BOX_OFFSET_X + CELLSIZE_X * PLAYER_BOX_RATIO_Y) * CELL_RATIO))
 
 extern "C"
 {
@@ -35,20 +29,20 @@ void vPlayerGetCollisionPoints(Player_t* pxPlayer, int16_t x[4], int16_t y[4])
 {
     vHitboxUpdateEdges(&xHitbox, pxPlayer->object.i16PosX, pxPlayer->object.i16PosY);
     // top left
-    x[0] = ((xHitbox.i16Left- FIELD_X1) / CELLSIZE_X);
-    y[0] = ((xHitbox.i16Top - FIELD_Y1) / CELLSIZE_Y);
+    x[0] = ((xHitbox.i16Left) / CELLSIZE_X);
+    y[0] = ((xHitbox.i16Top) / CELLSIZE_Y);
 
     // top right
-    x[1] = ((xHitbox.i16Right - FIELD_X1) / CELLSIZE_X);
-    y[1] = ((xHitbox.i16Top - FIELD_Y1) / CELLSIZE_Y);
+    x[1] = ((xHitbox.i16Right) / CELLSIZE_X);
+    y[1] = ((xHitbox.i16Top) / CELLSIZE_Y);
 
     // bottom right
-    x[2] = ((xHitbox.i16Right - FIELD_X1) / CELLSIZE_X);
-    y[2] = ((xHitbox.i16Bottom - FIELD_Y1) / CELLSIZE_Y);
+    x[2] = ((xHitbox.i16Right) / CELLSIZE_X);
+    y[2] = ((xHitbox.i16Bottom) / CELLSIZE_Y);
 
     // bottom left
-    x[3] = ((xHitbox.i16Left- FIELD_X1) / CELLSIZE_X);
-    y[3] = ((xHitbox.i16Bottom - FIELD_Y1) / CELLSIZE_Y);
+    x[3] = ((xHitbox.i16Left) / CELLSIZE_X);
+    y[3] = ((xHitbox.i16Bottom) / CELLSIZE_Y);
 }
 
 void vPlayerGetHitboxValues(Player_t * pxPlayer, jint *jiHitboxes) {
@@ -104,27 +98,27 @@ int16_t i16PlayerUpdateState(Player_t *pxPlayer, Bomb_t *pxBomb, int32_t dt) {
     vHitboxUpdateEdges(&xHitbox, pxPlayer->object.i16PosX, pxPlayer->object.i16PosY);
     switch (pxPlayer->object.ui8State) {
         case STATE_MOVEDOWN:
-            if (FIELD_Y2 <= (i16SpeedDelta + xHitbox.i16Bottom)) {
-                i16SpeedDelta = FIELD_Y2 - xHitbox.i16Bottom;
+            if (FIELD_SIZE_Y <= (i16SpeedDelta + xHitbox.i16Bottom)) {
+                i16SpeedDelta = FIELD_SIZE_Y - xHitbox.i16Bottom;
             }
 
             pxPlayer->object.i16PosY += (i16SpeedDelta);
             break;
         case STATE_MOVEUP:
-            if (FIELD_Y1 + i16SpeedDelta >= (xHitbox.i16Top)) {
-                i16SpeedDelta = xHitbox.i16Top - FIELD_Y1;
+            if (i16SpeedDelta >= (xHitbox.i16Top)) {
+                i16SpeedDelta = xHitbox.i16Top;
             }
             pxPlayer->object.i16PosY -= (i16SpeedDelta);
             break;
         case STATE_MOVELEFT:
-            if (FIELD_X1 + i16SpeedDelta >= (xHitbox.i16Left)) {
-                i16SpeedDelta = xHitbox.i16Left - FIELD_X1;
+            if (i16SpeedDelta >= (xHitbox.i16Left)) {
+                i16SpeedDelta = xHitbox.i16Left;
             }
             pxPlayer->object.i16PosX -= (i16SpeedDelta);
             break;
         case STATE_MOVERIGHT:
-            if (FIELD_X2 <= (i16SpeedDelta + xHitbox.i16Right)) {
-                i16SpeedDelta = FIELD_X2 - xHitbox.i16Right;
+            if (FIELD_SIZE_X <= (i16SpeedDelta + xHitbox.i16Right)) {
+                i16SpeedDelta = FIELD_SIZE_X - xHitbox.i16Right;
             }
             pxPlayer->object.i16PosX += (i16SpeedDelta);
             break;
