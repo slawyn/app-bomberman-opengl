@@ -27,6 +27,22 @@ public class Events
         return mEvents[idx];
     }
 
+    public boolean removeEvent(EventObject go)
+    {
+        int j = 0;
+        for(int i=0; i<mIndex; ++i)
+        {
+            mEvents[j] = mEvents[i];
+            if(mEvents[i] != go)
+            {
+                j+=1;
+            }
+        }
+
+        mIndex = j;
+        return false;
+    }
+
     public int getCount(){
         return mIndex;
     }

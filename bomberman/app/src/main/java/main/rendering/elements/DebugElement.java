@@ -13,7 +13,7 @@ public class DebugElement extends RenderElement
     public DebugElement(GameElement go, float scale)
     {
         super();
-        super.init(go.mObjectType, go.mObjectSubtype, go.getState(), go.getUniqeueID());
+        super.init(go.getType(), go.getSubtype(), go.getState(), go.getId());
         this.vertexData = new Vector<>();
 
         int[][] hitboxes = go.getHitBoxes();

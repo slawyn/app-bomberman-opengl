@@ -4,8 +4,8 @@ import main.game.events.EventObject;
 
 public class GameElement extends EventObject {
     public int mObjectStateOffset;
-    public int mObjectType;
-    public int mObjectSubtype;
+    private int mObjectType;
+    private int mObjectSubtype;
 
     public final static int OBJ_PLAYR = 0x00006000;
     public final static int OBJ_BOMB = 0x0001000;
@@ -27,10 +27,7 @@ public class GameElement extends EventObject {
         xScaling = x;
         yScaling = y;
     }
-    public int getUniqeueID()
-    {
-        return mObjectType | mObjectStateOffset;
-    }
+
 
     public int getZ()
     {
@@ -43,11 +40,6 @@ public class GameElement extends EventObject {
         positions[0] *=xScaling;
         positions[1] *=yScaling;
         return positions;
-    }
-
-    public int getState()
-    {
-        return GameManager.getState(mObjectType, mObjectStateOffset);
     }
 
     public void setInput(byte input)
@@ -67,4 +59,27 @@ public class GameElement extends EventObject {
         return hitboxes;
     }
 
+    @Override
+    public int getState()
+    {
+        return GameManager.getState(mObjectType, mObjectStateOffset);
+    }
+
+    @Override
+    public int getId()
+    {
+        return mObjectType | mObjectStateOffset;
+    }
+
+    @Override
+    public int getSubtype()
+    {
+        return mObjectSubtype;
+    }
+
+    @Override
+    public int getType()
+    {
+        return mObjectType;
+    }
 }

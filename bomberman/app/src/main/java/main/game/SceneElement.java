@@ -5,12 +5,12 @@ import main.game.events.EventObject;
 import main.rendering.elements.RenderElement;
 
 public abstract class SceneElement extends EventObject
-{
-    public int mObjectID;
-    public int mObjectType;
-    public int mObjectSubtype;
+{   
+    protected int mState;
+    private int mObjectID;
+    private int mObjectType;
+    private int mObjectSubtype;
     public int mPreviousState;
-    public int mState;
     public int mPositionX;
     public int mPositionY;
     public int[] mAdditionals;
@@ -35,5 +35,29 @@ public abstract class SceneElement extends EventObject
     public int[] getUpdatedAdditionals()
     {
         return mAdditionals;
+    }
+
+    @Override
+    public int getState()
+    {
+        return mState;
+    }
+
+    @Override
+    public int getId()
+    {
+        return mObjectID;
+    }
+
+    @Override
+    public int getSubtype()
+    {
+        return mObjectSubtype;
+    }
+
+    @Override
+    public int getType()
+    {
+        return mObjectType;
     }
 }

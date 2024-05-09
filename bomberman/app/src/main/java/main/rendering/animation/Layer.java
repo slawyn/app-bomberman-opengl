@@ -11,12 +11,12 @@ public class Layer
     private int mArraySize;
     private boolean mDirty;
 
-    private ConcurrentLinkedQueue<RenderElement> mNewRenderObjectsQueue;
+    private ConcurrentLinkedQueue<RenderElement> mRenderObjectsQueue;
 
     public Layer(int sz)
     {
         mSortedArrayForGPU = new RenderElement[sz];
-        mNewRenderObjectsQueue = new ConcurrentLinkedQueue<>();
+        mRenderObjectsQueue = new ConcurrentLinkedQueue<>();
         mDirty = true;
         mArraySize = 0;
     }
@@ -33,7 +33,7 @@ public class Layer
 
     public void addRenderObjectToLayer(RenderElement ro)
     {
-        mNewRenderObjectsQueue.add(ro);
+        mRenderObjectsQueue.add(ro);
     }
 
     private void removeObjectsFromSortedArray()
@@ -56,10 +56,10 @@ public class Layer
 
     private void addONewbjectsToSortedArray()
     {
-        int size = mNewRenderObjectsQueue.size();
+        int size = mRenderObjectsQueue.size();
         for(int idx = size - 1; idx >= 0; idx--)
         {
-            RenderElement ro = mNewRenderObjectsQueue.remove();
+            RenderElement ro = mRenderObjectsQueue.remove();
             if(mArraySize < mSortedArrayForGPU.length)
             {
                 mSortedArrayForGPU[mArraySize] = ro;

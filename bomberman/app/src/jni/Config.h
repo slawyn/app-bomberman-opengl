@@ -22,8 +22,8 @@
 
 
 /* Field size used for positional calculations*/
-#define FIELD_SIZE_X (2000.0f)
-#define FIELD_SIZE_Y (2000.0f)
+#define FIELD_SIZE_X (2200.0f)
+#define FIELD_SIZE_Y (2200.0f)
 
 
 #define NUMBER_OF_X_CELLS (11u)

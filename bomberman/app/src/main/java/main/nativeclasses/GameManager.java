@@ -35,7 +35,6 @@ public class GameManager
     private final int mCapacity = 50;
     private Events mStateUpdateEvents;
     private Events mBombEvents;
-    private Events mRemovalEvents;
 
     private int mNextFreeGameObject;
     private final GameElement[] mGameObjectPool;
@@ -45,7 +44,6 @@ public class GameManager
     public GameManager(int maxobjects)
     {
         mStateUpdateEvents = new Events();
-        mRemovalEvents = new Events();
         mBombEvents = new Events();
         mGameObjectPool = new GameElement[maxobjects];
         mNextFreeGameObject = 0;
@@ -86,8 +84,6 @@ public class GameManager
         GameManager.updateGame(dt);
     }
 
-
-
     /* Get Free Game object to fill with live information */
     private GameElement getFreeGameObject()
     {
@@ -112,7 +108,6 @@ public class GameManager
 
     public void deleteAllGameObjects()
     {
-        mRemovalEvents.resetEvents();
         mBombEvents.resetEvents();
         mStateUpdateEvents.resetEvents();
     }
@@ -130,16 +125,4 @@ public class GameManager
         return mStateUpdateEvents;
     }
 
-    public Events getRemovalEvents()
-    {
-        int[] objs = GameManager.getRemovedObjects();
-        int total = objs.length - 1;
-        for(int i = total; i >= 0; i--)
-        {
-            GameElement go = getFreeGameObject();
-            go.init( objs[i]&0xF000, objs[i]&0x0FFF,AnimationManager.AG000);
-            mRemovalEvents.addEvent(go);
-        }
-        return mRemovalEvents;
-    }
 }

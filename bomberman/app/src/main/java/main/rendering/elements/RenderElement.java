@@ -23,7 +23,7 @@ public class RenderElement implements Comparable<RenderElement>
     private int mUniqueId;
     public DebugElement mDebugObject;
     public int[] mAdditionalParams;
-
+    public boolean updated;
     public int mSubType;
 
     public RenderElement()
@@ -31,6 +31,7 @@ public class RenderElement implements Comparable<RenderElement>
         mAnimations = new Vector<>();
         mSwapBufferPosition = new float[2][4];
         mRenderObjectPosition = new float[2];
+        updated = false;
     }
 
     public void init(int type, int subtype, int state, int id)

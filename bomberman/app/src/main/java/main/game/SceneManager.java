@@ -38,7 +38,6 @@ public class SceneManager {
     private SparseArray<Button> mButtons;
     private SparseArray<SceneElement> mSceneObjects;
     private Events mUpdateEvents;
-    private Events mRemoveEvents;
     private SparseArray<Touch> mTouches;
     private DisplayManager mDisplayManager;
     private Timer timer;
@@ -53,12 +52,8 @@ public class SceneManager {
         mSceneObjects = new SparseArray<>();
         mTouches = new SparseArray<>();
         mUpdateEvents = new Events();
-        mRemoveEvents = new Events();
     }
 
-    public Events getRemovalEvents() {
-        return mRemoveEvents;
-    }
 
     public Events getUpdateEvents() {
         return mUpdateEvents;
@@ -72,7 +67,7 @@ public class SceneManager {
         int id = ++mObjectCounter;
         Touch touch = new Touch(id, touchid);
         mTouches.put(touchid, touch);
-        mSceneObjects.put(touch.mObjectType | id, touch);
+        mSceneObjects.put(touch.getType() | id, touch);
         touch.mLayer = DisplayManager.LAYER_0003;
     }
 
@@ -87,7 +82,7 @@ public class SceneManager {
                 xSize, ySize,
                 action, animation);
         mButtons.put(id, button);
-        mSceneObjects.put(button.mObjectType | id, button);
+        mSceneObjects.put(button.getType() | id, button);
         button.mLayer = layer;
     }
 
@@ -102,14 +97,14 @@ public class SceneManager {
                 xSize, ySize,
                 action, animation);
         mButtons.put(id, button);
-        mSceneObjects.put(button.mObjectType | id, button);
+        mSceneObjects.put(button.getType() | id, button);
         button.mLayer = layer;
     }
 
     private void addLoading(int animation, int layer) {
         int id = ++mObjectCounter;
         Loading loading = new Loading(id, animation);
-        mSceneObjects.put(loading.mObjectType | id, loading);
+        mSceneObjects.put(loading.getType() | id, loading);
         loading.mLayer = layer;
 
     }
@@ -117,14 +112,14 @@ public class SceneManager {
     private void addTimer(int animation, int layer) {
         int id = ++mObjectCounter;
         timer = new Timer(id, mDisplayManager.gameTimerOffsetXY[0], mDisplayManager.gameTimerOffsetXY[1], animation);
-        mSceneObjects.put(timer.mObjectType | id, timer);
+        mSceneObjects.put(timer.getType() | id, timer);
         timer.mLayer = layer;
     }
 
     private void addBackground(int animation, int layer) {
         int id = ++mObjectCounter;
         Background background = new Background(id, animation);
-        mSceneObjects.put(background.mObjectType | id, background);
+        mSceneObjects.put(background.getType() | id, background);
         background.mLayer = layer;
     }
 
@@ -153,13 +148,11 @@ public class SceneManager {
 
     private void clearScene() {
         callback = null;
-        mRemoveEvents.resetEvents();
         int size = mSceneObjects.size() - 1;
 
         for (int i = size; i >= 2; --i) {
             SceneElement so = mSceneObjects.valueAt(i);
             mSceneObjects.removeAt(i);
-            mRemoveEvents.addEvent(so);
         }
         mButtons.clear();
     }

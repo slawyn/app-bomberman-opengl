@@ -44,7 +44,7 @@ public class DisplayManager {
     public static int[] gameZeroOffsetXY = { 0, 0 };
     public static int[][] gameTimer2ndOffsets = { { 0, 0 }, { 78, 0 }, { 200, 0 }, { 278, 0 } };
 
-    private int mTotalNumberOfRenderObjects;
+    private int mTotalNumberOfRenderElements;
     private RenderElement[] mFreeRenderElements;
     private SparseArray<RenderElement> mRos;
 
@@ -70,9 +70,9 @@ public class DisplayManager {
          * :Translation is updated on game thread, and is interpolated
          * :Animation timings are updated on the GPU thread
          */
-        mTotalNumberOfRenderObjects = CONFIG_RENDER_OBJECTS_MAX;
+        mTotalNumberOfRenderElements = CONFIG_RENDER_OBJECTS_MAX;
 
-        mFreeRenderElements = new RenderElement[mTotalNumberOfRenderObjects];
+        mFreeRenderElements = new RenderElement[mTotalNumberOfRenderElements];
         for (int idx = 0; idx < CONFIG_RENDER_OBJECTS_MAX; idx++) {
             mFreeRenderElements[idx] = new RenderElement();
         }
@@ -86,7 +86,6 @@ public class DisplayManager {
                 { LAYER_0003, 10 },
                 { LAYER_0004, 50 } };
         mLayers = Layer.createLayers(layerConfiguration);
-
     }
 
     public int getResourceCount() {
@@ -107,7 +106,7 @@ public class DisplayManager {
 
     public RenderElement getRenderObject(GameElement go) {
         final int layerHitbox = 4;
-        final int unique = go.getUniqeueID();
+        final int unique = go.getId();
         RenderElement ro = mRos.get(unique);
 
         if (ro == null) {
@@ -115,7 +114,7 @@ public class DisplayManager {
             final int layerAnimation = 1;
 
             /* Save previous movement state */
-            ro.init(go.mObjectType, go.mObjectSubtype, go.getState(), unique);
+            ro.init(go.getType(), go.getSubtype(), go.getState(), unique);
             mAnimationManager.createAnimatedObject(ro, layerAnimation);
             mLayers.get(layerAnimation).addRenderObjectToLayer(ro);
             mRos.put(unique, ro);
@@ -142,15 +141,16 @@ public class DisplayManager {
     }
 
     private RenderElement getFreeRenderObjectFromPool() {
-        RenderElement ro = mFreeRenderElements[--mTotalNumberOfRenderObjects];
+        RenderElement ro = mFreeRenderElements[--mTotalNumberOfRenderElements];
         return ro;
     }
 
     private void returnRenderObjectToPool(RenderElement ro) {
+
         /* Return RenderElement to pool */
         ro.removeFromRenderingGpu = true;
         mRos.remove(ro.getUniqueId());
-        mFreeRenderElements[mTotalNumberOfRenderObjects++] = ro;
+        mFreeRenderElements[mTotalNumberOfRenderElements++] = ro;
 
         /* Return all animations to pool */
         mAnimationManager.returnAnimationsToPool(ro.getUsedAnimatedObjects());
@@ -158,7 +158,6 @@ public class DisplayManager {
 
     private void updateGameManager(GameManager gamemanager) {
         Events goupdates = gamemanager.getUpdateEvents();
-        Events goremovals = gamemanager.getRemovalEvents();
 
         /* Update/Create Renderobjects */
         int sz = goupdates.getCount();
@@ -166,31 +165,21 @@ public class DisplayManager {
             GameElement go = (GameElement) goupdates.getEvent(sz);
             RenderElement ro = getRenderObject(go);
 
-            /*
-             * Translate and sort after 'Z' all animations that are attached to the render
-             * object
-             */
+            /** Translate and sort after 'Z' all animations that are attached to the render object */
             float pos[] = go.getPositionXY();
             ro.setTranslation(mGameFieldOffsetX + pos[0] * mPortScaleFactor, mGameFieldOffsetY + pos[1] * mPortScaleFactor);
             ro.updateSortCriteria(go.getZ());
             mAnimationManager.updateAnimatedObject(ro, go.getState());
+            ro.updated = true;
         }
 
-        /* Remove objects */
-        sz = goremovals.getCount();
-        while (--sz >= 0) {
-            GameElement go = (GameElement) goremovals.getEvent(sz);
-            RenderElement ro = getRenderObject(go);
-            returnRenderObjectToPool(ro);
-        }
-        goremovals.resetEvents();
         goupdates.resetEvents();
     }
 
     private void updateSceneManager(SceneManager manager) {
-        // Updates RenderObjects from SceneManager
+
+        /* Updates RenderElements from SceneManager */
         Events soupdates = manager.getUpdateEvents();
-        Events soremovals = manager.getRemovalEvents();
         int sz = soupdates.getCount();
         while (--sz >= 0) {
             SceneElement so = (SceneElement) soupdates.getEvent(sz);
@@ -198,32 +187,47 @@ public class DisplayManager {
             if (ro == null) {
                 ro = getFreeRenderObjectFromPool();
                 so.ro = ro;
+                mRos.put( so.getId(), ro);
 
                 int laynum = so.mLayer;
-                ro.init(so.mObjectType, so.mObjectSubtype, so.mState, so.mObjectID);
+                ro.init(so.getType(), so.getSubtype(), so.getState(), so.getId());
                 ro.setAdditionalParams(so.getUpdatedAdditionals());
                 mAnimationManager.createAnimatedObject(ro, laynum);
                 mLayers.get(laynum).addRenderObjectToLayer(ro);
             }
 
-            mAnimationManager.updateAnimatedObject(ro, so.mState);
+            mAnimationManager.updateAnimatedObject(ro, so.getState());
             ro.setTranslation(so.mPositionX, so.mPositionY);
+            ro.updated = true;
         }
 
-        // Remove RendersObjects from SceneManager
-        sz = soremovals.getCount();
-        while (--sz >= 0) {
-            SceneElement so = (SceneElement) soremovals.getEvent(sz);
-            RenderElement ro = so.ro;
-            returnRenderObjectToPool(ro);
-        }
         soupdates.resetEvents();
-        soremovals.resetEvents();
+    }
+    public void removeRenderElements()
+    {
+        for(int i =  mRos.size()-1; i >= 0; --i) {
+            RenderElement re = mRos.valueAt(i);
+            if(!re.updated) {
+                re.removeFromRenderingGpu = true;
+                returnRenderObjectToPool(re);
+            }
+        }
     }
 
-    public void updateRenderObjectsForGPU(GameManager gamemanager, SceneManager scenemanager) {
+    public void markRenderElements()
+    {
+        for(int i = 0, nsize = mRos.size(); i < nsize; i++) {
+            RenderElement re = mRos.valueAt(i);
+            re.updated = false;
+        }
+    }
+
+    public void updateRenderElementsForGPU(GameManager gamemanager, SceneManager scenemanager) {
+        markRenderElements();
         updateGameManager(gamemanager);
         updateSceneManager(scenemanager);
+        removeRenderElements();
+        
         RenderElement.latch();
     }
 

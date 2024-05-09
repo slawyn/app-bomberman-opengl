@@ -277,7 +277,7 @@ public class Application implements Runnable, ButtonCallback
         mSceneManager.run(dt, input);
 
         /* Update Renderobjects for the next run */
-        mDisplayManager.updateRenderObjectsForGPU(mGameManager, mSceneManager);
+        mDisplayManager.updateRenderElementsForGPU(mGameManager, mSceneManager);
 
         /* Wait for Bluetooth to render */
         synchronized(mSyncObject)
