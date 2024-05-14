@@ -357,6 +357,7 @@ public class AnimationManager {
 
     public void updateAnimatedObject(RenderElement ro, int state) {
 
+        ro.updated = true;
         if (state != ro.getmAnimationState()) {
             ro.setmAnimationState(state);
             Animation ao = ro.getAnimation(0);

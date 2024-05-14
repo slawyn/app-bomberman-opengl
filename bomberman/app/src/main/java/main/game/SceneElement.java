@@ -15,7 +15,6 @@ public abstract class SceneElement extends EventObject
     public int mPositionY;
     public int[] mAdditionals;
     public int mLayer;
-    public RenderElement ro;
     public int mAction;
 
     public SceneElement(int objtype, int objid, int objsubtype)
@@ -59,5 +58,15 @@ public abstract class SceneElement extends EventObject
     public int getType()
     {
         return mObjectType;
+    }
+
+    public int getZ()
+    {
+        return 0;
+    }
+
+    public int getLayer()
+    {
+        return mLayer;
     }
 }

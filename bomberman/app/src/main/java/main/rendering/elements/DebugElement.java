@@ -2,6 +2,7 @@ package main.rendering.elements;
 
 import java.util.Vector;
 
+import main.game.events.EventObject;
 import main.nativeclasses.GameElement;
 import main.rendering.color.ColorShaderProgram;
 import main.rendering.VertexArray;
@@ -10,13 +11,13 @@ public class DebugElement extends RenderElement
 {
 
     private Vector<VertexArray> vertexData;
-    public DebugElement(GameElement go, float scale)
+    public DebugElement(EventObject go, float scale)
     {
         super();
         super.init(go.getType(), go.getSubtype(), go.getState(), go.getId());
         this.vertexData = new Vector<>();
 
-        int[][] hitboxes = go.getHitBoxes();
+        int[][] hitboxes = go.getHitboxes();
         for(int idx = 0;idx<hitboxes.length;idx++)
         {
             int[] box1 = hitboxes[idx];

@@ -5,6 +5,7 @@ import android.util.SparseArray;
 import java.util.Vector;
 
 import main.Globals;
+import main.game.events.EventObject;
 import main.game.events.Events;
 import main.nativeclasses.GameManager;
 import main.game.SceneManager;
@@ -104,26 +105,26 @@ public class DisplayManager {
         DEBUG_DRAW_HITBOXES = !DEBUG_DRAW_HITBOXES;
     }
 
-    public RenderElement getRenderObject(GameElement go) {
+    public RenderElement getRenderObject(EventObject go) {
         final int layerHitbox = 4;
         final int unique = go.getId();
-        RenderElement ro = mRos.get(unique);
 
+        RenderElement ro = mRos.get(unique);
         if (ro == null) {
             ro = getFreeRenderObjectFromPool();
-            final int layerAnimation = 1;
-
-            /* Save previous movement state */
-            ro.init(go.getType(), go.getSubtype(), go.getState(), unique);
-            mAnimationManager.createAnimatedObject(ro, layerAnimation);
-            mLayers.get(layerAnimation).addRenderObjectToLayer(ro);
             mRos.put(unique, ro);
-
+            
+            /* Save previous movement state */
+            final int laynum = go.getLayer();
+            ro.init(go.getType(), go.getSubtype(), go.getState(), unique);
+            ro.setAdditionalParams(go.getUpdatedAdditionals());
+            mAnimationManager.createAnimatedObject(ro, laynum);
+            mLayers.get(laynum).addRenderObjectToLayer(ro);
         }
 
         /* Add a visible hitbox */
         if (DEBUG_DRAW_HITBOXES) {
-            if ((ro.mDebugObject == null)) {
+            if (go.hasBoundingboxes() && ro.mDebugObject == null) {
                 ro.addDebugObject(go, mPortScaleFactor);
                 mLayers.get(layerHitbox).addRenderObjectToLayer(ro.mDebugObject);
             }
@@ -170,7 +171,6 @@ public class DisplayManager {
             ro.setTranslation(mGameFieldOffsetX + pos[0] * mPortScaleFactor, mGameFieldOffsetY + pos[1] * mPortScaleFactor);
             ro.updateSortCriteria(go.getZ());
             mAnimationManager.updateAnimatedObject(ro, go.getState());
-            ro.updated = true;
         }
 
         goupdates.resetEvents();
@@ -183,26 +183,15 @@ public class DisplayManager {
         int sz = soupdates.getCount();
         while (--sz >= 0) {
             SceneElement so = (SceneElement) soupdates.getEvent(sz);
-            RenderElement ro = so.ro;
-            if (ro == null) {
-                ro = getFreeRenderObjectFromPool();
-                so.ro = ro;
-                mRos.put( so.getId(), ro);
+            RenderElement ro = getRenderObject(so);
 
-                int laynum = so.mLayer;
-                ro.init(so.getType(), so.getSubtype(), so.getState(), so.getId());
-                ro.setAdditionalParams(so.getUpdatedAdditionals());
-                mAnimationManager.createAnimatedObject(ro, laynum);
-                mLayers.get(laynum).addRenderObjectToLayer(ro);
-            }
-
-            mAnimationManager.updateAnimatedObject(ro, so.getState());
             ro.setTranslation(so.mPositionX, so.mPositionY);
-            ro.updated = true;
+            mAnimationManager.updateAnimatedObject(ro, so.getState());
         }
 
         soupdates.resetEvents();
     }
+
     public void removeRenderElements()
     {
         for(int i =  mRos.size()-1; i >= 0; --i) {

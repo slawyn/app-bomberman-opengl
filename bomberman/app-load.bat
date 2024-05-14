@@ -1,6 +1,6 @@
 @echo off 
 set APP=app\build\outputs\apk\debug\app-debug.apk
-set EMULATOR=emulator-5556
+set EMULATOR=emulator-5554
 :: Install
 adb -s %EMULATOR% install %APP%
 

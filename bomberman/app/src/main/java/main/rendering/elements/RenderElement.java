@@ -3,6 +3,7 @@ package main.rendering.elements;
 import java.util.Vector;
 
 import main.Constants;
+import main.game.events.EventObject;
 import main.nativeclasses.GameElement;
 import main.rendering.animation.Animation;
 
@@ -76,7 +77,7 @@ public class RenderElement implements Comparable<RenderElement>
         mAnimationState = state;
     }
 
-    public void addDebugObject(GameElement go, float scale)
+    public void addDebugObject(EventObject go, float scale)
     {
         mDebugObject = new DebugElement(go, scale);
     }

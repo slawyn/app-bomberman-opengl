@@ -13,7 +13,7 @@ public class GameElement extends EventObject {
     public final static int OBJ_CRATE = 0x0003000;
     public final static int OBJ_BLOCK = 0x0004000;
     public final static int OBJ_ITEM = 0x0005000;
-
+    public int mLayer;
     private static float xScaling = 1.0f;
     private static float yScaling = 1.0f;
 
@@ -22,6 +22,7 @@ public class GameElement extends EventObject {
         mObjectType = type;
         mObjectStateOffset = slot;
         mObjectSubtype = 0;
+        mLayer = 1;
     }
     public static void setScalings(float x, float y){
         xScaling = x;
@@ -47,7 +48,8 @@ public class GameElement extends EventObject {
         GameManager.setInput(mObjectType, mObjectStateOffset, input);
     }
 
-    public int[][] getHitBoxes()
+    @Override
+    public int[][] getHitboxes()
     {
         int[][] hitboxes = GameManager.getHitboxes(mObjectType, mObjectStateOffset);
         for(int idx = 0; idx<hitboxes.length; ++idx)
@@ -81,5 +83,12 @@ public class GameElement extends EventObject {
     public int getType()
     {
         return mObjectType;
+    }
+
+    public int getLayer() {return mLayer;}
+
+    @Override
+    public boolean hasBoundingboxes(){
+        return true;
     }
 }
