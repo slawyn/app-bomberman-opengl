@@ -4,7 +4,7 @@
 
 #include "../misc/States.h"
 #include "../misc/Inputs.h"
-#include "../../Config.h"
+#include "Config.h"
 #include "Bomb.h"
 #include "../misc/Hitbox.h"
 

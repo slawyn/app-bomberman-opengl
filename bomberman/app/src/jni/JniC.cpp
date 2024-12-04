@@ -3,14 +3,14 @@
 //
 #include <jni.h>
 #include "JniC.h"
-#include "ft2build.h"
-#include "freetype/freetype.h"
-#include FT_FREETYPE_H "freetype/freetype.h"
+// #include "ft2build.h"
+// #include "freetype/freetype.h"
+// #include FT_FREETYPE_H "freetype/freetype.h"
 
 #include "code/GameLogic.h"
 extern "C"
 {
-    FT_Library library;
+    // FT_Library library;
 
     JNIEXPORT jintArray JNICALL
     Java_main_nativeclasses_GameManager_getFieldSizes(JNIEnv *env,
