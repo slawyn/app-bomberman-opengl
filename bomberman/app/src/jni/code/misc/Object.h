@@ -4,8 +4,7 @@
 
 #ifndef OBJECT_H
 #define OBJECT_H
-#include <jni.h>
-#include "Config.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

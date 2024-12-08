@@ -2,16 +2,16 @@
 // Created by Unixt on 6/22/2023.
 //
 #include "Explosion.h"
-#include "../misc/States.h"
-#include "../misc/Inputs.h"
-#include "../misc/Hitbox.h"
+#include "States.h"
+#include "Inputs.h"
+#include "Hitbox.h"
 
 extern "C"
 {
-static Hitbox_t xHitboxExplosion = {0};
-
+static Hitbox_t xHitboxExplosion;
 int16_t i16ExplosionInit()
 {
+(void)xHitboxExplosion;
     /*
 private void addExplosion( Bomb firstbomb)
 {
@@ -123,7 +123,8 @@ private void addExplosion( Bomb firstbomb)
     return 0;
 }
     int16_t i16ExplosionUpdateState(Explosion_t *pxPlayer, int32_t dt) {
-
+        (void)pxPlayer;
+        (void) dt;
 
         return 1;
     }

@@ -4,7 +4,7 @@
 
 #ifndef BLOCK_H
 #define BLOCK_H
-#include <jni.h>
+#include <stdint.h>
 #include "Hitbox.h"
 #include "Object.h"
 #ifdef __cplusplus
@@ -14,9 +14,9 @@ typedef struct
 {
     Object_t object;
 } Block_t;
-int16_t i16BlockUpdateState(Block_t *pxBlock, int32_t dt);
-int16_t i16BlockInit(Block_t * pxBlock, int16_t i16PositionX, int16_t i16PositionY);
-void vBlockGetHitboxValues(Block_t* pxBlock, jint* jiHitboxes);
+int32_t i32BlockUpdateState(Block_t *pxBlock, int32_t dt);
+int32_t i32BlockInit(Block_t * pxBlock, int16_t i16PositionX, int16_t i16PositionY);
+void vBlockGetHitboxValues(Block_t* pxBlock, int32_t* jiHitboxes);
 Hitbox_t * pxBlockGetHitbox(Block_t* pxBlock);
 #ifdef __cplusplus
 }

@@ -2,10 +2,10 @@
 // Created by Unixt on 6/22/2023.
 //
 #include "Player.h"
-#include "../misc/States.h"
-#include "../misc/Inputs.h"
-#include "../misc/Hitbox.h"
-#include "../../Config.h"
+#include "States.h"
+#include "Inputs.h"
+#include "Hitbox.h"
+#include "Config.h"
 #include "Bomb.h"
 
 
@@ -45,7 +45,7 @@ void vPlayerGetCollisionPoints(Player_t* pxPlayer, int16_t x[4], int16_t y[4])
     y[3] = ((xHitbox.i16Bottom) / CELLSIZE_Y);
 }
 
-void vPlayerGetHitboxValues(Player_t * pxPlayer, jint *jiHitboxes) {
+void vPlayerGetHitboxValues(Player_t * pxPlayer, int32_t *jiHitboxes) {
     vHitboxUpdateEdges(&xHitbox, pxPlayer->object.i16PosX, pxPlayer->object.i16PosY);
     jiHitboxes[0] = 0;
     jiHitboxes[1] = 0;
@@ -142,7 +142,7 @@ int16_t i16PlayerInit(Player_t *pxPlayer, int16_t i16PositionX, int16_t i16Posit
     return 1;
 }
 
-jint jiCorrectPlayerPosition(Player_t *pxPlayer, Hitbox_t * pxHitbox)
+int32_t jiCorrectPlayerPosition(Player_t *pxPlayer, Hitbox_t * pxHitbox)
 {
 
     // horizontal

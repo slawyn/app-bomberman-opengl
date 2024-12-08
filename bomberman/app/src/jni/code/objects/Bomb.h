@@ -4,7 +4,7 @@
 
 #ifndef BOMB_H
 #define BOMB_H
-#include <jni.h>
+#include <stdint.h>
 #include "Object.h"
 #ifdef __cplusplus
 extern "C" {
@@ -18,9 +18,9 @@ typedef struct
     uint16_t ui16IdOwner;
 } Bomb_t;
 
-int16_t i16BombUpdateState(Bomb_t *pxBomb, int32_t dt);
-int16_t i16BombInit(Bomb_t * pxBomb,  int16_t i16PositionX, int16_t i16PositionY);
-void vBombGetHitboxValues(Bomb_t* pxBomb, jint* jiHitboxes);
+int32_t i32BombUpdateState(Bomb_t *pxBomb, int32_t dt);
+int32_t i32BombInit(Bomb_t * pxBomb,  int16_t i16PositionX, int16_t i16PositionY);
+void vBombGetHitboxValues(Bomb_t* pxBomb, int32_t* jiHitboxes);
 bool bBombNeedsToBeRemoved(Bomb_t *ptr);
 bool bBombHasExploded(Bomb_t* pxBomb);
 #ifdef __cplusplus

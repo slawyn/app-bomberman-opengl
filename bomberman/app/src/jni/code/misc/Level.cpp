@@ -4,7 +4,7 @@
 #include "Level.h"
 #include "Config.h"
 #include "Bomb.h"
-#include "code/GameLogic.h"
+#include "GameLogic.h"
 #include <string.h>
 
 #ifdef __cplusplus
@@ -97,7 +97,7 @@ int16_t i16ExpandExplosion(Bomb_t * pxBomb, int16_t *rri16Fieldmap[])
 
     for(int16_t direction = 0; direction < 4; direction++) {
 
-        for (int radius = 1; radius <= pxBomb->ui16ExplosionStrength && ((expansionUnderway&(1<<direction) == 0)); radius++) {
+        for (int radius = 1; radius <= pxBomb->ui16ExplosionStrength && (((expansionUnderway&(1u<<direction)) == 0u)); radius++) {
             int posx = 0;
             int posy = 0;
 

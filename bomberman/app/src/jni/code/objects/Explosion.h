@@ -4,7 +4,6 @@
 
 #ifndef EXPLOSION_H
 #define EXPLOSION_H
-#include <jni.h>
 #include "Object.h"
 #ifdef __cplusplus
 extern "C" {

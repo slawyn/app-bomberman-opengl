@@ -2,11 +2,11 @@
 // Created by Unixt on 6/22/2023.
 //
 
-#include "../misc/States.h"
-#include "../misc/Inputs.h"
-#include "../../Config.h"
+#include "States.h"
+#include "Inputs.h"
+#include "Config.h"
 #include "Bomb.h"
-#include "../misc/Hitbox.h"
+#include "Hitbox.h"
 
 #define BOMB_BOX_WIDTH                                           (CELLSIZE_X / 4.0f)
 #define BOMB_BOX_HEIGHT                                          (CELL_RATIO * BOMB_BOX_WIDTH)
@@ -46,7 +46,7 @@ extern "C"
             .i16Right = 0,
             .pxHitboxNext = 0};
 
-    void vBombGetHitboxValues(Bomb_t* pxBomb, jint *jiHitboxes)
+    void vBombGetHitboxValues(Bomb_t* pxBomb, int32_t *jiHitboxes)
     {
         vHitboxUpdateEdges(&xHitbox, pxBomb->object.i16PosX, pxBomb->object.i16PosY);
         jiHitboxes[0] = 0;
@@ -69,7 +69,7 @@ extern "C"
         return (pxBomb->object.ui8State == STATE_REMOVE);
     }
 
-    void vExplosionGetHitboxValues(Bomb_t* pxBomb, jint *jiHitboxes)
+    void vExplosionGetHitboxValues(Bomb_t* pxBomb, int32_t *jiHitboxes)
     {
         jiHitboxes[0] = 0;
         jiHitboxes[1] = 0;
@@ -92,7 +92,7 @@ extern "C"
 
     }
 
-    int16_t i16BombUpdateState(Bomb_t *pxBomb, int32_t dt)
+    int32_t i32BombUpdateState(Bomb_t *pxBomb, int32_t dt)
 {
         vHitboxUpdateEdges(&xHitbox, pxBomb->object.i16PosX, pxBomb->object.i16PosY);
         switch (pxBomb->object.ui8State) {
@@ -113,7 +113,7 @@ extern "C"
         }
         return 1;
     }
-int16_t i16BombInit(Bomb_t *pxBomb,  int16_t i16PositionX, int16_t i16PositionY)
+int32_t i32BombInit(Bomb_t *pxBomb,  int16_t i16PositionX, int16_t i16PositionY)
 {
     pxBomb->object.ui8State = STATE_ALIVE;
     pxBomb->ui16BombCountdown = BOMB_TIMER;

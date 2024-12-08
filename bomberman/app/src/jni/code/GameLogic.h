@@ -1,7 +1,6 @@
 #ifndef GAME_STATE_BUFFER_H
 #define GAME_STATE_BUFFER_H
-#include <jni.h>
-
+#include <stdint.h>
 
 extern "C" {
 
@@ -15,16 +14,16 @@ extern "C" {
 
 
 #define OBJ_MASK                    (0xF000)
-void vGameGetFieldSizes(jint rjiFieldSizes[2]);
-jint jiUpdateObjects(jint ji32Dt, uint32_t *ui32PlayerUpdates);
-jint  jiGameGetObjects(jint ** ppui32Objects);
-jint  jiGameGetRemovedObjects(jint ** ppui32Objects);
-jint jiGameCreate();
+void vGameGetFieldSizes(int32_t ri32FieldSizes[2]);
+int32_t jiUpdateObjects(int32_t ji32Dt, uint32_t *ui32PlayerUpdates);
+int32_t  jiGameGetObjects(int32_t ** ppui32Objects);
+int32_t  jiGameGetRemovedObjects(int32_t ** ppui32Objects);
+int32_t jiGameCreate();
 int16_t i16GameGetObjectZ(int32_t i32ObjType, int32_t i32ObjectStateOffset);
-jint jiGameUpdateTicker();
+int32_t jiGameUpdateTicker();
 uint32_t ui32GameGetState(int32_t i32ObjType, int32_t i32ObjectStateOffset);
-jint jiGameGetPositions(jfloat ** ppfPositions, int32_t i32ObjType, int32_t i32ObjectStateOffset);
+int32_t jiGameGetPositions(float ** ppfPositions, int32_t i32ObjType, int32_t i32ObjectStateOffset);
 void vGameSetInput(int32_t i32ObjectStateOffset, uint8_t ui8Input);
-jint jiGameGetHitbox(jint **ppi32Hitbox, int32_t i32ObjType, int32_t i32ObjectStateOffset);
+int32_t jiGameGetHitbox(int32_t **ppi32Hitbox, int32_t i32ObjType, int32_t i32ObjectStateOffset);
 }
 #endif

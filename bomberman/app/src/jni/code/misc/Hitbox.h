@@ -3,7 +3,7 @@
 
 #ifndef HITBOX_H
 #define HITBOX_H
-#include <jni.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

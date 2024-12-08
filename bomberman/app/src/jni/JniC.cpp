@@ -3,26 +3,26 @@
 //
 #include <jni.h>
 #include "JniC.h"
-#include "ft2build.h"
-#include "freetype/freetype.h"
-#include FT_FREETYPE_H "freetype/freetype.h"
+// #include "ft2build.h"
+// #include "freetype/freetype.h"
+// #include FT_FREETYPE_H "freetype/freetype.h"
 
 #include "code/GameLogic.h"
 extern "C"
 {
-    FT_Library library;
+    // FT_Library library;
 
     JNIEXPORT jintArray JNICALL
     Java_main_nativeclasses_GameManager_getFieldSizes(JNIEnv *env,
                                                       jclass type)
     {
 
-        jint rjiSizes[2];
-        vGameGetFieldSizes(rjiSizes);
+        int32_t ri32Sizes[2];
+        vGameGetFieldSizes(ri32Sizes);
 
         /* Copy to external array */
         jintArray jArray = env->NewIntArray(2);
-        env->SetIntArrayRegion(jArray, 0, 2, rjiSizes);
+        env->SetIntArrayRegion(jArray, 0, 2, ri32Sizes);
         return jArray;
     }
 
@@ -97,7 +97,7 @@ extern "C"
                                                     jint i32ObjType,
                                                     jint i32ObjectStateOffset)
     {
-        jfloat *pjlPositions = NULL;
+        float *pjlPositions = NULL;
         jiGameGetPositions(&pjlPositions, i32ObjType, i32ObjectStateOffset);
 
         /* Copy to external array */

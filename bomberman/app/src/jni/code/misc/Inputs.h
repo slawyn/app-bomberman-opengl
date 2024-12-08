@@ -4,7 +4,6 @@
 
 #ifndef INPUTS_H
 #define INPUTS_H
-#include <jni.h>
 #ifdef __cplusplus
 extern "C" {
 #endif

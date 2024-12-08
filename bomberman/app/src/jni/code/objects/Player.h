@@ -4,7 +4,7 @@
 
 #ifndef PLAYER_H
 #define PLAYER_H
-#include <jni.h>
+#include <stdint.h>
 #include "Hitbox.h"
 #include "Bomb.h"
 #include "Object.h"
@@ -27,8 +27,8 @@ typedef struct
 void vPlayerGetCollisionPoints(Player_t* pxPlayer, int16_t x[4], int16_t y[4]);
 int16_t i16PlayerUpdateState(Player_t *pxPlayer, Bomb_t *pxBomb, int32_t dt);
 int16_t i16PlayerInit(Player_t * pxPlayer, int16_t i16PositionX, int16_t i16PositionY);
-void vPlayerGetHitboxValues(Player_t * pxPlayer, jint *jiHitboxes);
-jint jiCorrectPlayerPosition(Player_t *pxPlayer, Hitbox_t * pxHitbox);
+void vPlayerGetHitboxValues(Player_t * pxPlayer, int32_t *jiHitboxes);
+int32_t jiCorrectPlayerPosition(Player_t *pxPlayer, Hitbox_t * pxHitbox);
 #ifdef __cplusplus
 }
 #endif

@@ -3,9 +3,9 @@
 //
 
 #include "Crate.h"
-#include "../misc/States.h"
-#include "../misc/Inputs.h"
-#include "../misc/Hitbox.h"
+#include "States.h"
+#include "Inputs.h"
+#include "Hitbox.h"
 #include "Config.h"
 
 #define CRATE_BOX_WIDTH     (CELLSIZE_X / 2)
@@ -30,7 +30,7 @@ extern "C"
         return &xHitbox;
     }
 
-    void vCrateGetHitboxValues(Crate_t *pxCrate, jint *jiHitboxes)
+    void vCrateGetHitboxValues(Crate_t *pxCrate, int32_t *jiHitboxes)
     {
         vHitboxUpdateEdges(&xHitbox, pxCrate->object.i16PosX, pxCrate->object.i16PosY);
         jiHitboxes[0] = 0;
@@ -47,8 +47,9 @@ extern "C"
         return (pxCrate->object.ui8State == STATE_REMOVE);
     }
 
-    int16_t i16CrateUpdateState(Crate_t *pxCrate, int32_t dt)
+    int32_t i32CrateUpdateState(Crate_t *pxCrate, int32_t dt)
     {
+        (void)dt;
         vHitboxUpdateEdges(&xHitbox, pxCrate->object.i16PosX, pxCrate->object.i16PosY);
         switch (pxCrate->object.ui8State)
         {
@@ -59,7 +60,7 @@ extern "C"
         return 1;
     }
 
-    int16_t i16CrateInit(Crate_t *pxCrate, int16_t i16PositionX, int16_t i16PositionY)
+    int32_t i32CrateInit(Crate_t *pxCrate, int16_t i16PositionX, int16_t i16PositionY)
     {
         pxCrate->object.ui8State = STATE_ALIVE;
         pxCrate->object.i16PosX = i16PositionX;

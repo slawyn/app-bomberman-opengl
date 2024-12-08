@@ -4,7 +4,7 @@
 
 #ifndef BOMBERMAN_APP_LEVEL_H
 #define BOMBERMAN_APP_LEVEL_H
-#include <jni.h>
+#include <stdint.h>
 #include "Config.h"
 
 #ifdef __cplusplus

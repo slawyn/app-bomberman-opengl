@@ -2,9 +2,9 @@
 // Created by Unixt on 6/22/2023.
 //
 
-#include "../misc/States.h"
-#include "../misc/Inputs.h"
-#include "../misc/Hitbox.h"
+#include "States.h"
+#include "Inputs.h"
+#include "Hitbox.h"
 #include "Config.h"
 #include "Block.h"
 
@@ -29,7 +29,7 @@ extern "C"
         return &xHitbox;
     }
 
-    void vBlockGetHitboxValues(Block_t* pxBlock, jint *jiHitboxes) {
+    void vBlockGetHitboxValues(Block_t* pxBlock, int32_t *jiHitboxes) {
         vHitboxUpdateEdges(&xHitbox, pxBlock->object.i16PosX, pxBlock->object.i16PosY);
         jiHitboxes[0] = 0;
         jiHitboxes[1] = 0;
@@ -41,7 +41,8 @@ extern "C"
         jiHitboxes[7] = xHitbox.i16Top;
     }
 
-    int16_t i16BlockUpdateState(Block_t *pxBlock, int32_t dt) {
+    int32_t i32BlockUpdateState(Block_t *pxBlock, int32_t dt) {
+        (void)dt;
         vHitboxUpdateEdges(&xHitbox, pxBlock->object.i16PosX, pxBlock->object.i16PosY);
         switch(pxBlock->object.ui8State)
         {
@@ -52,7 +53,7 @@ extern "C"
         return 1;
     }
 
-    int16_t i16BlockInit(Block_t *pxBlock, int16_t i16PositionX, int16_t i16PositionY) {
+    int32_t i32BlockInit(Block_t *pxBlock, int16_t i16PositionX, int16_t i16PositionY) {
         pxBlock->object.ui8State = STATE_ALIVE;
         pxBlock->object.i16PosX = i16PositionX;
         pxBlock->object.i16PosY = i16PositionY;

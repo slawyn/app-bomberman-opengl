@@ -4,7 +4,6 @@
 
 #ifndef STATES_H
 #define STATES_H
-#include <jni.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
