@@ -8,5 +8,5 @@ set BUILD_DIR=.externalNativeBuild/ndk-build/
 set CLEAN=%~1
 
 pushd app\src\jni
-%MAKE% -f Windows.mak
+%MAKE% -f Windows.make
 popd
