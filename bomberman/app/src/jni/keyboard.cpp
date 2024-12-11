@@ -102,7 +102,7 @@ DWORD WINAPI dwHookThread(LPVOID lpParm)
 
 int Keyboard_init(KeyboardConfig_t *config)
 {
-   if (NULL != config && (config->ui8Count < KeyboardKeys_quan) && (NULL != config->prKeyConfigs))
+   if (NULL != config && (config->ui8Count <= KeyboardKeys_quan) && (NULL != config->prKeyConfigs))
    {
       uint8_t i = config->ui8Count;
       while (i > 0u)

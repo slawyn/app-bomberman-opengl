@@ -1,5 +1,10 @@
 #include <Windows.h>
 #include <iostream>
+#include <chrono>
+#include <iomanip>
+#include <time.h>
+#include <thread>
+
 
 #include "GameLogic.h"
 #include "Inputs.h"
@@ -7,7 +12,7 @@
 
 using namespace std;
 
-int32_t STEP = 20;
+#define MILLISECONDS_STEP    (20u)
 int32_t ri32FieldSizes[2u];
 uint8_t ui8Input       = INPUT_NONE;
 bool    bGameExecuting = true;
@@ -59,7 +64,7 @@ int main(int argc, char **argv)
 
    KeyboardKeysConfig_t xKeysConfig[] =
    {
-      { .eKey = KeyboardKeysLeftPressed,    .pFunction = &vKeyPressedLeft    },
+      { .eKey = KeyboardKeysLeftPressed,      .pFunction = &vKeyPressedLeft    },
       { .eKey = KeyboardKeys_left_unpressed,  .pFunction = &vKeyUnpressedLeft  },
       { .eKey = KeyboardKeys_right_pressed,   .pFunction = &vKeyPressedRight   },
       { .eKey = KeyboardKeys_right_unpressed, .pFunction = &vKeyUnpressedRight },
@@ -71,7 +76,7 @@ int main(int argc, char **argv)
 
    KeyboardConfig_t xConfig = {
       .prKeyConfigs = xKeysConfig,
-      .ui8Count     = sizeof(xKeysConfig)/sizeof(KeyboardKeysConfig_t)
+      .ui8Count     = sizeof(xKeysConfig) / sizeof(KeyboardKeysConfig_t)
    };
 
    Keyboard_init(&xConfig);
@@ -82,23 +87,48 @@ int main(int argc, char **argv)
    std::cout << "Field x:" << ri32FieldSizes[0u] << " y:" << ri32FieldSizes[1u] << std::endl;
 
    uint32_t ui32UpdatedPlayers = 0u;
-   float *pfPositions;
+   float *  pfPositions;
+
+
+
+   auto xTimestampStart = std::chrono::high_resolution_clock::now();
+   std::chrono::duration <double> xTimeAccumulator;
+   uint32_t ui32GameCycles = 0u;
    while (bGameExecuting)
    {
-      jiGameGetPositions(&pfPositions, OBJ_PLAYR, 0u);
-      std::cout << "Input:" << std::uppercase << std::hex << static_cast <int>(ui8Input) << " X:" << pfPositions[0] << " Y:" << pfPositions[1] << std::endl;
+      auto xTimeNow = std::chrono::high_resolution_clock::now();
+      xTimeAccumulator += xTimeNow - xTimestampStart;
+      xTimestampStart   = xTimeNow;
 
 
-      int32_t i32ObjectStateOffset = 0;
-      vGameSetInput(i32ObjectStateOffset, ui8Input);
-      jiUpdateObjects(STEP, &ui32UpdatedPlayers);
+      const std::chrono::duration <double> xStep = std::chrono::milliseconds(MILLISECONDS_STEP);
+      if (xTimeAccumulator >= xStep)
+      {
+         xTimeAccumulator -= xStep;
+         jiGameGetPositions(&pfPositions, OBJ_PLAYR, 0u);
 
-      int32_t *pjiObjects    = NULL;
-      int16_t  i16TotalCount = jiGameGetRemovedObjects(&pjiObjects);
-      (void)i16TotalCount;
+         auto    in_time_t = std::chrono::system_clock::to_time_t(xTimeNow);
+         auto    ms        = std::chrono::duration_cast <std::chrono::milliseconds>(xTimeNow.time_since_epoch()) % 1000;
+         std::tm buf; localtime_s(&buf, &in_time_t);
 
-      Sleep(15u);
+         std::cout << std::dec;
+         std::cout << std::put_time(&buf, "%H:%M:%S") << '.' << std::setfill('0') << std::setw(3) << ms.count();
+         std::cout << "(" << xTimeAccumulator.count() << ")";
+         std::cout << "[" << ++ui32GameCycles << "] "
+                   << "Input: " << std::uppercase << std::hex << static_cast <int>(ui8Input) << " "
+                   << "X: " << pfPositions[0] << " "
+                   << "Y: " << pfPositions[1] << std:: endl;
 
+         int32_t i32ObjectStateOffset = 0;
+         vGameSetInput(i32ObjectStateOffset, ui8Input);
+         jiUpdateObjects(MILLISECONDS_STEP, &ui32UpdatedPlayers);
+
+         int32_t *pjiObjects    = NULL;
+         int16_t  i16TotalCount = jiGameGetRemovedObjects(&pjiObjects);
+         (void)i16TotalCount;
+      }
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(MILLISECONDS_STEP >> 1u));
 
       // ui32GameGetState(i32ObjType, i32ObjectStateOffset)
       // jiGameGetHitbox(int32_t **ppi32Hitbox, int32_t i32ObjType, int32_t i32ObjectStateOffset)
