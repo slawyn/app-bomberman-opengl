@@ -5,7 +5,8 @@
 #include <time.h>
 #include <thread>
 
-
+#include "jni.h"
+#include "JniC.h"
 #include "GameLogic.h"
 #include "Inputs.h"
 #include "keyboard.h"
@@ -13,7 +14,6 @@
 using namespace std;
 
 #define MILLISECONDS_STEP    (20u)
-int32_t ri32FieldSizes[2u];
 uint8_t ui8Input       = INPUT_NONE;
 bool    bGameExecuting = true;
 
@@ -81,11 +81,13 @@ int main(int argc, char **argv)
 
    Keyboard_init(&xConfig);
 
+   /* Initialize Game */
+   JNIEnv env = JNIEnv();
+   (void)Java_main_nativeclasses_GameManager_createGame(&env, 0);
+   jintArray rjiFieldSizes = Java_main_nativeclasses_GameManager_getFieldSizes(&env, 0);
 
-   jiGameCreate();
-   vGameGetFieldSizes(ri32FieldSizes);
-   std::cout << "Field x:" << ri32FieldSizes[0u] << " y:" << ri32FieldSizes[1u] << std::endl;
 
+   std::cout << "Field x:" << rjiFieldSizes[0u] << " y:" << rjiFieldSizes[1u] << std::endl;
    uint32_t ui32UpdatedPlayers = 0u;
    float *  pfPositions;
 

@@ -2,11 +2,12 @@
 CC := gcc
 CXX := g++
 CFLAGS := -W -Wall -fPIC -DPIC -DDARWIN_NO_CARBON -DFT2_BUILD_LIBRARY -O0 -ggdb -Og
-INCLUDES := -I./code -I./code/misc -I./code/objects -I./freetype/inc
+INCLUDES := -I./code -I./code/misc -I./code/objects -I./freetype/inc -I./pc -I./
 TOOL_MKDIR := mkdir
 
 # Define the source files
 SRC_FILES :=\
+    JniC.cpp\
     code/GameLogic.cpp \
     code/misc/Hitbox.cpp \
     code/objects/Block.cpp \
@@ -15,8 +16,9 @@ SRC_FILES :=\
     code/objects/Explosion.cpp \
     code/objects/Player.cpp \
     code/misc/Level.cpp \
-    keyboard.cpp \
-    main.cpp
+    pc/keyboard.cpp \
+    pc/jni.cpp\
+    pc/main.cpp\
 
 # Define the build directory
 BUILD_DIR := $(abspath ../../build/windows)
@@ -34,7 +36,7 @@ $(OUTPUT_EXE): $(OBJ_FILES)
 	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $^ -Wl,--pdb=${BUILD_DIR}/main.pdb
 
 ${BUILD_DIR}/%.o: %.cpp
-	-$(TOOL_MKDIR) $(subst /,\, $(dir $@))
+	@if not exist $(subst /,\,$(dir $@)) $(TOOL_MKDIR) $(subst /,\,$(dir $@))
 	$(CXX) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
 clean:
